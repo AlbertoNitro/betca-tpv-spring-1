@@ -27,7 +27,7 @@ public class UserController {
     public TokenOutputDto login(String mobile) {
         User user = userRepository.findByMobile(mobile).get();
         String[] roles = Arrays.stream(user.getRoles()).map(Role::roleName).toArray(String[]::new);
-        String token = jwtService.createToken(user.getUsername(), roles);
+        String token = jwtService.createToken(user.getMobile(), roles);
         return new TokenOutputDto(token, user.getRoles());
     }
 
