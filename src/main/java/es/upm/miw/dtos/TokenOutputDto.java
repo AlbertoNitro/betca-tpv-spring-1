@@ -14,6 +14,11 @@ public class TokenOutputDto {
         // Empty for framework
     }
 
+    public TokenOutputDto(String token, Role[] roles) {
+        this.token = token;
+        this.roles = roles;
+    }
+
     public String getToken() {
         return token;
     }

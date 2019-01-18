@@ -105,6 +105,11 @@ public class RestBuilder<T> {
         return this;
     }
 
+    public RestBuilder<T> bearerAuth(String token) {
+        this.authorization = "Bearer " + token;
+        return this;
+    }
+
     public RestBuilder<T> param(String key, String value) {
         this.params.add(key, value);
         return this;
@@ -173,7 +178,8 @@ public class RestBuilder<T> {
     public T build() {
         ResponseEntity<T> response;
         if (log) {
-            LogManager.getLogger(this.getClass()).info(method + " " + this.path + this.headers() + "{" + this.body + "}");
+            LogManager.getLogger(this.getClass()).info(method + " " + this.port + ":" + this.path + "  "
+                    + this.headers() + "{" + this.body + "}");
         }
         if (body != null && !method.equals(HttpMethod.GET)) {
             response = restTemplate.exchange(this.uri(), method, new HttpEntity<>(body, this.headers()), clazz);

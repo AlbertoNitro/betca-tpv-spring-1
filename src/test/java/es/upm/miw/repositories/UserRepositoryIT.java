@@ -1,9 +1,9 @@
 package es.upm.miw.repositories;
 
+import es.upm.miw.TestConfig;
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
 import es.upm.miw.dtos.UserMinimumDto;
-import miw.TestConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @TestConfig
-public class UserRepositoryIT {
+class UserRepositoryIT {
 
     @Autowired
     private UserRepository userRepository;
@@ -22,13 +22,13 @@ public class UserRepositoryIT {
     private User user;
 
     @BeforeEach
-    public void seedDb() {
+    void seedDb() {
         this.user = new User("666001000", "666001000", "666001000");
         this.userRepository.save(user);
     }
 
     @Test
-    public void testFindByMobile() {
+    void testFindByMobile() {
         User userBd = userRepository.findByMobile("666001000");
         assertNotNull(userBd);
         assertEquals("666001000", userBd.getUsername());
@@ -36,12 +36,12 @@ public class UserRepositoryIT {
     }
 
     @Test
-    public void testFindCustomerAll() {
+    void testFindCustomerAll() {
         List<UserMinimumDto> userList = userRepository.findCustomerAll();
     }
 
     @AfterEach
-    public void delete() {
+    void delete() {
         this.userRepository.delete(user);
     }
 

@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return this.userBuilder(String.valueOf(user.getMobile()), user.getPassword(), new Role[]{Role.AUTHENTICATED},
                     user.isActive());
         } else {
-            throw new UsernameNotFoundException("Username-token not found. " + mobile);
+            throw new UsernameNotFoundException("mobile not found. " + mobile);
         }
     }
 

@@ -1,6 +1,7 @@
 package es.upm.miw.restControllers;
 
 import es.upm.miw.dataServices.DatabaseSeederService;
+import es.upm.miw.documents.Role;
 import es.upm.miw.dtos.TokenOutputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
 
 @Service
 public class RestService {
@@ -18,7 +20,7 @@ public class RestService {
     @Autowired
     private DatabaseSeederService databaseSeederService;
 
-    @Value("${server.contextPath}")
+    @Value("${server.servlet.contextPath}")
     private String contextPath;
 
     @Value("${miw.admin.mobile}")
@@ -38,6 +40,10 @@ public class RestService {
         return Integer.parseInt(environment.getProperty("local.server.port"));
     }
 
+    private boolean isRole(Role role) {
+        return this.tokenDto != null && Arrays.stream(this.tokenDto.getRoles()).anyMatch(role::equals);
+    }
+
     public <T> RestBuilder<T> restBuilder(RestBuilder<T> restBuilder) {
         restBuilder.port(this.port());
         restBuilder.path(contextPath);
@@ -51,10 +57,31 @@ public class RestService {
         RestBuilder<Object> restBuilder = new RestBuilder<>(this.port());
         restBuilder.path(contextPath);
         if (tokenDto != null) {
-            restBuilder.basicAuth(tokenDto.getToken());
+            restBuilder.bearerAuth(tokenDto.getToken());
         }
         return restBuilder;
     }
+
+    public RestService loginAdmin() {
+        if (!this.isRole(Role.ADMIN)) {
+            this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).clazz(TokenOutputDto.class)
+                    .basicAuth(this.adminMobile, this.adminPassword)
+                    .path(contextPath).path(UserResource.USERS).path(UserResource.TOKEN)
+                    .post().log().build();
+        }
+        return this;
+    }
+
+    public RestService loginManager() {
+        if (!this.isRole(Role.MANAGER)) {
+            this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).clazz(TokenOutputDto.class)
+                    .basicAuth("666666001", "p001")
+                    .path(contextPath).path(UserResource.USERS).path(UserResource.TOKEN)
+                    .post().log().build();
+        }
+        return this;
+    }
+
 
     public RestService logout() {
         this.tokenDto = null;
@@ -64,6 +91,7 @@ public class RestService {
     public void reLoadTestDB() {
         this.databaseSeederService.resetDB();
     }
+
 
     public TokenOutputDto getTokenDto() {
         return tokenDto;

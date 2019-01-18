@@ -23,10 +23,9 @@ public class UserResource {
     private UserController userController;
 
     @PreAuthorize("authenticated")
-    @PostMapping
+    @PostMapping(value = TOKEN)
     public TokenOutputDto login(@AuthenticationPrincipal User activeUser) {
         return userController.login(activeUser.getUsername());
     }
-
 
 }

@@ -21,14 +21,14 @@ public class JwtService {
     private static final String SECRET = "clave-secreta-test";
 
 
-    public String createToken(String user, List<String> roles) {
+    public String createToken(String user, String[] roles) {
         return JWT.create()
                 .withIssuer(ISSUER)
                 .withIssuedAt(new Date())
                 .withNotBefore(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRES_IN_MILLISECOND))
                 .withClaim(USER, user)
-                .withArrayClaim(ROLES, roles.toArray(new String[0]))
+                .withArrayClaim(ROLES, roles)
                 .sign(Algorithm.HMAC256(SECRET));
     }
 

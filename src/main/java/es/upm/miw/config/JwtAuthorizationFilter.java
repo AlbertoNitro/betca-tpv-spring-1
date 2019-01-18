@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    public static final String AUTHORIZATION = "Authorization";
+    private static final String AUTHORIZATION = "Authorization";
 
     @Autowired
     private JwtService jwtService;
@@ -33,23 +33,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest req,
                                     HttpServletResponse res,
                                     FilterChain chain) throws IOException, ServletException {
-
-        LogManager.getLogger(this.getClass().getName()).debug(">>> FILTER JWT...");
-
         String authHeader = req.getHeader(AUTHORIZATION);
-
-        if (!jwtService.isBearer(authHeader)) {
-            chain.doFilter(req, res);
-            return;
+        if (jwtService.isBearer(authHeader)) {
+            LogManager.getLogger(this.getClass().getName()).debug(">>> FILTER JWT...");
+            List<GrantedAuthority> authorities = jwtService.roles(authHeader).stream()
+                    .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(jwtService.user(authHeader), null, authorities);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
-        List<GrantedAuthority> authorities = jwtService.roles(authHeader).stream()
-                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(jwtService.user(authHeader), null, authorities);
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
     }
 
