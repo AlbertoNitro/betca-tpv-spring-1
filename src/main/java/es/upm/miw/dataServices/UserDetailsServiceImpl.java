@@ -26,13 +26,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String mobile) {
-        User user = userRepository.findByMobile(mobile);
-        if (user != null) {
-            return this.userBuilder(String.valueOf(user.getMobile()), user.getPassword(), new Role[]{Role.AUTHENTICATED},
-                    user.isActive());
-        } else {
-            throw new UsernameNotFoundException("mobile not found. " + mobile);
-        }
+        User user = userRepository.findByMobile(mobile)
+                .orElseThrow(() -> new UsernameNotFoundException("mobile not found. " + mobile));
+        return this.userBuilder(user.getMobile(), user.getPassword(), new Role[]{Role.AUTHENTICATED}, user.isActive());
+
     }
 
     private org.springframework.security.core.userdetails.User userBuilder(String mobile, String password, Role[] roles,

@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 @TestConfig
 class UserRepositoryIT {
@@ -29,8 +30,7 @@ class UserRepositoryIT {
 
     @Test
     void testFindByMobile() {
-        User userBd = userRepository.findByMobile("666001000");
-        assertNotNull(userBd);
+        User userBd = userRepository.findByMobile("666001000").get();
         assertEquals("666001000", userBd.getUsername());
         assertArrayEquals(new Role[]{Role.CUSTOMER}, userBd.getRoles());
     }

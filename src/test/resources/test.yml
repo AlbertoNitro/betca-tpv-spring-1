@@ -26,15 +26,18 @@ userList:
   - mobile: 666666002
     username: u002
     password: p002
+    email: u005@gmail.com
+    dni: 66666605R
+    address: C/ TPV, 5, 1A, 28000 Madrid
     roles:
-      - CUSTOMER
+      - OPERATOR
   - mobile: 666666003
     username: u003
     password: p003
     dni: 66666603E
     address: C/ TPV, 3, 1A, 28000 Madrid
     roles:
-      - CUSTOMER
+      - OPERATOR
   - &us4
     mobile: 666666004
     username: u004
@@ -52,6 +55,6 @@ userList:
     dni: 66666605R
     address: C/ TPV, 5, 1A, 28000 Madrid
     roles:
-      - OPERATOR
+      - CUSTOMER
 
 

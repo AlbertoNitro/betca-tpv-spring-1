@@ -1,6 +1,5 @@
 package es.upm.miw.dataServices;
 
-import es.upm.miw.businessServices.Barcode;
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
 import es.upm.miw.repositories.UserRepository;
@@ -15,7 +14,6 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 
 
 @Service
@@ -33,63 +31,48 @@ public class DatabaseSeederService {
     private String password;
 
     @Value("${miw.databaseSeeder.ymlFileName:#{null}}")
-    private Optional<String> ymlFileName;
+    private String ymlFileName;
 
     @Autowired
     private UserRepository userRepository;
 
-    private long ean13;
-
     @PostConstruct
     public void constructor() {
-        if (this.userRepository.count() == 0) {
-            this.createAdminIfNotExist();
-        }
-        this.initializeEan13();
+        this.initialize();
     }
 
-    private void initializeEan13() {
-        this.ean13 = 840000000000L;
-        LogManager.getLogger(this.getClass()).warn("Code 84000000* doesn't exist... initialize");
-    }
-
-    public void initializeDB() {
-        this.createAdminIfNotExist();
-        this.createArticleVariousIfNotExist();
-        this.createCashierClosureIfNotExist();
-    }
-
-    private void createAdminIfNotExist() {
-        if (this.userRepository.findByMobile(this.mobile) == null) {
+    private void initialize() {
+        if (!this.userRepository.findByMobile(this.mobile).isPresent()) {
+            LogManager.getLogger(this.getClass()).warn("------- Create Admin -----------");
             User user = new User(this.mobile, this.username, this.password);
             user.setRoles(new Role[]{Role.ADMIN});
             this.userRepository.save(user);
         }
+        //TODO createArticleVariousIfNotExist
+        //TODO createCashierClosureIfNotExist
     }
 
-    private void createArticleVariousIfNotExist() {
+    public void deleteAllAndInitialize() {
+        LogManager.getLogger(this.getClass()).warn("------- Delete All -----------");
+        // Delete Repositories -----------------------------------------------------
+        this.userRepository.deleteAll();
+        // -------------------------------------------------------------------------
+
+        this.initialize();
     }
 
-    private void createCashierClosureIfNotExist() {
-    }
-
-    public void resetDB() {
-        this.deleteAllAndCreateAdmin();
-        if (ymlFileName.isPresent()) {
+    public void deleteAllAndInitializeAndLoadYml() {
+        this.deleteAllAndInitialize();
+        if (ymlFileName != null) {
             try {
-                this.seedDatabase(ymlFileName.get());
+                this.seedDatabase(ymlFileName);
             } catch (IOException e) {
                 LogManager.getLogger(this.getClass()).error("File " + ymlFileName + " doesn't exist or can't be opened");
             }
         } else {
             LogManager.getLogger(this.getClass()).error("File " + ymlFileName + " doesn't configured");
         }
-        this.initializeDB();
-    }
-
-    public String createEan13() {
-        this.ean13++;
-        return new Barcode().generateEan13code(this.ean13);
+        this.initialize();
     }
 
     private void seedDatabase(String ymlFileName) throws IOException {
@@ -102,17 +85,8 @@ public class DatabaseSeederService {
         this.userRepository.saveAll(tpvGraph.getUserList());
         // -----------------------------------------------------------------------
 
-        LogManager.getLogger(this.getClass()).warn("------------------------- Seed: " + ymlFileName + "-----------");
+        LogManager.getLogger(this.getClass()).warn("------- Seed: " + ymlFileName + "-----------");
     }
 
-
-    public void deleteAllAndCreateAdmin() {
-        LogManager.getLogger(this.getClass()).warn("------------------------- delete All And Create Admin-----------");
-        // Delete Repositories -----------------------------------------------------
-        this.userRepository.deleteAll();
-
-        this.initializeDB();
-        // -----------------------------------------------------------------------
-    }
 
 }

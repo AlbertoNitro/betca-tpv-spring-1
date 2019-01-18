@@ -48,7 +48,7 @@ public class RestService {
         restBuilder.port(this.port());
         restBuilder.path(contextPath);
         if (tokenDto != null) {
-            restBuilder.basicAuth(tokenDto.getToken());
+            restBuilder.bearerAuth(tokenDto.getToken());
         }
         return restBuilder;
     }
@@ -82,6 +82,16 @@ public class RestService {
         return this;
     }
 
+    public RestService loginOperator() {
+        if (!this.isRole(Role.MANAGER)) {
+            this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).clazz(TokenOutputDto.class)
+                    .basicAuth("666666005", "p005")
+                    .path(contextPath).path(UserResource.USERS).path(UserResource.TOKEN)
+                    .post().log().build();
+        }
+        return this;
+    }
+
 
     public RestService logout() {
         this.tokenDto = null;
@@ -89,7 +99,7 @@ public class RestService {
     }
 
     public void reLoadTestDB() {
-        this.databaseSeederService.resetDB();
+        this.databaseSeederService.deleteAllAndInitializeAndLoadYml();
     }
 
 

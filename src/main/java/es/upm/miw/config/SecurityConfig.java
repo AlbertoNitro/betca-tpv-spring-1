@@ -36,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
         return new JwtAuthorizationFilter(this.authenticationManager());
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
