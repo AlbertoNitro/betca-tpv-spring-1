@@ -1,4 +1,4 @@
-package miw.restControllers;
+package es.upm.miw.restControllers;
 
 import org.apache.logging.log4j.LogManager;
 import org.springframework.http.*;
@@ -90,9 +90,7 @@ public class RestBuilder<T> {
     }
 
     public RestBuilder<T> expand(Object... values) {
-        for (Object value : values) {
-            this.expandList.add(value);
-        }
+        this.expandList.addAll(Arrays.asList(values));
         return this;
     }
 
@@ -103,8 +101,12 @@ public class RestBuilder<T> {
     public RestBuilder<T> basicAuth(String nick, String pass) {
         String auth = nick + ":" + pass;
         String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
-        String authHeader = "Basic " + encodedAuth;
-        this.authorization = authHeader;
+        this.authorization = "Basic " + encodedAuth;
+        return this;
+    }
+
+    public RestBuilder<T> bearerAuth(String token) {
+        this.authorization = "Bearer " + token;
         return this;
     }
 
@@ -176,16 +178,17 @@ public class RestBuilder<T> {
     public T build() {
         ResponseEntity<T> response;
         if (log) {
-            LogManager.getLogger(this.getClass()).info(method + " " + this.path + this.headers() + "{" + this.body + "}");
+            LogManager.getLogger(this.getClass()).info(method + " " + this.port + ":" + this.path + "  "
+                    + this.headers() + "{" + this.body + "}");
         }
         if (body != null && !method.equals(HttpMethod.GET)) {
-            response = restTemplate.exchange(this.uri(), method, new HttpEntity<Object>(body, this.headers()), clazz);
+            response = restTemplate.exchange(this.uri(), method, new HttpEntity<>(body, this.headers()), clazz);
             if (log) {
                 LogManager.getLogger(this.getClass()).info(response.getStatusCode() + "==" + response.getHeaders());
             }
             return response.getBody();
         } else {
-            response = restTemplate.exchange(this.uri(), method, new HttpEntity<Object>(this.headers()), clazz);
+            response = restTemplate.exchange(this.uri(), method, new HttpEntity<>(this.headers()), clazz);
             if (log) {
                 LogManager.getLogger(this.getClass()).info(response.getStatusCode() + "==" + response.getHeaders());
             }
