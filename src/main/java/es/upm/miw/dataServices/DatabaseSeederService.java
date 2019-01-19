@@ -1,7 +1,9 @@
 package es.upm.miw.dataServices;
 
+import es.upm.miw.documents.CashierClosure;
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
+import es.upm.miw.repositories.CashierClosureRepository;
 import es.upm.miw.repositories.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 
 
 @Service
@@ -36,6 +39,9 @@ public class DatabaseSeederService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    public CashierClosureRepository cashierClosureRepository;
+
     @PostConstruct
     public void constructor() {
         this.initialize();
@@ -48,8 +54,15 @@ public class DatabaseSeederService {
             user.setRoles(new Role[]{Role.ADMIN});
             this.userRepository.save(user);
         }
-        //TODO createArticleVariousIfNotExist
-        //TODO createCashierClosureIfNotExist
+        CashierClosure cashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
+        if (cashierClosure == null) {
+            cashierClosure = new CashierClosure(BigDecimal.ZERO);
+            cashierClosure.close(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, "Initial");
+            this.cashierClosureRepository.save(cashierClosure);
+        }
+
+        // TODO createArticleVariousIfNotExist
+
     }
 
     public void deleteAllAndInitialize() {
