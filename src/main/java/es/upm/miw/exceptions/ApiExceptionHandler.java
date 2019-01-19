@@ -11,6 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler({
+            JwtException.class
+    })
+    @ResponseBody
+    public void unauthorizedRequest(HttpServletRequest request, Exception exception) {
+        //Empty. Nothing to do
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
             NotFoundException.class
@@ -22,6 +31,7 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
+            BadRequestException.class,
             org.springframework.dao.DuplicateKeyException.class,
             org.springframework.web.HttpRequestMethodNotSupportedException.class,
             org.springframework.web.bind.MethodArgumentNotValidException.class,
@@ -41,10 +51,11 @@ public class ApiExceptionHandler {
         return new ErrorMessage(exception, request.getRequestURI());
     }
 
+
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler({
-            org.springframework.security.access.AccessDeniedException.class,
-            ForbiddenException.class
+            ForbiddenException.class,
+            org.springframework.security.access.AccessDeniedException.class
     })
     @ResponseBody
     public ErrorMessage forbiddenRequest(Exception exception) {
