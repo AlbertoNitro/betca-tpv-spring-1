@@ -25,22 +25,18 @@ public class DatabaseSeederService {
     private static final String VARIOUS_CODE = "1";
 
     private static final String VARIOUS_NAME = "Varios";
-
+    @Autowired
+    public CashierClosureRepository cashierClosureRepository;
     @Value("${miw.admin.mobile}")
     private String mobile;
     @Value("${miw.admin.username}")
     private String username;
     @Value("${miw.admin.password}")
     private String password;
-
     @Value("${miw.databaseSeeder.ymlFileName:#{null}}")
     private String ymlFileName;
-
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    public CashierClosureRepository cashierClosureRepository;
 
     @PostConstruct
     public void constructor() {
@@ -57,7 +53,8 @@ public class DatabaseSeederService {
         CashierClosure cashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
         if (cashierClosure == null) {
             cashierClosure = new CashierClosure(BigDecimal.ZERO);
-            cashierClosure.close(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, "Initial");
+            cashierClosure.close(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    "Initial");
             this.cashierClosureRepository.save(cashierClosure);
         }
 
@@ -69,6 +66,7 @@ public class DatabaseSeederService {
         LogManager.getLogger(this.getClass()).warn("------- Delete All -----------");
         // Delete Repositories -----------------------------------------------------
         this.userRepository.deleteAll();
+        this.cashierClosureRepository.deleteAll();
         // -------------------------------------------------------------------------
 
         this.initialize();
