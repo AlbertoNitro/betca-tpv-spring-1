@@ -38,6 +38,7 @@ public class CashierClosure {
         this.openingDate = LocalDateTime.now();
         this.initialCash = initialCash;
         this.closureDate = null;
+        this.comment = "";
     }
 
     public void deposit(BigDecimal cash, String comment) {
@@ -52,13 +53,13 @@ public class CashierClosure {
                 + comment + ". ";
     }
 
-    public void close(BigDecimal salesCard, BigDecimal salesCash, BigDecimal usedVouchers, BigDecimal finalCash, String comment) {
+    public void close(BigDecimal salesCard, BigDecimal salesCash, BigDecimal usedVouchers,
+                      BigDecimal finalCash, BigDecimal lostCash, String comment) {
         this.salesCard = salesCard;
         this.salesCash = salesCash;
         this.usedVouchers = usedVouchers;
         this.finalCash = finalCash;
-        //TODO falta calcular el dinero total que queda despues de cerrar
-        this.lostCash = BigDecimal.ZERO;
+        this.lostCash = lostCash;
         this.comment += comment + ". ";
         this.closureDate = LocalDateTime.now();
     }

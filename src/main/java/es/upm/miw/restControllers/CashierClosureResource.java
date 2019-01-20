@@ -1,14 +1,15 @@
 package es.upm.miw.restControllers;
 
 import es.upm.miw.businessControllers.CashierClosureController;
+import es.upm.miw.dtos.CashierClosingOutputDto;
+import es.upm.miw.dtos.CashierClosureInputDto;
 import es.upm.miw.dtos.CashierLastOutputDto;
 import es.upm.miw.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('OPERATOR')")
@@ -40,5 +41,17 @@ public class CashierClosureResource {
     public CashierLastOutputDto getCashierClosureLast() {
         return cashierClosureController.readCashierClosureLast();
     }
+
+    @GetMapping(value = LAST + TOTALS)
+    public CashierClosingOutputDto readTotalsFromLast() throws BadRequestException {
+        return this.cashierClosureController.readTotalsFromLast();
+    }
+
+    @PatchMapping(value = LAST)
+    public void closeCashierClosure(@Valid @RequestBody CashierClosureInputDto cashierClosureInputDto)
+            throws BadRequestException {
+        cashierClosureController.close(cashierClosureInputDto);
+    }
+
 
 }
