@@ -2,10 +2,14 @@ package es.upm.miw.restControllers;
 
 import es.upm.miw.documents.User;
 import es.upm.miw.dtos.UserDto;
+import es.upm.miw.dtos.UserMinimumDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,5 +76,13 @@ class UserResorceIT {
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
     }
 
+    @Test
+    void testReadAll() {
+        List<UserMinimumDto> userMinimumDtoList = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<UserMinimumDto[]>()).clazz(UserMinimumDto[].class)
+                .path(UserResource.USERS)
+                .get().build());
+        assertTrue(userMinimumDtoList.size() > 1);
+    }
 
 }

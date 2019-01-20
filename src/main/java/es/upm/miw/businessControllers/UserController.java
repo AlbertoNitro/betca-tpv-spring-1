@@ -5,6 +5,7 @@ import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
 import es.upm.miw.dtos.TokenOutputDto;
 import es.upm.miw.dtos.UserDto;
+import es.upm.miw.dtos.UserMinimumDto;
 import es.upm.miw.exceptions.ForbiddenException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.UserRepository;
@@ -25,7 +26,8 @@ public class UserController {
     private JwtService jwtService;
 
     public TokenOutputDto login(String mobile) {
-        User user = userRepository.findByMobile(mobile).get();
+        User user = userRepository.findByMobile(mobile)
+                .orElseThrow(() -> new RuntimeException("Unexpected!!. Mobile not found:" + mobile));
         String[] roles = Arrays.stream(user.getRoles()).map(Role::roleName).toArray(String[]::new);
         String token = jwtService.createToken(user.getMobile(), roles);
         return new TokenOutputDto(token, user.getRoles());
@@ -34,7 +36,7 @@ public class UserController {
     public UserDto readUser(String mobile, String claimMobile, List<String> claimRoles) throws NotFoundException, ForbiddenException {
         User user = this.userRepository.findByMobile(mobile)
                 .orElseThrow(() -> new NotFoundException("User mobile:" + mobile));
-        this.authorized(claimMobile, claimRoles, mobile, Arrays.asList(user.getRoles()).stream()
+        this.authorized(claimMobile, claimRoles, mobile, Arrays.stream(user.getRoles())
                 .map(role -> role.roleName()).collect(Collectors.toList()));
         return new UserDto(user);
     }
@@ -54,5 +56,10 @@ public class UserController {
         }
         throw new ForbiddenException("User mobile (" + userMobile + ")");
     }
+
+    public List<UserMinimumDto> readAll() {
+        return this.userRepository.findAllUsers();
+    }
+
 
 }
