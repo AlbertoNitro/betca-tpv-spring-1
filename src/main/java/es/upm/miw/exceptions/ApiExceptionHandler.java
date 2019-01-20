@@ -13,7 +13,8 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({
-            JwtException.class
+            JwtException.class,
+            org.springframework.security.access.AccessDeniedException.class
     })
     @ResponseBody
     public void unauthorizedRequest(HttpServletRequest request, Exception exception) {
@@ -54,8 +55,7 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler({
-            ForbiddenException.class,
-            org.springframework.security.access.AccessDeniedException.class
+            ForbiddenException.class
     })
     @ResponseBody
     public ErrorMessage forbiddenRequest(Exception exception) {
