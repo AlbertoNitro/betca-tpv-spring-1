@@ -12,8 +12,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findByMobile(String mobile);
 
-    @Query(value = "{'roles' : 'CUSTOMER'}", fields = "{ '_id' : 0, 'mobile' : 1, 'username' : 1}")
-    List<UserMinimumDto> findCustomerAll();
+    @Query(value = "{}", fields = "{ '_id' : 0, 'mobile' : 1, 'username' : 1}")
+    List<UserMinimumDto> findAllUsers();
 
 
 }

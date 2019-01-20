@@ -37,7 +37,7 @@ class UserRepositoryIT {
 
     @Test
     void testFindCustomerAll() {
-        List<UserMinimumDto> userList = userRepository.findCustomerAll();
+        List<UserMinimumDto> userList = userRepository.findAllUsers();
     }
 
     @AfterEach
