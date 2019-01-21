@@ -134,8 +134,8 @@ public class Article {
         private Article article;
 
         private Builder(String code) {
-            this.article.code = code;
             this.article = new Article();
+            this.article.code = code;
             this.article.registrationDate = LocalDateTime.now();
             this.article.discontinued = false;
             this.article.stock = 0;
