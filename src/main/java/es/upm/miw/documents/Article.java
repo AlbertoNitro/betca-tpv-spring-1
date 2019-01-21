@@ -31,6 +31,7 @@ public class Article {
     private Provider provider;
 
     public Article() {
+        this.registrationDate = LocalDateTime.now();
     }
 
     public static Builder builder(String code) {
@@ -39,6 +40,10 @@ public class Article {
 
     public String getCode() {
         return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getReference() {
@@ -134,9 +139,8 @@ public class Article {
         private Article article;
 
         private Builder(String code) {
-            this.article.code = code;
             this.article = new Article();
-            this.article.registrationDate = LocalDateTime.now();
+            this.article.code = code;
             this.article.discontinued = false;
             this.article.stock = 0;
             this.article.tax = Tax.GENERAL;

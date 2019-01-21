@@ -102,6 +102,10 @@ public class RestService {
         this.databaseSeederService.deleteAllAndInitializeAndLoadYml();
     }
 
+    public void deleteDB() {
+        this.databaseSeederService.deleteAllAndInitialize();
+    }
+
 
     public TokenOutputDto getTokenDto() {
         return tokenDto;
