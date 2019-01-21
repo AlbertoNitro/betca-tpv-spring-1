@@ -5,7 +5,7 @@ public enum Role {
 
     private int level;
 
-    private Role(int level) {
+    Role(int level) {
         this.level = level;
     }
 

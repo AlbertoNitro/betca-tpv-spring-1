@@ -37,7 +37,7 @@ public class UserController {
         User user = this.userRepository.findByMobile(mobile)
                 .orElseThrow(() -> new NotFoundException("User mobile:" + mobile));
         this.authorized(claimMobile, claimRoles, mobile, Arrays.stream(user.getRoles())
-                .map(role -> role.roleName()).collect(Collectors.toList()));
+                .map(Role::roleName).collect(Collectors.toList()));
         return new UserDto(user);
     }
 
