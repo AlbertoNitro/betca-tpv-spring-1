@@ -60,7 +60,6 @@ userList:
 # Providers
 providerList:
   - &pr1
-    id: provider1
     company: company-p1
     nif: 12345678b
     address: C/ TPV-provider, 2, 1A, 28000 Madrid
@@ -69,14 +68,12 @@ providerList:
     note: provider 1
     active: true
   - &pr2
-    id: provider2
     company: company-p2
     address: C/ TPV-provider, 2, 1A, 28000 Madrid
     phone: 9166666601
     note: provider 2
     active: false
   - &pr3
-    id: provider3
     company: company-p3
     address: C/ TPV-provider, 2, 1A, 28000 Madrid
     phone: 9166666601
@@ -92,7 +89,6 @@ articleList:
     retailPrice: 20
     stock: 10
     tax: GENERAL
-    registrationDate: 2018-01-01
     discontinued: false
     provider: *pr1
   - &ar2
@@ -102,7 +98,6 @@ articleList:
     retailPrice: 27.8
     stock: 10
     tax: FREE
-    registrationDate: 2018-01-01
     discontinued: false
     provider: *pr1
   - &ar3
@@ -112,7 +107,6 @@ articleList:
     retailPrice: 10.12
     stock: 10
     tax: GENERAL
-    registrationDate: 2018-01-01
     discontinued: false
     provider: *pr2
   - &ar4
@@ -121,7 +115,6 @@ articleList:
     retailPrice: 0.23
     stock: 10
     tax: GENERAL
-    registrationDate: 2018-01-01
     discontinued: false
     provider: *pr2
   - &ar5
@@ -131,7 +124,6 @@ articleList:
     retailPrice: 2
     stock: 10
     tax: GENERAL
-    registrationDate: 2018-01-01
     discontinued: false
     provider: *pr3
   - &ar6
@@ -141,7 +133,6 @@ articleList:
     retailPrice: 8
     stock: 10
     tax: GENERAL
-    registrationDate: 2018-01-01
     discontinued: false
     provider: *pr3
   - &ar7
@@ -152,7 +143,4 @@ articleList:
     stock: 10
     tax: GENERAL
     discontinued: false
-    registrationDate: 2018-01-01
     provider: *pr3
-
-
