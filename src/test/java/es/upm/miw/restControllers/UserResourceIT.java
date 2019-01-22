@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ApiTestConfig
-class UserResorceIT {
+class UserResourceIT {
 
     @Autowired
     private RestService restService;

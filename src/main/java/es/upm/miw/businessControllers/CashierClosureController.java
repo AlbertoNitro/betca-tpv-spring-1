@@ -46,9 +46,8 @@ public class CashierClosureController {
         BigDecimal finalCash = lastCashierClosure.getInitialCash().add(lastCashierClosure.getSalesCash())
                 .add(lastCashierClosure.getDeposit()).subtract(lastCashierClosure.getWithdrawal());
 
-        CashierClosingOutputDto cashierClosingOutputDto = new CashierClosingOutputDto(lastCashierClosure.getSalesCard(),
-                finalCash, lastCashierClosure.getUsedVouchers(), salesTotal);
-        return cashierClosingOutputDto;
+        return new CashierClosingOutputDto(lastCashierClosure.getSalesCard(), finalCash,
+                lastCashierClosure.getUsedVouchers(), salesTotal);
     }
 
     public void close(CashierClosureInputDto cashierClosureInputDto) throws BadRequestException {

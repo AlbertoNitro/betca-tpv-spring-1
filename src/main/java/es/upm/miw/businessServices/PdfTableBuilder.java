@@ -13,11 +13,11 @@ public class PdfTableBuilder {
 
     private static final int FONT_SIZE_EMPHASIZEDD = 10;
 
-    private PdfBuilder pdfBuilder;
+    private final PdfBuilder pdfBuilder;
 
-    private Document document;
+    private final Document document;
 
-    private Table table;
+    private final Table table;
 
 
     PdfTableBuilder(PdfBuilder pdfbuilder, Document document, float... widths) {

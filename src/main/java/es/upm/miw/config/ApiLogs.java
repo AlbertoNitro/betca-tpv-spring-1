@@ -23,7 +23,7 @@ public class ApiLogs {
         LogManager.getLogger(jp.getSignature().getDeclaringTypeName()).info("------------------------- o -------------------------");
         StringBuilder log = new StringBuilder(jp.getSignature().getName() + " >>>");
         for (Object arg : jp.getArgs()) {
-            log.append("\n   ARG: " + arg);
+            log.append("\n   ARG: ").append(arg);
         }
         LogManager.getLogger(jp.getSignature().getDeclaringTypeName()).info(log);
     }

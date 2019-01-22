@@ -19,7 +19,7 @@ public class Encrypting {
 
     public static final String SHA512 = "SHA-512";
 
-    private String algorithm;
+    private final String algorithm;
 
     public Encrypting(String algorithm) {
         this.algorithm = algorithm;

@@ -16,9 +16,9 @@ public class Order {
     private String description;
 
     @DBRef
-    private Provider provider;
+    private final Provider provider;
 
-    private LocalDateTime openingDate;
+    private final LocalDateTime openingDate;
 
     private LocalDateTime closingDate;
 

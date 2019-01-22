@@ -20,7 +20,7 @@ public class Ticket {
     @Id
     private String id;
 
-    private LocalDateTime creationDate;
+    private final LocalDateTime creationDate;
 
     private String reference;
 

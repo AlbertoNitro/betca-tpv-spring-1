@@ -12,9 +12,9 @@ public class CashierClosure {
     @Id
     private String id;
 
-    private LocalDateTime openingDate;
+    private final LocalDateTime openingDate;
 
-    private BigDecimal initialCash;
+    private final BigDecimal initialCash;
 
     private BigDecimal salesCard;
 
@@ -74,9 +74,6 @@ public class CashierClosure {
     }
 
     public void close(BigDecimal finalCard, BigDecimal finalCash, String comment) {
-        this.salesCard = salesCard;
-        this.salesCash = salesCash;
-        this.usedVouchers = usedVouchers;
         this.lostCard = this.salesCard.subtract(finalCard);
         this.lostCash = this.initialCash.add(this.salesCash).add(this.deposit)
                 .subtract(this.withdrawal).subtract(finalCash);

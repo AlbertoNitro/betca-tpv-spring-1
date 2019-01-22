@@ -33,13 +33,13 @@ public class PdfBuilder {
     private static final int QR_CODE_PERCENT = 50;
     private static final int IMAGE_WIDTH = 80;
 
-    private static final int TERMIC_FONT_SIZE = 7;
-    private static final int TERMIC_FONT_SIZE_EMPHASIZEDD = 10;
-    private static final int TERMIC_MARGIN_LEFT = 10;
-    private static final int TERMIC_MARGIN_RIGHT = 14;
-    private static final int TERMIC_MARGIN_TOP_BOTTOM = 12;
-    private static final float TERMIC_PAGE_WIDHT = 227;
-    private static final float TERMIC_PAGE_HEIGHT = 800;
+    private static final int THERMAL_FONT_SIZE = 7;
+    private static final int THERMAL_FONT_SIZE_EMPHASIZED = 10;
+    private static final int THERMAL_MARGIN_LEFT = 10;
+    private static final int THERMAL_MARGIN_RIGHT = 14;
+    private static final int THERMAL_MARGIN_TOP_BOTTOM = 12;
+    private static final float THERMAL_PAGE_WIDTH = 227;
+    private static final float THERMAL_PAGE_HEIGHT = 800;
 
     private String filename;
 
@@ -47,9 +47,9 @@ public class PdfBuilder {
 
     public PdfBuilder(String path) throws PdfException {
         this.filename = System.getProperty(USER_HOME) + path + PDF_FILE_EXT;
-        this.prepareDocument(new PageSize(TERMIC_PAGE_WIDHT, TERMIC_PAGE_HEIGHT));
-        this.document.setMargins(TERMIC_MARGIN_TOP_BOTTOM, TERMIC_MARGIN_RIGHT, TERMIC_MARGIN_TOP_BOTTOM, TERMIC_MARGIN_LEFT);
-        this.document.setFontSize(TERMIC_FONT_SIZE);
+        this.prepareDocument(new PageSize(THERMAL_PAGE_WIDTH, THERMAL_PAGE_HEIGHT));
+        this.document.setMargins(THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_RIGHT, THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_LEFT);
+        this.document.setFontSize(THERMAL_FONT_SIZE);
     }
 
     private void prepareDocument(PageSize pageSize) throws PdfException {
@@ -69,7 +69,7 @@ public class PdfBuilder {
     }
 
     public PdfBuilder paragraphEmphasized(String text) {
-        this.document.add(new Paragraph(text).setBold().setFontSize(TERMIC_FONT_SIZE_EMPHASIZEDD));
+        this.document.add(new Paragraph(text).setBold().setFontSize(THERMAL_FONT_SIZE_EMPHASIZED));
         return this;
     }
 

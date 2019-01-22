@@ -13,13 +13,13 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ApiTestConfig
-public class TicketResourceIT {
+class TicketResourceIT {
 
     @Autowired
     private RestService restService;
 
     @Test
-    public void testCreateTicket() {
+    void testCreateTicket() {
         ShoppingDto shoppingDto =
                 new ShoppingDto("1", "", new BigDecimal("100.00"), 1, BigDecimal.ZERO,
                         new BigDecimal("100.00"), true);
@@ -32,7 +32,7 @@ public class TicketResourceIT {
     }
 
     @Test
-    public void testCreateReserve() {
+    void testCreateReserve() {
         ShoppingDto shoppingDto =
                 new ShoppingDto("1", "", new BigDecimal("100.00"), 1, BigDecimal.ZERO,
                         new BigDecimal("100.00"), false);
@@ -46,7 +46,7 @@ public class TicketResourceIT {
     }
 
     @Test
-    public void testCreateReserveNonCash() {
+    void testCreateReserveNonCash() {
         ShoppingDto shoppingDto =
                 new ShoppingDto("1", "", new BigDecimal("100.00"), 1, BigDecimal.ZERO,
                         new BigDecimal("100.00"), true);

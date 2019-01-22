@@ -94,10 +94,6 @@ public class RestBuilder<T> {
         return this;
     }
 
-    public RestBuilder<T> basicAuth(String token) {
-        return basicAuth(token, "");
-    }
-
     public RestBuilder<T> basicAuth(String nick, String pass) {
         String auth = nick + ":" + pass;
         String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));

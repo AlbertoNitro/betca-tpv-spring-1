@@ -13,13 +13,13 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ApiTestConfig
-public class CashierClosureResourceIT {
+class CashierClosureResourceIT {
 
     @Autowired
     private RestService restService;
 
     @Test
-    public void testGetCashierClosureLast() {
+    void testGetCashierClosureLast() {
         CashierLastOutputDto cashierClosureLastDto = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<CashierLastOutputDto>()).clazz(CashierLastOutputDto.class)
                 .path(CashierClosureResource.CASHIER_CLOSURES).path(CashierClosureResource.LAST)
@@ -28,7 +28,7 @@ public class CashierClosureResourceIT {
     }
 
     @Test
-    public void testGetCashierClosureLastTotals() {
+    void testGetCashierClosureLastTotals() {
         this.restService.loginAdmin().restBuilder().path(CashierClosureResource.CASHIER_CLOSURES)
                 .post().build();
         CashierClosingOutputDto cashierClosingOutputDto = this.restService.loginAdmin()
@@ -45,7 +45,7 @@ public class CashierClosureResourceIT {
     }
 
     @Test
-    public void testGetCashierClosureLastTotalsCashierClosed() {
+    void testGetCashierClosureLastTotalsCashierClosed() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 this.restService.loginAdmin().restBuilder()
                         .path(CashierClosureResource.CASHIER_CLOSURES).path(CashierClosureResource.LAST)
