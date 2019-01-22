@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestConfig
-public class CashierClosureControllerIT {
+class CashierClosureControllerIT {
 
     @Autowired
     private CashierClosureController cashierClosureController;
@@ -19,7 +19,7 @@ public class CashierClosureControllerIT {
     private DatabaseSeederService databaseSeederService;
 
     @Test
-    public void testReadCashierClosureLast() {
+    void testReadCashierClosureLast() {
         CashierLastOutputDto cashierLastOutputDto = cashierClosureController.readCashierClosureLast();
         assertNotNull(cashierLastOutputDto);
         assertTrue(cashierLastOutputDto.isClosed());

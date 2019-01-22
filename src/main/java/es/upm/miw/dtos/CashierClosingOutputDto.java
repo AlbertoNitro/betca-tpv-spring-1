@@ -17,9 +17,9 @@ public class CashierClosingOutputDto {
         // Empty for framework
     }
 
-    public CashierClosingOutputDto(BigDecimal totalCash, BigDecimal totalCard, BigDecimal totalVoucher, BigDecimal salesTotal) {
-        this.totalCash = totalCash;
+    public CashierClosingOutputDto(BigDecimal totalCard, BigDecimal totalCash, BigDecimal totalVoucher, BigDecimal salesTotal) {
         this.totalCard = totalCard;
+        this.totalCash = totalCash;
         this.totalVoucher = totalVoucher;
         this.salesTotal = salesTotal;
     }

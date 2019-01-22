@@ -23,7 +23,7 @@ public class ApiLogs {
         LogManager.getLogger(jp.getSignature().getDeclaringTypeName()).info("------------------------- o -------------------------");
         StringBuilder log = new StringBuilder(jp.getSignature().getName() + " >>>");
         for (Object arg : jp.getArgs()) {
-            log.append("\n   ARG: " + arg);
+            log.append("\n   ARG: ").append(arg);
         }
         LogManager.getLogger(jp.getSignature().getDeclaringTypeName()).info(log);
     }
@@ -38,8 +38,8 @@ public class ApiLogs {
             resultAsString = result.toString();
         }
         String log = "<<< Return << " + jp.getSignature().getName() + ": " + resultAsString;
-        if (log.length() > 2000) {
-            log = log.substring(0, 2000) + ".... (+" + log.length() + " characters)";
+        if (log.length() > 1000) {
+            log = log.substring(0, 1000) + ".... (+" + log.length() + " characters)";
         }
         LogManager.getLogger(jp.getSignature().getDeclaringTypeName()).info(log);
     }

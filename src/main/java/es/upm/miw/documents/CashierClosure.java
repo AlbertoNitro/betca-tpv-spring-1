@@ -12,23 +12,25 @@ public class CashierClosure {
     @Id
     private String id;
 
-    private LocalDateTime openingDate;
+    private final LocalDateTime openingDate;
 
-    private BigDecimal initialCash;
-
-    private BigDecimal usedVouchers;
+    private final BigDecimal initialCash;
 
     private BigDecimal salesCard;
 
     private BigDecimal salesCash;
 
+    private BigDecimal usedVouchers;
+
     private BigDecimal deposit;
 
     private BigDecimal withdrawal;
 
-    private BigDecimal finalCash;
+    private BigDecimal lostCard;
 
     private BigDecimal lostCash;
+
+    private BigDecimal finalCash;
 
     private String comment;
 
@@ -37,8 +39,26 @@ public class CashierClosure {
     public CashierClosure(BigDecimal initialCash) {
         this.openingDate = LocalDateTime.now();
         this.initialCash = initialCash;
-        this.closureDate = null;
+        this.salesCard = BigDecimal.ZERO;
+        this.salesCash = BigDecimal.ZERO;
+        this.usedVouchers = BigDecimal.ZERO;
+        this.deposit = BigDecimal.ZERO;
+        this.withdrawal = BigDecimal.ZERO;
         this.comment = "";
+        this.closureDate = null;
+
+    }
+
+    public void card(BigDecimal card) {
+        this.salesCard = this.salesCard.add(card);
+    }
+
+    public void cash(BigDecimal cash) {
+        this.salesCash = this.salesCash.add(cash);
+    }
+
+    public void voucher(BigDecimal voucher) {
+        this.usedVouchers = this.usedVouchers.add(voucher);
     }
 
     public void deposit(BigDecimal cash, String comment) {
@@ -53,13 +73,11 @@ public class CashierClosure {
                 + comment + ". ";
     }
 
-    public void close(BigDecimal salesCard, BigDecimal salesCash, BigDecimal usedVouchers,
-                      BigDecimal finalCash, BigDecimal lostCash, String comment) {
-        this.salesCard = salesCard;
-        this.salesCash = salesCash;
-        this.usedVouchers = usedVouchers;
+    public void close(BigDecimal finalCard, BigDecimal finalCash, String comment) {
+        this.lostCard = this.salesCard.subtract(finalCard);
+        this.lostCash = this.initialCash.add(this.salesCash).add(this.deposit)
+                .subtract(this.withdrawal).subtract(finalCash);
         this.finalCash = finalCash;
-        this.lostCash = lostCash;
         this.comment += comment + ". ";
         this.closureDate = LocalDateTime.now();
     }
@@ -72,6 +90,14 @@ public class CashierClosure {
         return id;
     }
 
+    public LocalDateTime getOpeningDate() {
+        return openingDate;
+    }
+
+    public BigDecimal getInitialCash() {
+        return initialCash;
+    }
+
     public BigDecimal getDeposit() {
         return deposit;
     }
@@ -80,40 +106,36 @@ public class CashierClosure {
         return withdrawal;
     }
 
-    public BigDecimal getInitialCash() {
-        return initialCash;
-    }
-
-    public BigDecimal getUsedVouchers() {
-        return usedVouchers;
+    public BigDecimal getSalesCard() {
+        return salesCard;
     }
 
     public BigDecimal getSalesCash() {
         return salesCash;
     }
 
-    public BigDecimal getSalesCard() {
-        return salesCard;
+    public BigDecimal getUsedVouchers() {
+        return usedVouchers;
     }
 
-    public BigDecimal getFinalCash() {
-        return finalCash;
+    public BigDecimal getLostCard() {
+        return lostCard;
     }
 
     public BigDecimal getLostCash() {
         return lostCash;
     }
 
-    public LocalDateTime getOpeningDate() {
-        return openingDate;
-    }
-
-    public LocalDateTime getClosureDate() {
-        return closureDate;
+    public BigDecimal getFinalCash() {
+        return finalCash;
     }
 
     public String getComment() {
         return comment;
+    }
+
+    public LocalDateTime getClosureDate() {
+        return closureDate;
     }
 
     @Override
@@ -132,12 +154,13 @@ public class CashierClosure {
                 "id='" + id + '\'' +
                 ", openingDate=" + openingDate +
                 ", initialCash=" + initialCash +
-                ", usedVouchers=" + usedVouchers +
                 ", salesCard=" + salesCard +
                 ", salesCash=" + salesCash +
+                ", usedVouchers=" + usedVouchers +
                 ", deposit=" + deposit +
                 ", withdrawal=" + withdrawal +
-                ", finalCash=" + finalCash +
+                ", lostCard=" + lostCard +
+                ", lostCash=" + lostCash +
                 ", comment='" + comment + '\'' +
                 ", closureDate=" + closureDate +
                 '}';

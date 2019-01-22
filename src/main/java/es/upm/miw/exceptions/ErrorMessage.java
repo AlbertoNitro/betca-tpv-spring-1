@@ -2,11 +2,11 @@ package es.upm.miw.exceptions;
 
 public class ErrorMessage {
 
-    private String error;
+    private final String error;
 
-    private String message;
+    private final String message;
 
-    private String path;
+    private final String path;
 
     public ErrorMessage(Exception exception, String path) {
         this.error = exception.getClass().getSimpleName();

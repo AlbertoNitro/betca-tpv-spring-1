@@ -118,7 +118,7 @@ public class Provider {
     }
 
     public static class Builder {
-        private Provider provider;
+        private final Provider provider;
 
         private Builder(String company) {
             this.provider = new Provider();
