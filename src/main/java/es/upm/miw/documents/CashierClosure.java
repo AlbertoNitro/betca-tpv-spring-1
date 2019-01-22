@@ -12,9 +12,9 @@ public class CashierClosure {
     @Id
     private String id;
 
-    private final LocalDateTime openingDate;
+    private LocalDateTime openingDate;
 
-    private final BigDecimal initialCash;
+    private BigDecimal initialCash;
 
     private BigDecimal salesCard;
 
