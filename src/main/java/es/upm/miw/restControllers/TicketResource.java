@@ -23,7 +23,7 @@ public class TicketResource {
     @Autowired
     private TicketController ticketController;
 
-    @PostMapping(produces = {"application/pdf; charset=UTF-8", "application/json"})
+    @PostMapping(produces = {"application/pdf", "application/json"})
     public byte[] createTicket(@Valid @RequestBody TicketCreationInputDto ticketCreationDto)
             throws NotFoundException, PdfException, BadRequestException {
         return this.ticketController.createTicketAndPdf(ticketCreationDto);

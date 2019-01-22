@@ -52,9 +52,6 @@ public class Ticket {
         this.id = new SimpleDateFormat(DATE_FORMAT).format(new Date()) + idOfDay;
         this.shoppingList = shoppingList;
         this.user = user;
-        if (user == null && this.getTotal().compareTo(this.getTotalCommited()) != 0) {
-            throw new BadRequestException("Material pendiente sin usuario");
-        }
         this.addPay(card, cash, voucher);
     }
 
