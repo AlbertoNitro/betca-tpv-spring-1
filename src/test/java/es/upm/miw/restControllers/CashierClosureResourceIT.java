@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ApiTestConfig
-public class CashierClosureIT {
+public class CashierClosureResourceIT {
 
     @Autowired
     private RestService restService;

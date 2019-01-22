@@ -1,12 +1,12 @@
 package es.upm.miw.documents;
 
 import es.upm.miw.businessServices.Encrypting;
+import es.upm.miw.exceptions.BadRequestException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -26,9 +26,11 @@ public class Ticket {
 
     private Shopping[] shoppingList;
 
-    private BigDecimal cashDeposited;
+    private BigDecimal cash;
 
-    private BigDecimal debt;
+    private BigDecimal card;
+
+    private BigDecimal voucher;
 
     private String note;
 
@@ -38,16 +40,43 @@ public class Ticket {
     public Ticket() {
         this.creationDate = LocalDateTime.now();
         this.reference = new Encrypting().encryptInBase64UrlSafe();
-        this.debt = BigDecimal.ZERO;
         this.note = "";
+        this.card = BigDecimal.ZERO;
+        this.cash = BigDecimal.ZERO;
+        this.voucher = BigDecimal.ZERO;
     }
 
-    public Ticket(int idOfday, BigDecimal cashDeposited, Shopping[] shoppingList, User user) {
+    public Ticket(int idOfDay, BigDecimal card, BigDecimal cash, BigDecimal voucher, Shopping[] shoppingList, User user)
+            throws BadRequestException {
         this();
-        this.id = new SimpleDateFormat(DATE_FORMAT).format(new Date()) + idOfday;
-        this.setCashDeposited(cashDeposited);
+        this.id = new SimpleDateFormat(DATE_FORMAT).format(new Date()) + idOfDay;
         this.shoppingList = shoppingList;
         this.user = user;
+        if (user == null && this.getTotal().compareTo(this.getTotalCommited()) != 0) {
+            throw new BadRequestException("Material pendiente sin usuario");
+        }
+        this.addPay(card, cash, voucher);
+    }
+
+    public void addPay(BigDecimal card, BigDecimal cash, BigDecimal voucher) throws BadRequestException {
+        this.card = this.card.add(card);
+        this.cash = this.cash.add(cash);
+        this.voucher = this.voucher.add(voucher);
+        if (this.pay().compareTo(this.getTotalCommited()) < 0) {
+            throw new BadRequestException("Dinero inferior al material entregado");
+        }
+    }
+
+    public BigDecimal pay() {
+        return this.cash.add(this.card).add(this.voucher);
+    }
+
+    public BigDecimal debt() {
+        return this.getTotal().subtract(this.pay());
+    }
+
+    public boolean isDebt() {
+        return this.pay().compareTo(this.getTotal()) < 0;
     }
 
     public String getId() {
@@ -90,24 +119,16 @@ public class Ticket {
         this.reference = reference;
     }
 
-    public BigDecimal getCashDeposited() {
-        return cashDeposited;
+    public BigDecimal getCash() {
+        return cash;
     }
 
-    public void setCashDeposited(BigDecimal cashDeposited) {
-        this.cashDeposited = cashDeposited.setScale(2, RoundingMode.HALF_UP);
+    public BigDecimal getCard() {
+        return card;
     }
 
-    public BigDecimal getDebt() {
-        return debt;
-    }
-
-    public void setDebt(BigDecimal debt) {
-        if (debt.signum() == -1) {
-            this.debt = BigDecimal.ZERO;
-        } else {
-            this.debt = debt;
-        }
+    public BigDecimal getVoucher() {
+        return voucher;
     }
 
     public String getNote() {
@@ -148,14 +169,16 @@ public class Ticket {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Ticket[" + id + ": created=" + creationDate + ", reference=" + reference + ", shoppingList="
-                + Arrays.toString(shoppingList) + ", cashDeposited=" + cashDeposited + ", debt: " + this.debt + " , note: " + this.note);
-        if (user != null) {
-            stringBuilder.append(", userId=" + user.getMobile());
-        }
-        stringBuilder.append("]");
-        return stringBuilder.toString();
+        return "Ticket{" +
+                "id='" + id + '\'' +
+                ", creationDate=" + creationDate +
+                ", reference='" + reference + '\'' +
+                ", shoppingList=" + Arrays.toString(shoppingList) +
+                ", cash=" + cash +
+                ", card=" + card +
+                ", voucher=" + voucher +
+                ", note='" + note + '\'' +
+                ", user=" + user +
+                '}';
     }
-
 }

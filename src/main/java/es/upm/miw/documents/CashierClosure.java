@@ -37,8 +37,27 @@ public class CashierClosure {
     public CashierClosure(BigDecimal initialCash) {
         this.openingDate = LocalDateTime.now();
         this.initialCash = initialCash;
-        this.closureDate = null;
+        this.usedVouchers = BigDecimal.ZERO;
+        this.salesCard = BigDecimal.ZERO;
+        this.salesCash = BigDecimal.ZERO;
+        this.deposit = BigDecimal.ZERO;
+        this.withdrawal = BigDecimal.ZERO;
+        this.lostCash = BigDecimal.ZERO;
         this.comment = "";
+        this.closureDate = null;
+
+    }
+
+    public void voucher(BigDecimal voucher) {
+        this.usedVouchers = this.usedVouchers.add(voucher);
+    }
+
+    public void card(BigDecimal card) {
+        this.salesCard = this.salesCard.add(card);
+    }
+
+    public void cash(BigDecimal cash) {
+        this.salesCash = this.salesCash.add(cash);
     }
 
     public void deposit(BigDecimal cash, String comment) {
@@ -53,6 +72,7 @@ public class CashierClosure {
                 + comment + ". ";
     }
 
+    // TODO cambiar, solo pedir final cash y final card
     public void close(BigDecimal salesCard, BigDecimal salesCash, BigDecimal usedVouchers,
                       BigDecimal finalCash, BigDecimal lostCash, String comment) {
         this.salesCard = salesCard;
