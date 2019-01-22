@@ -14,7 +14,7 @@ public class Voucher {
 
     private BigDecimal value;
 
-    private final LocalDateTime creationDate;
+    private LocalDateTime creationDate;
 
     private LocalDateTime dateOfUse;
 

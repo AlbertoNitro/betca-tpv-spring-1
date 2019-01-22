@@ -18,7 +18,7 @@ public class User {
     @Indexed(unique = true)
     private String mobile;
 
-    private final LocalDateTime registrationDate;
+    private LocalDateTime registrationDate;
 
     private String username;
 
