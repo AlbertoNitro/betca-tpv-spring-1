@@ -21,7 +21,12 @@ public class DatabaseSeederService {
     private static final String VARIOUS_CODE = "1";
 
     private static final String VARIOUS_NAME = "Varios";
-
+    @Autowired
+    public TicketRepository ticketRepository;
+    @Autowired
+    public InvoiceRepository invoiceRepository;
+    @Autowired
+    public CashierClosureRepository cashierClosureRepository;
     @Value("${miw.admin.mobile}")
     private String mobile;
     @Value("${miw.admin.username}")
@@ -30,28 +35,14 @@ public class DatabaseSeederService {
     private String password;
     @Value("${miw.databaseSeeder.ymlFileName:#{null}}")
     private String ymlFileName;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private VoucherRepository voucherRepository;
-
     @Autowired
     private ProviderRepository providerRepository;
-
     @Autowired
     private ArticleRepository articleRepository;
-
-    @Autowired
-    public TicketRepository ticketRepository;
-
-    @Autowired
-    public InvoiceRepository invoiceRepository;
-
-    @Autowired
-    public CashierClosureRepository cashierClosureRepository;
-
     @Autowired
     private BudgetRepository budgetRepository;
 
@@ -85,8 +76,7 @@ public class DatabaseSeederService {
         CashierClosure cashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
         if (cashierClosure == null) {
             cashierClosure = new CashierClosure(BigDecimal.ZERO);
-            cashierClosure.close(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    "Initial");
+            cashierClosure.close(BigDecimal.ZERO, BigDecimal.ZERO, "Initial");
             this.cashierClosureRepository.save(cashierClosure);
         }
         if (!this.articleRepository.existsById(VARIOUS_CODE)) {

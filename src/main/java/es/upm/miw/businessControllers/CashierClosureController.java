@@ -40,15 +40,14 @@ public class CashierClosureController {
         if (lastCashierClosure.isClosed()) {
             throw new BadRequestException("Cashier already closed: " + lastCashierClosure.getId());
         }
-        CashierClosingOutputDto cashierClosingOutputDto = new CashierClosingOutputDto();
-        //TODO Calcular total vouches de la ultima caja
-        cashierClosingOutputDto.setTotalVoucher(BigDecimal.ZERO);
-        //TODO Calcular total sales card de la ultima caja
-        cashierClosingOutputDto.setTotalCard(BigDecimal.ZERO);
-        //TODO Calcular total sales cash de la ultima caja
-        cashierClosingOutputDto.setTotalCash(BigDecimal.ZERO);
-        //TODO Calcular total sales de la ultima caja
-        cashierClosingOutputDto.setSalesTotal(BigDecimal.ZERO);
+        BigDecimal salesTotal = lastCashierClosure.getSalesCard().add(lastCashierClosure.getSalesCash())
+                .add(lastCashierClosure.getUsedVouchers());
+
+        BigDecimal finalCash = lastCashierClosure.getInitialCash().add(lastCashierClosure.getSalesCash())
+                .add(lastCashierClosure.getDeposit()).subtract(lastCashierClosure.getWithdrawal());
+
+        CashierClosingOutputDto cashierClosingOutputDto = new CashierClosingOutputDto(lastCashierClosure.getSalesCard(),
+                finalCash, lastCashierClosure.getUsedVouchers(), salesTotal);
         return cashierClosingOutputDto;
     }
 
@@ -58,9 +57,8 @@ public class CashierClosureController {
             throw new BadRequestException("Cashier already closed: " + lastCashierClosure.getId());
         }
         LocalDateTime cashierOpenedDate = cashierClosureRepository.findFirstByOrderByOpeningDateDesc().getOpeningDate();
-        //TODO falta calcular el dinero total que queda despues de cerrar, con perdidas y todo lo necesario
-        lastCashierClosure.close(cashierClosureInputDto.getSalesCard(), BigDecimal.ZERO, BigDecimal.ZERO,
-                cashierClosureInputDto.getFinalCash(), BigDecimal.ZERO, cashierClosureInputDto.getComment());
+        lastCashierClosure.close(cashierClosureInputDto.getSalesCard(), cashierClosureInputDto.getFinalCash(),
+                cashierClosureInputDto.getComment());
         this.cashierClosureRepository.save(lastCashierClosure);
     }
 
