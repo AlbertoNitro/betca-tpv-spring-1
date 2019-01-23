@@ -1,8 +1,8 @@
 package es.upm.miw.restControllers;
 
-import es.upm.miw.dtos.CashierClosingOutputDto;
 import es.upm.miw.dtos.CashierClosureInputDto;
 import es.upm.miw.dtos.CashierLastOutputDto;
+import es.upm.miw.dtos.CashierStatusOutputDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,12 +31,12 @@ class CashierClosureResourceIT {
     void testGetCashierClosureLastTotals() {
         this.restService.loginAdmin().restBuilder().path(CashierClosureResource.CASHIER_CLOSURES)
                 .post().build();
-        CashierClosingOutputDto cashierClosingOutputDto = this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<CashierClosingOutputDto>()).clazz(CashierClosingOutputDto.class)
+        CashierStatusOutputDto cashierStatusOutputDto = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<CashierStatusOutputDto>()).clazz(CashierStatusOutputDto.class)
                 .path(CashierClosureResource.CASHIER_CLOSURES).path(CashierClosureResource.LAST)
                 .path(CashierClosureResource.TOTALS)
                 .get().build();
-        assertNotNull(cashierClosingOutputDto);
+        assertNotNull(cashierStatusOutputDto);
         CashierClosureInputDto cashierClosureInputDto = new CashierClosureInputDto(BigDecimal.ZERO, BigDecimal.ZERO, "");
         this.restService.loginAdmin().restBuilder()
                 .path(CashierClosureResource.CASHIER_CLOSURES).path(CashierClosureResource.LAST)

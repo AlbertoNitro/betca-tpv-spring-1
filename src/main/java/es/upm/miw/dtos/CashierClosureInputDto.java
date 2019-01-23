@@ -6,10 +6,10 @@ import java.math.BigDecimal;
 public class CashierClosureInputDto {
 
     @NotNull
-    private BigDecimal finalCash;
+    private BigDecimal finalCard;
 
     @NotNull
-    private BigDecimal salesCard;
+    private BigDecimal finalCash;
 
     private String comment;
 
@@ -17,9 +17,9 @@ public class CashierClosureInputDto {
         // Empty for framework
     }
 
-    public CashierClosureInputDto(BigDecimal finalCash, BigDecimal salesCard, String comment) {
+    public CashierClosureInputDto(BigDecimal finalCash, BigDecimal finalCard, String comment) {
         this.finalCash = finalCash;
-        this.salesCard = salesCard;
+        this.finalCard = finalCard;
         this.comment = comment;
     }
 
@@ -31,12 +31,12 @@ public class CashierClosureInputDto {
         this.finalCash = finalCash;
     }
 
-    public BigDecimal getSalesCard() {
-        return salesCard;
+    public BigDecimal getFinalCard() {
+        return finalCard;
     }
 
-    public void setSalesCard(BigDecimal salesCard) {
-        this.salesCard = salesCard;
+    public void setFinalCard(BigDecimal finalCard) {
+        this.finalCard = finalCard;
     }
 
     public String getComment() {
@@ -49,7 +49,10 @@ public class CashierClosureInputDto {
 
     @Override
     public String toString() {
-        return "CashierClosureDto [finalCash=" + finalCash + ", salesCard=" + salesCard + ", comment=" + comment + "]";
+        return "CashierClosureInputDto{" +
+                "finalCard=" + finalCard +
+                ", finalCash=" + finalCash +
+                ", comment='" + comment + '\'' +
+                '}';
     }
-
 }

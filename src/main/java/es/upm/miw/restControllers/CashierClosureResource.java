@@ -1,16 +1,15 @@
 package es.upm.miw.restControllers;
 
 import es.upm.miw.businessControllers.CashierClosureController;
-import es.upm.miw.dtos.CashierClosingOutputDto;
 import es.upm.miw.dtos.CashierClosureInputDto;
 import es.upm.miw.dtos.CashierLastOutputDto;
+import es.upm.miw.dtos.CashierStatusOutputDto;
 import es.upm.miw.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('OPERATOR')")
 @RestController
@@ -43,7 +42,7 @@ public class CashierClosureResource {
     }
 
     @GetMapping(value = LAST + TOTALS)
-    public CashierClosingOutputDto readTotalsFromLast() throws BadRequestException {
+    public CashierStatusOutputDto readTotalsFromLast() throws BadRequestException {
         return this.cashierClosureController.readTotalsFromLast();
     }
 
