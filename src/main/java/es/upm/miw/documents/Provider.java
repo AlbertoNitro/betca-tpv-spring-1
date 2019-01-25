@@ -25,8 +25,13 @@ public class Provider {
 
     private Boolean active;
 
-    public static Builder builder(String company) {
-        return new Builder(company);
+    public Provider() {
+        // for framework
+    }
+
+    public Provider(String company) {
+        this.company = company;
+        this.active = true;
     }
 
     public String getId() {
@@ -81,10 +86,6 @@ public class Provider {
         this.note = note;
     }
 
-    public Boolean getActive() {
-        return active;
-    }
-
     public void setActive(Boolean active) {
         this.active = active;
     }
@@ -115,51 +116,6 @@ public class Provider {
                 ", note='" + note + '\'' +
                 ", active=" + active +
                 '}';
-    }
-
-    public static class Builder {
-        private Provider provider;
-
-        private Builder(String company) {
-            this.provider = new Provider();
-            this.provider.company = company;
-            this.provider.active = true;
-        }
-
-        public Builder company(String company) {
-            this.provider.company = company;
-            return this;
-        }
-
-        public Builder nif(String nif) {
-            this.provider.nif = nif;
-            return this;
-        }
-
-        public Builder address(String address) {
-            this.provider.address = address;
-            return this;
-        }
-
-        public Builder phone(String phone) {
-            this.provider.phone = phone;
-            return this;
-        }
-
-        public Builder email(String email) {
-            this.provider.email = email;
-            return this;
-        }
-
-        public Builder note(String note) {
-            this.provider.note = note;
-            return this;
-        }
-
-        public Provider build() {
-            return this.provider;
-        }
-
     }
 
 }

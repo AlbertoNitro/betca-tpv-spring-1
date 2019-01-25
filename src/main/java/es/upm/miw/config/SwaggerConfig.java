@@ -45,15 +45,15 @@ public class SwaggerConfig {
     private List<SecurityContext> securityContext() {
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[]{new AuthorizationScope(
                 "global", "accessEverything")};
-        List<SecurityReference> BearerSecurityReferences = Arrays.asList(new SecurityReference("Bearer",
+        List<SecurityReference> basicSecurityReferences = Arrays.asList(new SecurityReference("Basic",
                 authorizationScopes));
-        List<SecurityReference> BasicSecurityReferences = Arrays.asList(new SecurityReference("Basic",
+        List<SecurityReference> bearerSecurityReferences = Arrays.asList(new SecurityReference("Bearer",
                 authorizationScopes));
         return Arrays.asList(
                 SecurityContext.builder().securityReferences(
-                        BasicSecurityReferences).forPaths(PathSelectors.ant("/users/token/**")).build(),
+                        basicSecurityReferences).forPaths(PathSelectors.ant("/users/token/**")).build(),
                 SecurityContext.builder().securityReferences(
-                        BearerSecurityReferences).forPaths(PathSelectors.any()).build());
+                        bearerSecurityReferences).forPaths(PathSelectors.any()).build());
     }
 
 }

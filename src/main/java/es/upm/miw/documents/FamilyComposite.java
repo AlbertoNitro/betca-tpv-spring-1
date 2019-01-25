@@ -14,18 +14,18 @@ public class FamilyComposite extends ArticlesFamily {
     private String description;
 
     @DBRef(lazy = true)
-    private List<ArticlesFamily> ArticlesfamilyList;
+    private List<ArticlesFamily> articlesfamilyList;
 
     public FamilyComposite() {
         super(FamilyType.ARTICLES);
-        this.ArticlesfamilyList = new ArrayList<>();
+        this.articlesfamilyList = new ArrayList<>();
     }
 
     public FamilyComposite(FamilyType familyType, String reference, String description) {
         super(familyType);
         this.reference = reference;
         this.description = description;
-        this.ArticlesfamilyList = new ArrayList<>();
+        this.articlesfamilyList = new ArrayList<>();
     }
 
     @Override
@@ -53,33 +53,31 @@ public class FamilyComposite extends ArticlesFamily {
 
     @Override
     public void add(ArticlesFamily articlesFamilyList) {
-        assert articlesFamilyList != null;
-        this.ArticlesfamilyList.add(articlesFamilyList);
+        this.articlesfamilyList.add(articlesFamilyList);
     }
 
     @Override
     public void remove(ArticlesFamily articlesFamilyList) {
-        assert articlesFamilyList != null;
-        this.ArticlesfamilyList.remove(articlesFamilyList);
+        this.articlesfamilyList.remove(articlesFamilyList);
     }
 
     public List<ArticlesFamily> getFamilyCompositeList() {
-        return ArticlesfamilyList;
+        return articlesfamilyList;
     }
 
     public void setFamilyCompositeList(List<ArticlesFamily> familyCompositeList) {
-        this.ArticlesfamilyList = familyCompositeList;
+        this.articlesfamilyList = familyCompositeList;
     }
 
     @Override
     public List<ArticlesFamily> getArticlesFamilyList() {
-        return this.ArticlesfamilyList;
+        return this.articlesfamilyList;
     }
 
     @Override
     public String toString() {
         List<String> list = new ArrayList<>();
-        for (ArticlesFamily item : ArticlesfamilyList) {
+        for (ArticlesFamily item : articlesfamilyList) {
             list.add("DBref:" + item.getId());
         }
         return "FamilyComposite [" + super.toString() + " reference=" + reference + ", description=" + description
@@ -89,7 +87,7 @@ public class FamilyComposite extends ArticlesFamily {
     @Override
     public List<String> getArticleIdList() {
         List<String> articleIdList = new ArrayList<>();
-        for (ArticlesFamily articlesFamily : this.ArticlesfamilyList) {
+        for (ArticlesFamily articlesFamily : this.articlesfamilyList) {
             articleIdList.addAll(articlesFamily.getArticleIdList());
         }
         return articleIdList;

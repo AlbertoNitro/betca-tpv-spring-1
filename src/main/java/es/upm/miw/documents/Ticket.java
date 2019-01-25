@@ -1,6 +1,6 @@
 package es.upm.miw.documents;
 
-import es.upm.miw.businessServices.Encrypting;
+import es.upm.miw.business_services.Encrypting;
 import es.upm.miw.exceptions.BadRequestException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
