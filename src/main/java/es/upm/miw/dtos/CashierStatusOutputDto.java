@@ -3,7 +3,9 @@ package es.upm.miw.dtos;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class CashierClosingOutputDto {
+public class CashierStatusOutputDto {
+
+    private BigDecimal salesTotal;
 
     private BigDecimal totalVoucher;
 
@@ -11,17 +13,16 @@ public class CashierClosingOutputDto {
 
     private BigDecimal totalCash;
 
-    private BigDecimal salesTotal;
-
-    public CashierClosingOutputDto() {
+    public CashierStatusOutputDto() {
         // Empty for framework
     }
 
-    public CashierClosingOutputDto(BigDecimal totalCard, BigDecimal totalCash, BigDecimal totalVoucher, BigDecimal salesTotal) {
+    public CashierStatusOutputDto(BigDecimal salesTotal, BigDecimal totalCard, BigDecimal totalCash, BigDecimal totalVoucher) {
+        this.salesTotal = salesTotal;
         this.totalCard = totalCard;
         this.totalCash = totalCash;
         this.totalVoucher = totalVoucher;
-        this.salesTotal = salesTotal;
+
     }
 
     public BigDecimal getTotalCard() {
@@ -58,8 +59,11 @@ public class CashierClosingOutputDto {
 
     @Override
     public String toString() {
-        return "CashierClosingOutputDto [getTotalCard()=" + getTotalCard() + ", getTotalCash()=" + getTotalCash() + ", getTotalVoucher()="
-                + getTotalVoucher() + ", getSalesTotal()=" + getSalesTotal() + "]";
+        return "CashierStatusOutputDto{" +
+                "salesTotal=" + salesTotal +
+                ", totalVoucher=" + totalVoucher +
+                ", totalCard=" + totalCard +
+                ", totalCash=" + totalCash +
+                '}';
     }
-
 }
