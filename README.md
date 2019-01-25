@@ -24,4 +24,8 @@
 1. Marcar **Create Project from external model**, elegir **Maven**
 1. **Next** … **Finish**
 
+### Cliente Swagger 
+[swagger-ui: http://localhost:8080/api/v0/swagger-ui.html](http://localhost:8080/api/v0/swagger-ui.html)
+
 ###### Autor: Jesús Bernal Bermúdez U.P.M.
+
