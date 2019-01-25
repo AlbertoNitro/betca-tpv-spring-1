@@ -73,7 +73,7 @@ class UserResourceIT {
                 this.restService.loginOperator().restBuilder(new RestBuilder<User>()).clazz(User.class).log()
                         .path(UserResource.USERS).path(UserResource.MOBILE_ID).expand("666666003")
                         .get().build());
-        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
     }
 
     @Test

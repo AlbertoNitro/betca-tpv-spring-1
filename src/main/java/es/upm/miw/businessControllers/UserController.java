@@ -28,9 +28,8 @@ public class UserController {
     public TokenOutputDto login(String mobile) {
         User user = userRepository.findByMobile(mobile)
                 .orElseThrow(() -> new RuntimeException("Unexpected!!. Mobile not found:" + mobile));
-        String[] roles = Arrays.stream(user.getRoles()).map(Role::roleName).toArray(String[]::new);
-        String token = jwtService.createToken(user.getMobile(), roles);
-        return new TokenOutputDto(token, user.getMobile(), user.getUsername(), user.getRoles());
+        String[] roles = Arrays.stream(user.getRoles()).map(Role::name).toArray(String[]::new);
+        return new TokenOutputDto(jwtService.createToken(user.getMobile(), user.getUsername(), roles));
     }
 
     public UserDto readUser(String mobile, String claimMobile, List<String> claimRoles) throws NotFoundException, ForbiddenException {

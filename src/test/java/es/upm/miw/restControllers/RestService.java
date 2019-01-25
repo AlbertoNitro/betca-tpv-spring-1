@@ -1,15 +1,16 @@
 package es.upm.miw.restControllers;
 
+import es.upm.miw.businessServices.JwtService;
 import es.upm.miw.dataServices.DatabaseSeederService;
 import es.upm.miw.documents.Role;
 import es.upm.miw.dtos.TokenOutputDto;
+import es.upm.miw.exceptions.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
 
 @Service
 public class RestService {
@@ -19,6 +20,9 @@ public class RestService {
 
     @Autowired
     private DatabaseSeederService databaseSeederService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Value("${server.servlet.contextPath}")
     private String contextPath;
@@ -41,7 +45,13 @@ public class RestService {
     }
 
     private boolean isRole(Role role) {
-        return this.tokenDto != null && Arrays.stream(this.tokenDto.getRoles()).anyMatch(role::equals);
+        try {
+            return this.tokenDto != null && this.jwtService.roles("Bearer "
+                    + tokenDto.getToken()).contains(role.name());
+        } catch (JwtException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public <T> RestBuilder<T> restBuilder(RestBuilder<T> restBuilder) {
@@ -83,9 +93,9 @@ public class RestService {
     }
 
     public RestService loginOperator() {
-        if (!this.isRole(Role.MANAGER)) {
+        if (!this.isRole(Role.OPERATOR)) {
             this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).clazz(TokenOutputDto.class)
-                    .basicAuth("666666005", "p005")
+                    .basicAuth("666666002", "p002")
                     .path(contextPath).path(UserResource.USERS).path(UserResource.TOKEN)
                     .post().log().build();
         }

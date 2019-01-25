@@ -1,6 +1,7 @@
 package es.upm.miw.config;
 
 import es.upm.miw.businessServices.JwtService;
+import es.upm.miw.documents.Role;
 import es.upm.miw.exceptions.JwtException;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +37,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                                     FilterChain chain) throws IOException, ServletException {
         String authHeader = req.getHeader(AUTHORIZATION);
         if (jwtService.isBearer(authHeader)) {
-            LogManager.getLogger(this.getClass().getName()).debug(">>> FILTER JWT...");
             List<GrantedAuthority> authorities;
             try {
                 authorities = jwtService.roles(authHeader).stream()
-                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+                        .map(role -> new SimpleGrantedAuthority(Role.valueOf(role).roleName())).collect(Collectors.toList());
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(jwtService.user(authHeader), null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (JwtException e) {
+                LogManager.getLogger(this.getClass().getName()).debug(">>> FILTER JWT UNAUTHORIZED ..."
+                        + req.getHeader(AUTHORIZATION) + e.getMessage());
                 res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             }
         }
