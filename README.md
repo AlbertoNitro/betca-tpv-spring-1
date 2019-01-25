@@ -3,6 +3,7 @@
 #### [Máster en Ingeniería Web por la U.P.M.](http://miw.etsisi.upm.es)
 
 [![Build Status](https://travis-ci.org/miw-upm/betca-tpv-spring.svg?branch=develop)](https://travis-ci.org/miw-upm/betca-tpv-spring)
+![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=es.upm.miw%3Abetca-tpv-spring&metric=alert_status)
 
 > Proyecto Back-end completo para el uso de la tecnología Spring.  
 > El Front-end se desarrolla en Angular en el proyecto [betca-tpv-angular](https://github.com/miw-upm/betca-tpv-angular).  
