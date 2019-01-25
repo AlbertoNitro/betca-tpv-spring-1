@@ -1,5 +1,5 @@
 package es.upm.miw.dtos.validations;
 
-public interface Pattern {
-    String NINE_DIGITS = "\\d{9}";
+public final class Pattern {
+    public static final String NINE_DIGITS = "\\d{9}";
 }

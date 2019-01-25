@@ -1,6 +1,6 @@
 package es.upm.miw.documents;
 
-import es.upm.miw.businessServices.Encrypting;
+import es.upm.miw.business_services.Encrypting;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;

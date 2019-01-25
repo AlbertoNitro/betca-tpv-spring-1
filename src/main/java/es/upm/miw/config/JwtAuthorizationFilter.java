@@ -1,6 +1,6 @@
 package es.upm.miw.config;
 
-import es.upm.miw.businessServices.JwtService;
+import es.upm.miw.business_services.JwtService;
 import es.upm.miw.documents.Role;
 import es.upm.miw.exceptions.JwtException;
 import org.apache.logging.log4j.LogManager;

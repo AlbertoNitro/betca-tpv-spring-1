@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Document(collection = "articlesFamily")
@@ -37,15 +38,17 @@ public class FamilyArticle extends ArticlesFamily {
 
     @Override
     public void add(ArticlesFamily familyComponent) {
+        // Do nothing
     }
 
     @Override
     public void remove(ArticlesFamily familyComponent) {
+        // Do nothing
     }
 
     @Override
     public List<ArticlesFamily> getArticlesFamilyList() {
-        return null;
+        return Collections.emptyList();
     }
 
     public Article getArticle() {
