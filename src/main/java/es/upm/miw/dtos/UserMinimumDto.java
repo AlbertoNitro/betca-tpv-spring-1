@@ -13,7 +13,7 @@ public class UserMinimumDto {
     private String username;
 
     public UserMinimumDto() {
-        // Empty for framework
+        this("000000000", "");
     }
 
     public UserMinimumDto(String mobile, String username) {

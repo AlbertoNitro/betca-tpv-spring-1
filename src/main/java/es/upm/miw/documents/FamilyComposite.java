@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Document(collection = "articlesFamily")
 public class FamilyComposite extends ArticlesFamily {
@@ -72,6 +73,17 @@ public class FamilyComposite extends ArticlesFamily {
     @Override
     public List<ArticlesFamily> getArticlesFamilyList() {
         return this.articlesfamilyList;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || obj != null && getClass() == obj.getClass() && this.getId().equals(((FamilyComposite) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), reference, description, articlesfamilyList);
     }
 
     @Override

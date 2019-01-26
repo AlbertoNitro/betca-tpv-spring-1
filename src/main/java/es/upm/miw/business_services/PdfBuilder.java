@@ -57,9 +57,12 @@ public class PdfBuilder {
         if (!file.exists()) {
             file.getParentFile().mkdirs();
         }
+        PdfWriter pdfWriter;
+        PdfDocument pdf;
         try {
-            PdfDocument pdf = new PdfDocument(new PdfWriter(filename));
-            document = new Document(pdf, pageSize);
+            pdfWriter = new PdfWriter(filename);
+            pdf = new PdfDocument(pdfWriter);
+            this.document = new Document(pdf, pageSize);
         } catch (FileNotFoundException fnfe) {
             LogManager.getLogger(this.getClass()).error(
                     "PdfBuilder::prepareDocuemnt. Error when creating the pdf document (" + this.filename + "). "

@@ -60,6 +60,11 @@ public class FamilyArticle extends ArticlesFamily {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return this == obj || obj != null && getClass() == obj.getClass() && this.getId().equals(((FamilyArticle) obj).getId());
+    }
+
+    @Override
     public String toString() {
         return "FamilyArticle [" + super.toString() + "article=" + article + "]";
     }
