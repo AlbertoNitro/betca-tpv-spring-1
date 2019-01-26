@@ -12,6 +12,7 @@ public class ArticleMinimumDto {
     private String description;
 
     public ArticleMinimumDto() {
+        this.description = "";
     }
 
     public ArticleMinimumDto(String code, String description) {

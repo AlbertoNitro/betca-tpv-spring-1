@@ -14,7 +14,7 @@ public class CashierClosureInputDto {
     private String comment;
 
     public CashierClosureInputDto() {
-        // Empty for framework
+        this(BigDecimal.ZERO, BigDecimal.ZERO, "");
     }
 
     public CashierClosureInputDto(BigDecimal finalCash, BigDecimal finalCard, String comment) {

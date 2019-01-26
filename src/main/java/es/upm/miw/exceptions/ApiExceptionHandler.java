@@ -1,5 +1,6 @@
 package es.upm.miw.exceptions;
 
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -69,7 +70,7 @@ public class ApiExceptionHandler {
     })
     @ResponseBody
     public ErrorMessage exception(Exception exception) {
-        exception.printStackTrace();
+        LogManager.getLogger(this.getClass()).debug(">>> EXCEPTION  ..." + exception.toString());
         return new ErrorMessage("Server Error. " + exception.getMessage());
     }
 
