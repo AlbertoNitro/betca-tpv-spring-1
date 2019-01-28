@@ -1,11 +1,10 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.data_services.DatabaseSeederService;
-import es.upm.miw.exceptions.FileException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.io.IOException;
+import java.io.InputStream;
 
 @Controller
 public class AdminController {
@@ -17,12 +16,12 @@ public class AdminController {
         this.databaseSeederService.deleteAllAndInitialize();
     }
 
-    public void seedDatabase(String ymlFileName) throws FileException {
-        try {
-            this.databaseSeederService.seedDatabase(ymlFileName);
-        } catch (IOException e) {
-            throw new FileException(e.getMessage());
-        }
+    public void seedDatabase(InputStream inputStream) {
+            this.databaseSeederService.seedDatabase(inputStream);
+    }
+
+    public void seedDatabase() {
+        this.databaseSeederService.seedDatabase();
     }
 
 }

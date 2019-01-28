@@ -5,6 +5,7 @@ import es.upm.miw.repositories.*;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
@@ -14,6 +15,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 @Service
 public class DatabaseSeederService {
@@ -27,14 +29,19 @@ public class DatabaseSeederService {
     public InvoiceRepository invoiceRepository;
     @Autowired
     public CashierClosureRepository cashierClosureRepository;
+    @Autowired
+    private Environment environment;
+
     @Value("${miw.admin.mobile}")
     private String mobile;
     @Value("${miw.admin.username}")
     private String username;
     @Value("${miw.admin.password}")
     private String password;
+
     @Value("${miw.databaseSeeder.ymlFileName:#{null}}")
     private String ymlFileName;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -45,25 +52,23 @@ public class DatabaseSeederService {
     private ArticleRepository articleRepository;
     @Autowired
     private BudgetRepository budgetRepository;
-
     @Autowired
     private ArticlesFamilyRepository articlesFamilyRepository;
-
     @Autowired
     private FamilyArticleRepository familyArticleRepository;
-
     @Autowired
     private FamilyCompositeRepository familyCompositeRepository;
-
     @Autowired
     private OrderRepository orderRepository;
-
     @Autowired
     private TagRepository tagRepository;
 
     @PostConstruct
     public void constructor() {
-        this.initialize();
+        String[] profiles = this.environment.getActiveProfiles();
+        if (Arrays.stream(profiles).anyMatch("dev"::equals)) {
+            this.deleteAllAndInitializeAndLoadYml();
+        }
     }
 
     private void initialize() {
@@ -75,11 +80,13 @@ public class DatabaseSeederService {
         }
         CashierClosure cashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
         if (cashierClosure == null) {
+            LogManager.getLogger(this.getClass()).warn("------- Create cashierClosure -----------");
             cashierClosure = new CashierClosure(BigDecimal.ZERO);
             cashierClosure.close(BigDecimal.ZERO, BigDecimal.ZERO, "Initial");
             this.cashierClosureRepository.save(cashierClosure);
         }
         if (!this.articleRepository.existsById(VARIOUS_CODE)) {
+            LogManager.getLogger(this.getClass()).warn("------- Create Article Various -----------");
             Provider provider = new Provider(VARIOUS_NAME);
             this.providerRepository.save(provider);
             this.articleRepository.save(Article.builder(VARIOUS_CODE).reference(VARIOUS_NAME).description(VARIOUS_NAME)
@@ -107,27 +114,30 @@ public class DatabaseSeederService {
         this.userRepository.deleteAll();
 
         // -------------------------------------------------------------------------
-
         this.initialize();
     }
 
     public void deleteAllAndInitializeAndLoadYml() {
         this.deleteAllAndInitialize();
-        if (ymlFileName != null) {
-            try {
-                this.seedDatabase(ymlFileName);
-            } catch (IOException e) {
-                LogManager.getLogger(this.getClass()).error("File " + ymlFileName + " doesn't exist or can't be opened");
-            }
-        } else {
-            LogManager.getLogger(this.getClass()).error("File " + ymlFileName + " doesn't configured");
-        }
+        this.seedDatabase();
         this.initialize();
     }
 
-    public void seedDatabase(String ymlFileName) throws IOException {
+    public void seedDatabase() {
+        if (this.ymlFileName != null) {
+            try {
+                LogManager.getLogger(this.getClass()).warn("------- Initial Load: " + this.ymlFileName + "-----------");
+                this.seedDatabase(new ClassPathResource(this.ymlFileName).getInputStream());
+            } catch (IOException e) {
+                LogManager.getLogger(this.getClass()).error("File " + this.ymlFileName + " doesn't exist or can't be opened");
+            }
+        } else {
+            LogManager.getLogger(this.getClass()).error("File " + this.ymlFileName + " doesn't configured");
+        }
+    }
+
+    public void seedDatabase(InputStream input) {
         Yaml yamlParser = new Yaml(new Constructor(DatabaseGraph.class));
-        InputStream input = new ClassPathResource(ymlFileName).getInputStream();
         DatabaseGraph tpvGraph = yamlParser.load(input);
 
         // Save Repositories -----------------------------------------------------
@@ -140,7 +150,7 @@ public class DatabaseSeederService {
         this.invoiceRepository.saveAll(tpvGraph.getInvoiceList());
         // -----------------------------------------------------------------------
 
-        LogManager.getLogger(this.getClass()).warn("------- Seed: " + ymlFileName + "-----------");
+        LogManager.getLogger(this.getClass()).warn("------- Seed...   " + "-----------");
     }
 
 }

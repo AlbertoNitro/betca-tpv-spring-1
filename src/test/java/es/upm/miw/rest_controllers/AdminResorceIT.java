@@ -3,6 +3,8 @@ package es.upm.miw.rest_controllers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+
 @ApiTestConfig
 class AdminResourceIT {
 
@@ -11,19 +13,23 @@ class AdminResourceIT {
 
     @Test
     void testDeleteDB() {
-        this.restService.loginAdmin().restBuilder()
-                .path(AdminResource.ADMINS).path(AdminResource.DB)
-                .delete().build();
+        this.restService.deleteDB();
+        this.restService.reLoadTestDB();
+    }
+
+    @Test
+    void testSeedDBUpload() throws IOException {
+        this.restService.loginAdmin().restBuilder().loadFile("test.yml").path(AdminResource.ADMINS)
+                .path(AdminResource.DB).post().log().build();
         this.restService.reLoadTestDB();
     }
 
     @Test
     void testSeedDB() {
         this.restService.deleteDB();
-        this.restService.loginAdmin().restBuilder()
-                .path(AdminResource.ADMINS).path(AdminResource.DB).body("test.yml")
-                .post().build();
+        this.restService.loginAdmin().restBuilder().path(AdminResource.ADMINS)
+                .path(AdminResource.DB).post().build();
+        this.restService.reLoadTestDB();
     }
-
 
 }
