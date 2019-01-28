@@ -66,7 +66,7 @@ public class DatabaseSeederService {
     @PostConstruct
     public void constructor() {
         String[] profiles = this.environment.getActiveProfiles();
-        if (Arrays.stream(profiles).anyMatch(profile -> "dev".equals(profile))) {
+        if (Arrays.stream(profiles).anyMatch("dev"::equals)) {
             this.deleteAllAndInitializeAndLoadYml();
         }
     }
@@ -119,6 +119,11 @@ public class DatabaseSeederService {
 
     public void deleteAllAndInitializeAndLoadYml() {
         this.deleteAllAndInitialize();
+        this.seedDatabase();
+        this.initialize();
+    }
+
+    public void seedDatabase() {
         if (this.ymlFileName != null) {
             try {
                 LogManager.getLogger(this.getClass()).warn("------- Initial Load: " + this.ymlFileName + "-----------");
@@ -129,7 +134,6 @@ public class DatabaseSeederService {
         } else {
             LogManager.getLogger(this.getClass()).error("File " + this.ymlFileName + " doesn't configured");
         }
-        this.initialize();
     }
 
     public void seedDatabase(InputStream input) {

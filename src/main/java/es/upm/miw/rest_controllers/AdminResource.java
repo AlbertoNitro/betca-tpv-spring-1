@@ -32,16 +32,21 @@ public class AdminResource {
     }
 
     @PostMapping(value = DB)
-    public void seedDb(@RequestParam("file") MultipartFile file) throws FileException {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        if (file.isEmpty()) {
-            throw new FileException("Failed to load empty file (" + filename + ")");
+    public void seedDb(@RequestParam(value = "file", required = false) MultipartFile file) throws FileException {
+        if (file != null) {
+            String filename = StringUtils.cleanPath(file.getOriginalFilename());
+            if (file.isEmpty()) {
+                throw new FileException("Failed to load empty file (" + filename + ")");
+            }
+            try {
+                this.adminController.seedDatabase(file.getInputStream());
+            } catch (IOException e) {
+                throw new FileException("Failed to load file (" + filename + ")");
+            }
+        } else {
+            this.adminController.seedDatabase();
         }
-        try {
-            this.adminController.seedDatabase(file.getInputStream());
-        } catch (IOException e) {
-            throw new FileException("Failed to load file (" + filename + ")");
-        }
+
     }
 
 }

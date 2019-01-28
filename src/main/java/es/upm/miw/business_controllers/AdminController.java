@@ -20,4 +20,8 @@ public class AdminController {
             this.databaseSeederService.seedDatabase(inputStream);
     }
 
+    public void seedDatabase() {
+        this.databaseSeederService.seedDatabase();
+    }
+
 }
