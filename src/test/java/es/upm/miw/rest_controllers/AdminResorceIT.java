@@ -11,19 +11,12 @@ class AdminResourceIT {
 
     @Test
     void testDeleteDB() {
-        this.restService.loginAdmin().restBuilder()
-                .path(AdminResource.ADMINS).path(AdminResource.DB)
-                .delete().build();
-        this.restService.reLoadTestDB();
+        this.restService.deleteDB();
     }
 
     @Test
-    void testSeedDB() {
-        this.restService.deleteDB();
-        this.restService.loginAdmin().restBuilder()
-                .path(AdminResource.ADMINS).path(AdminResource.DB).body("test.yml")
-                .post().build();
+    void testSeedDBUpload() {
+        this.restService.reLoadTestDB();
     }
-
 
 }

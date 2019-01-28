@@ -13,13 +13,13 @@ services:
   - mongodb
 script:
 #Test unitario y de integracion en develop
-- mvn verify
 - mvn org.jacoco:jacoco-maven-plugin:prepare-agent verify
+
+# SONAR
 - mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=miw-upm-github -Dsonar.login=$SONAR
-deploy:
-  provider: heroku
-  api_key:
-    secure: $HEROKU
-  app: betca-tpv-spring
-  on:
-    repo: miw-upm/betca-tpv-spring
+
+# Deploy https://betca-tpv-spring.herokuapp.com/swagger-ui.html
+#deploy:
+#  provider: heroku
+#  api_key:
+#    secure: $HEROKU

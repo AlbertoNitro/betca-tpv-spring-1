@@ -5,7 +5,11 @@ import es.upm.miw.exceptions.FileException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @PreAuthorize("hasRole('ADMIN')")
 @RestController
@@ -28,8 +32,16 @@ public class AdminResource {
     }
 
     @PostMapping(value = DB)
-    public void seedDb(@RequestBody String ymlFileName) throws FileException {
-        this.adminController.seedDatabase(ymlFileName);
+    public void seedDb(@RequestParam("file") MultipartFile file) throws FileException {
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        if (file.isEmpty()) {
+            throw new FileException("Failed to load empty file (" + filename + ")");
+        }
+        try {
+            this.adminController.seedDatabase(file.getInputStream());
+        } catch (IOException e) {
+            throw new FileException("Failed to load file (" + filename + ")");
+        }
     }
 
 }

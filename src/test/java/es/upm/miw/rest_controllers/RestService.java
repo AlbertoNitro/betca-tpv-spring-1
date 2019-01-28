@@ -10,16 +10,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 
 @Service
 public class RestService {
 
     @Autowired
-    private Environment environment;
+    private DatabaseSeederService databaseSeederService;
 
     @Autowired
-    private DatabaseSeederService databaseSeederService;
+    private Environment environment;
 
     @Autowired
     private JwtService jwtService;
@@ -33,15 +32,15 @@ public class RestService {
     @Value("${miw.admin.password}")
     private String adminPassword;
 
+    private int port = 0;
+
     private TokenOutputDto tokenDto;
 
-    @PostConstruct
-    public void constructor() {
-        this.reLoadTestDB();
-    }
-
-    private int port() {
-        return Integer.parseInt(environment.getProperty("local.server.port"));
+    private int getPort() {
+        if (this.port == 0) {
+            this.port = 0;
+        }
+        return this.port;
     }
 
     private boolean isRole(Role role) {
@@ -55,7 +54,7 @@ public class RestService {
     }
 
     public <T> RestBuilder<T> restBuilder(RestBuilder<T> restBuilder) {
-        restBuilder.port(this.port());
+        restBuilder.port(this.getPort());
         restBuilder.path(contextPath);
         if (tokenDto != null) {
             restBuilder.bearerAuth(tokenDto.getToken());
@@ -64,7 +63,7 @@ public class RestService {
     }
 
     public RestBuilder<Object> restBuilder() {
-        RestBuilder<Object> restBuilder = new RestBuilder<>(this.port());
+        RestBuilder<Object> restBuilder = new RestBuilder<>(this.port);
         restBuilder.path(contextPath);
         if (tokenDto != null) {
             restBuilder.bearerAuth(tokenDto.getToken());
@@ -74,7 +73,7 @@ public class RestService {
 
     public RestService loginAdmin() {
         if (!this.isRole(Role.ADMIN)) {
-            this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).clazz(TokenOutputDto.class)
+            this.tokenDto = new RestBuilder<TokenOutputDto>(this.getPort()).clazz(TokenOutputDto.class)
                     .basicAuth(this.adminMobile, this.adminPassword)
                     .path(contextPath).path(UserResource.USERS).path(UserResource.TOKEN)
                     .post().log().build();
@@ -84,7 +83,7 @@ public class RestService {
 
     public RestService loginManager() {
         if (!this.isRole(Role.MANAGER)) {
-            this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).clazz(TokenOutputDto.class)
+            this.tokenDto = new RestBuilder<TokenOutputDto>(this.getPort()).clazz(TokenOutputDto.class)
                     .basicAuth("666666001", "p001")
                     .path(contextPath).path(UserResource.USERS).path(UserResource.TOKEN)
                     .post().log().build();
@@ -94,7 +93,7 @@ public class RestService {
 
     public RestService loginOperator() {
         if (!this.isRole(Role.OPERATOR)) {
-            this.tokenDto = new RestBuilder<TokenOutputDto>(this.port()).clazz(TokenOutputDto.class)
+            this.tokenDto = new RestBuilder<TokenOutputDto>(this.getPort()).clazz(TokenOutputDto.class)
                     .basicAuth("666666002", "p002")
                     .path(contextPath).path(UserResource.USERS).path(UserResource.TOKEN)
                     .post().log().build();
@@ -113,7 +112,8 @@ public class RestService {
     }
 
     public void deleteDB() {
-        this.databaseSeederService.deleteAllAndInitialize();
+        this.loginAdmin().restBuilder().path(AdminResource.ADMINS).path(AdminResource.DB)
+                .delete().build();
     }
 
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 @Controller
 public class AdminController {
@@ -17,9 +18,9 @@ public class AdminController {
         this.databaseSeederService.deleteAllAndInitialize();
     }
 
-    public void seedDatabase(String ymlFileName) throws FileException {
+    public void seedDatabase(InputStream inputStream) throws FileException {
         try {
-            this.databaseSeederService.seedDatabase(ymlFileName);
+            this.databaseSeederService.seedDatabase(inputStream);
         } catch (IOException e) {
             throw new FileException(e.getMessage());
         }
