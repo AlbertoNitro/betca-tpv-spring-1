@@ -181,7 +181,6 @@ public class RestBuilder<T> {
             uriComponents = uriComponents.expand(expandList.toArray());
         }
         return uriComponents.encode().toUri();
-
     }
 
     public RestBuilder<T> log() {

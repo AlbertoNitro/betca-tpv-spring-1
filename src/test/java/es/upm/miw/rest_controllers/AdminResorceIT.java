@@ -20,7 +20,7 @@ class AdminResourceIT {
     @Test
     void testSeedDBUpload() throws IOException {
         this.restService.loginAdmin().restBuilder().loadFile("test.yml").path(AdminResource.ADMINS)
-                .path(AdminResource.DB).post().build();
+                .path(AdminResource.DB).post().log().build();
         this.restService.reLoadTestDB();
     }
 

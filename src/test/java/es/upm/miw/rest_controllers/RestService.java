@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class RestService {
 
@@ -97,7 +96,6 @@ public class RestService {
         return this;
     }
 
-
     public RestService logout() {
         this.tokenDto = null;
         return this;
@@ -113,7 +111,6 @@ public class RestService {
         this.loginAdmin().restBuilder().path(AdminResource.ADMINS).path(AdminResource.DB)
                 .delete().build();
     }
-
 
     public TokenOutputDto getTokenDto() {
         return tokenDto;
