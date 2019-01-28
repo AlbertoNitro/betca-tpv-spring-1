@@ -38,7 +38,7 @@ public class RestService {
 
     private int getPort() {
         if (this.port == 0) {
-            this.port = 0;
+            this.port = Integer.parseInt(environment.getProperty("local.server.port"));
         }
         return this.port;
     }
