@@ -1,7 +1,6 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_services.JwtService;
-import es.upm.miw.data_services.DatabaseSeederService;
 import es.upm.miw.documents.Role;
 import es.upm.miw.dtos.TokenOutputDto;
 import es.upm.miw.exceptions.JwtException;
@@ -13,9 +12,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RestService {
-
-    @Autowired
-    private DatabaseSeederService databaseSeederService;
 
     @Autowired
     private Environment environment;
@@ -108,7 +104,9 @@ public class RestService {
     }
 
     public void reLoadTestDB() {
-        this.databaseSeederService.deleteAllAndInitializeAndLoadYml();
+        this.deleteDB();
+        this.loginAdmin().restBuilder().path(AdminResource.ADMINS).path(AdminResource.DB)
+                .post().build();
     }
 
     public void deleteDB() {
@@ -119,10 +117,6 @@ public class RestService {
 
     public TokenOutputDto getTokenDto() {
         return tokenDto;
-    }
-
-    public void setTokenDto(TokenOutputDto tokenDto) {
-        this.tokenDto = tokenDto;
     }
 
     public String getAdminMobile() {
