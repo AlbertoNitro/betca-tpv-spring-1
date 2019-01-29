@@ -101,19 +101,18 @@ public class DatabaseSeederService {
         // Delete Repositories -----------------------------------------------------
         this.familyCompositeRepository.deleteAll();
         this.invoiceRepository.deleteAll();
-        this.tagRepository.deleteAll();
 
-        this.ticketRepository.deleteAll();
-        this.orderRepository.deleteAll();
-        this.familyArticleRepository.deleteAll();
         this.budgetRepository.deleteAll();
-
+        this.familyArticleRepository.deleteAll();
+        this.orderRepository.deleteAll();
+        this.tagRepository.deleteAll();
+        this.ticketRepository.deleteAll();
         this.articleRepository.deleteAll();
 
-        this.voucherRepository.deleteAll();
         this.cashierClosureRepository.deleteAll();
         this.providerRepository.deleteAll();
         this.userRepository.deleteAll();
+        this.voucherRepository.deleteAll();
 
         // -------------------------------------------------------------------------
         this.initialize();
@@ -143,12 +142,19 @@ public class DatabaseSeederService {
         DatabaseGraph tpvGraph = yamlParser.load(input);
 
         // Save Repositories -----------------------------------------------------
+        this.providerRepository.saveAll(tpvGraph.getProviderList());
         this.userRepository.saveAll(tpvGraph.getUserList());
         this.voucherRepository.saveAll(tpvGraph.getVoucherList());
-        this.cashierClosureRepository.saveAll(tpvGraph.getCashierClosureList());
-        this.providerRepository.saveAll(tpvGraph.getProviderList());
+
         this.articleRepository.saveAll(tpvGraph.getArticleList());
+
+        //this.budgetRepository.saveAll(tpvGraph.getBudgetList());
+        this.familyArticleRepository.saveAll(tpvGraph.getFamilyArticleList());
+        //this.orderRepository.saveAll(tpvGraph.getOrderList());
+        this.tagRepository.saveAll(tpvGraph.getTagList());
         this.ticketRepository.saveAll(tpvGraph.getTicketList());
+
+        this.familyCompositeRepository.saveAll(tpvGraph.getFamilyCompositeList());
         this.invoiceRepository.saveAll(tpvGraph.getInvoiceList());
         // -----------------------------------------------------------------------
 
@@ -156,3 +162,8 @@ public class DatabaseSeederService {
     }
 
 }
+
+
+
+
+

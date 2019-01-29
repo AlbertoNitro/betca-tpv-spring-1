@@ -128,6 +128,18 @@ public class Ticket {
         return voucher;
     }
 
+    public void setCash(BigDecimal cash) {
+        this.cash = cash;
+    }
+
+    public void setCard(BigDecimal card) {
+        this.card = card;
+    }
+
+    public void setVoucher(BigDecimal voucher) {
+        this.voucher = voucher;
+    }
+
     public String getNote() {
         return note;
     }

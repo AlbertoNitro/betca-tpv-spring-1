@@ -53,7 +53,7 @@ public class Encrypting {
     }
 
     public String shortId64UrlSafe() {
-        return this.encryptInBase64UrlSafe().substring(0, 8);
+        return this.encryptInBase64UrlSafe().substring(0, 10);
     }
 
     public String encodeHexInBase64UrlSafe(String hex) {

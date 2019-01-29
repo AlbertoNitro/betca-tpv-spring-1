@@ -106,10 +106,6 @@ public class Article {
         return registrationDate;
     }
 
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
     @Override
     public int hashCode() {
         return this.code.hashCode();
