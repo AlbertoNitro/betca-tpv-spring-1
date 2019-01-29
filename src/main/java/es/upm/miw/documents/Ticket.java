@@ -120,20 +120,20 @@ public class Ticket {
         return cash;
     }
 
-    public BigDecimal getCard() {
-        return card;
-    }
-
-    public BigDecimal getVoucher() {
-        return voucher;
-    }
-
     public void setCash(BigDecimal cash) {
         this.cash = cash;
     }
 
+    public BigDecimal getCard() {
+        return card;
+    }
+
     public void setCard(BigDecimal card) {
         this.card = card;
+    }
+
+    public BigDecimal getVoucher() {
+        return voucher;
     }
 
     public void setVoucher(BigDecimal voucher) {

@@ -17,7 +17,7 @@ public class AdminController {
     }
 
     public void seedDatabase(InputStream inputStream) {
-            this.databaseSeederService.seedDatabase(inputStream);
+        this.databaseSeederService.seedDatabase(inputStream);
     }
 
     public void seedDatabase() {

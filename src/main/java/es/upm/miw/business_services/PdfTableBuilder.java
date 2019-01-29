@@ -52,7 +52,7 @@ public class PdfTableBuilder {
         return this;
     }
 
-    public PdfBuilder closeTable() {
+    public PdfBuilder build() {
         this.document.add(this.table);
         return this.pdfBuilder;
     }

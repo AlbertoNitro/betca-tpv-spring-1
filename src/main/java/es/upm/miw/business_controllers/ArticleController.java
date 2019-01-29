@@ -3,7 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Provider;
 import es.upm.miw.dtos.ArticleDto;
-import es.upm.miw.exceptions.FieldAlreadyExistException;
+import es.upm.miw.exceptions.ConflictRequestException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.ProviderRepository;
@@ -25,10 +25,10 @@ public class ArticleController {
                 .orElseThrow(() -> new NotFoundException("Article code (" + code + ")")));
     }
 
-    public ArticleDto createArticle(ArticleDto articleDto) throws FieldAlreadyExistException, NotFoundException {
+    public ArticleDto createArticle(ArticleDto articleDto) throws ConflictRequestException, NotFoundException {
         String code = articleDto.getCode();
         if (this.articleRepository.findById(code).isPresent()) {
-            throw new FieldAlreadyExistException("Article code (" + code + ")");
+            throw new ConflictRequestException("Article code (" + code + ")");
         }
         int stock = (articleDto.getStock() == null) ? 10 : articleDto.getStock();
         Provider provider = null;

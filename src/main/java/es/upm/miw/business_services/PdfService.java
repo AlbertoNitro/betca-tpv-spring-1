@@ -70,7 +70,7 @@ public class PdfService {
             table.tableCell(String.valueOf(i + 1), shopping.getDescription(), "" + shopping.getAmount(), discount,
                     shopping.getShoppingTotal().setScale(2, RoundingMode.HALF_UP) + "€", state);
         }
-        table.tableColspanRight(ticket.getTotal().setScale(2, RoundingMode.HALF_UP) + "€").closeTable();
+        table.tableColspanRight(ticket.getTotal().setScale(2, RoundingMode.HALF_UP) + "€").build();
         pdf.paragraph(ticket.getNote());
         if (notCommitted > 0) {
             pdf.paragraphEmphasized("Artículos pendientes de entrega: " + notCommitted);

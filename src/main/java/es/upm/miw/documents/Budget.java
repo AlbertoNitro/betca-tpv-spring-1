@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Document
-public class Budget {
+public class
+Budget {
 
     @Id
     private String id;

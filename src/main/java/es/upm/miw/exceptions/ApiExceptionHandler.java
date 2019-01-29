@@ -47,7 +47,7 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler({
-            FieldAlreadyExistException.class
+            ConflictRequestException.class
     })
     @ResponseBody
     public ErrorMessage conflictRequest(HttpServletRequest request, Exception exception) {

@@ -7,9 +7,9 @@ public class OrderLine {
     @DBRef
     private Article article;
 
-    private int requiredAmount;
+    private Integer requiredAmount;
 
-    private int finalAmount;
+    private Integer finalAmount;
 
     public OrderLine() {
     }
@@ -25,7 +25,7 @@ public class OrderLine {
         return finalAmount;
     }
 
-    public void setFinalAmount(int finalAmount) {
+    public void setFinalAmount(Integer finalAmount) {
         this.finalAmount = finalAmount;
     }
 
@@ -33,7 +33,7 @@ public class OrderLine {
         return article;
     }
 
-    public int getRequiredAmount() {
+    public Integer getRequiredAmount() {
         return requiredAmount;
     }
 

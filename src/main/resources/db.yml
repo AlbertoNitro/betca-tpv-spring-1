@@ -133,14 +133,14 @@ articleList:
 tagList:
   - description: tag-1
     articleList:
-        - *ar1
-        - *ar2
-        - *ar3
+      - *ar1
+      - *ar2
+      - *ar3
   - description: tag-2
     articleList:
-        - *ar1
-        - *ar2
-        - *ar5
+      - *ar1
+      - *ar2
+      - *ar5
 
 # Ticket
 shoppingList:

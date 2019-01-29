@@ -20,13 +20,7 @@ public class CashierClosureResource {
 
     public static final String LAST = "/last";
 
-    public static final String MOVEMENTS = "/movements";
-
     public static final String TOTALS = "/totals";
-
-    public static final String SEARCH = "/search";
-
-    public static final String DATE = "/date";
 
     @Autowired
     private CashierClosureController cashierClosureController;
@@ -51,6 +45,5 @@ public class CashierClosureResource {
             throws BadRequestException {
         cashierClosureController.close(cashierClosureInputDto);
     }
-
 
 }
