@@ -3,8 +3,9 @@ jdk:
 - oraclejdk8
 branches:
   only:
-  - master
   - develop
+  - master
+  - /^release-.*$/
 notifications:
   email:
     recipients:
