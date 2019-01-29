@@ -22,13 +22,13 @@ public class Order {
 
     private LocalDateTime closingDate;
 
-    private OrderLine[] orderLine;
+    private OrderLine[] orderLines;
 
-    public Order(String description, Provider provider, OrderLine[] orderLine) {
+    public Order(String description, Provider provider, OrderLine[] orderLines) {
         this.openingDate = LocalDateTime.now();
         this.description = description;
         this.provider = provider;
-        this.orderLine = orderLine;
+        this.orderLines = orderLines;
     }
 
     public String getDescription() {
@@ -39,12 +39,12 @@ public class Order {
         this.description = description;
     }
 
-    public OrderLine[] getOrderLine() {
-        return orderLine;
+    public OrderLine[] getOrderLines() {
+        return orderLines;
     }
 
-    public void setOrderLine(OrderLine[] orderLine) {
-        this.orderLine = orderLine;
+    public void setOrderLines(OrderLine[] orderLines) {
+        this.orderLines = orderLines;
     }
 
     public String getId() {
@@ -81,7 +81,7 @@ public class Order {
                 ", provider=" + provider +
                 ", openingDate=" + openingDate +
                 ", closingDate=" + closingDate +
-                ", orderLine=" + Arrays.toString(orderLine) +
+                ", orderLines=" + Arrays.toString(orderLines) +
                 '}';
     }
 

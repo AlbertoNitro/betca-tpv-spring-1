@@ -22,8 +22,9 @@ public class Voucher {
         this.creationDate = LocalDateTime.now();
     }
 
-    public Voucher(BigDecimal value) {
+    public Voucher(String id, BigDecimal value) {
         this();
+        this.id = id;
         this.value = value;
     }
 
@@ -31,8 +32,16 @@ public class Voucher {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public BigDecimal getValue() {
         return value;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 
     public LocalDateTime getCreationDate() {
@@ -44,7 +53,9 @@ public class Voucher {
     }
 
     public void use() {
-        assert dateOfUse == null;
+        if (this.dateOfUse != null) {
+            throw new IllegalStateException("Voucher is already consumed");
+        }
         dateOfUse = LocalDateTime.now();
     }
 
