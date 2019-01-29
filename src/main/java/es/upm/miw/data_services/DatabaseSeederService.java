@@ -68,6 +68,8 @@ public class DatabaseSeederService {
         String[] profiles = this.environment.getActiveProfiles();
         if (Arrays.stream(profiles).anyMatch("dev"::equals)) {
             this.deleteAllAndInitializeAndLoadYml();
+        } else if (Arrays.stream(profiles).anyMatch("prod"::equals)) {
+            this.initialize();
         }
     }
 
