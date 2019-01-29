@@ -132,7 +132,7 @@ public class DatabaseSeederService {
                 LogManager.getLogger(this.getClass()).error("File " + this.ymlFileName + " doesn't exist or can't be opened");
             }
         } else {
-            LogManager.getLogger(this.getClass()).error("File " + this.ymlFileName + " doesn't configured");
+            LogManager.getLogger(this.getClass()).error("File db.yml doesn't configured");
         }
     }
 
