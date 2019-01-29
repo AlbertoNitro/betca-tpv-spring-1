@@ -19,7 +19,8 @@ script:
 - mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=miw-upm-github -Dsonar.login=$SONAR
 
 # Deploy https://betca-tpv-spring.herokuapp.com/swagger-ui.html
-#deploy:
-#  provider: heroku
-#  api_key:
-#    secure: $HEROKU
+deploy:
+  provider: heroku
+  api_key:
+    secure: $HEROKU
+
