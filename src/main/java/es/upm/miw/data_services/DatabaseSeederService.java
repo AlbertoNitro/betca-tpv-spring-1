@@ -148,9 +148,9 @@ public class DatabaseSeederService {
 
         this.articleRepository.saveAll(tpvGraph.getArticleList());
 
-        //this.budgetRepository.saveAll(tpvGraph.getBudgetList());
+        this.budgetRepository.saveAll(tpvGraph.getBudgetList());
         this.familyArticleRepository.saveAll(tpvGraph.getFamilyArticleList());
-        //this.orderRepository.saveAll(tpvGraph.getOrderList());
+        this.orderRepository.saveAll(tpvGraph.getOrderList());
         this.tagRepository.saveAll(tpvGraph.getTagList());
         this.ticketRepository.saveAll(tpvGraph.getTicketList());
 

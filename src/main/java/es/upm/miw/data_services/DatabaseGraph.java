@@ -7,9 +7,11 @@ import java.util.List;
 
 public class DatabaseGraph {
     private List<Article> articleList;
+    private List<Budget> budgetList;
     private List<FamilyArticle> familyArticleList;
     private List<FamilyComposite> familyCompositeList;
     private List<Invoice> invoiceList;
+    private List<Order> orderList;
     private List<Provider> providerList;
     private List<Shopping> shoppingList;
     private List<Tag> tagList;
@@ -19,9 +21,11 @@ public class DatabaseGraph {
 
     public DatabaseGraph() {
         this.articleList = new ArrayList<>();
+        this.budgetList = new ArrayList<>();
         this.familyArticleList = new ArrayList<>();
         this.familyCompositeList = new ArrayList<>();
         this.invoiceList = new ArrayList<>();
+        this.orderList = new ArrayList<>();
         this.providerList = new ArrayList<>();
         this.shoppingList = new ArrayList<>();
         this.tagList = new ArrayList<>();
@@ -36,6 +40,14 @@ public class DatabaseGraph {
 
     public void setArticleList(List<Article> articleList) {
         this.articleList = articleList;
+    }
+
+    public List<Budget> getBudgetList() {
+        return budgetList;
+    }
+
+    public void setBudgetList(List<Budget> budgetList) {
+        this.budgetList = budgetList;
     }
 
     public List<FamilyArticle> getFamilyArticleList() {
@@ -60,6 +72,14 @@ public class DatabaseGraph {
 
     public void setInvoiceList(List<Invoice> invoiceList) {
         this.invoiceList = invoiceList;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 
     public List<Provider> getProviderList() {
