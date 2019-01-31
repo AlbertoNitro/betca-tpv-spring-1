@@ -19,7 +19,7 @@ Budget {
     private Shopping[] shoppingList;
 
     public Budget() {
-        // For framework
+    this(null);
     }
 
     public Budget(Shopping[] shoppingList) {
@@ -29,10 +29,6 @@ Budget {
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public LocalDateTime getCreationDate() {

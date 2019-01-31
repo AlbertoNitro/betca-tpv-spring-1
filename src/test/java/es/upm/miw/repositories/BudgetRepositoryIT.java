@@ -1,11 +1,13 @@
 package es.upm.miw.repositories;
 
 import es.upm.miw.TestConfig;
-import es.upm.miw.documents.*;
+import es.upm.miw.documents.Budget;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestConfig
 class BudgetRepositoryIT {
@@ -24,4 +26,12 @@ class BudgetRepositoryIT {
         this.budgetRepository.delete(budget);
     }
 
+    @Test
+    void testRead() {
+        Budget budget = this.budgetRepository.findAll().stream()
+                .filter(bud -> bud.getShoppingList()[0].getDescription().equals("test-budget")).findFirst().get();
+        assertNotNull(budget.getCreationDate());
+        assertEquals(3, budget.getShoppingList().length);
+        assertEquals(0, new BigDecimal("79.7").compareTo(budget.getBudgetTotal()));
+    }
 }

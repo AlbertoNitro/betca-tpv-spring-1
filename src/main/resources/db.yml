@@ -211,3 +211,29 @@ invoiceList:
   - id: 20191
     ticket: *ti1
     user: *us4
+
+# Budget
+shoppingList:
+  - &shb1
+    description: "test-budget"
+    retailPrice: 20
+    amount: 1
+    discount: 0
+    article: *ar1
+  - &shb2
+    description: "descrip-a2"
+    retailPrice: 27.8
+    amount: 3
+    discount: 50.00
+    article: *ar2
+  - &shb3
+    description: "descrip-a1"
+    retailPrice: 20
+    amount: 1
+    discount: 10
+    article: *ar1
+budgetList:
+  - shoppingList:
+    - *shb1
+    - *shb2
+    - *shb3
