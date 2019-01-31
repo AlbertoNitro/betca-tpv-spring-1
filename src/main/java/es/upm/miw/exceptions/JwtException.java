@@ -1,8 +1,7 @@
 package es.upm.miw.exceptions;
 
-public class JwtException extends Exception {
+public class JwtException extends RuntimeException {
     private static final String DESCRIPTION = "Jwt exception";
-    private static final long serialVersionUID = -1344640670884805385L;
 
     public JwtException(String detail) {
         super(DESCRIPTION + ". " + detail);
