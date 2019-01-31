@@ -3,7 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.documents.CashierClosure;
 import es.upm.miw.dtos.CashierClosureInputDto;
 import es.upm.miw.dtos.CashierLastOutputDto;
-import es.upm.miw.dtos.CashierStatusOutputDto;
+import es.upm.miw.dtos.CashierStateOutputDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.CashierClosureRepository;
 import es.upm.miw.repositories.UserRepository;
@@ -34,7 +34,7 @@ public class CashierClosureController {
         return new CashierLastOutputDto(lastCashierClosure);
     }
 
-    public CashierStatusOutputDto readTotalsFromLast() throws BadRequestException {
+    public CashierStateOutputDto readTotalsFromLast() throws BadRequestException {
         CashierClosure lastCashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
         if (lastCashierClosure.isClosed()) {
             throw new BadRequestException("Cashier already closed: " + lastCashierClosure.getId());
@@ -45,7 +45,7 @@ public class CashierClosureController {
         BigDecimal finalCash = lastCashierClosure.getInitialCash().add(lastCashierClosure.getSalesCash())
                 .add(lastCashierClosure.getDeposit()).subtract(lastCashierClosure.getWithdrawal());
 
-        return new CashierStatusOutputDto(salesTotal, lastCashierClosure.getSalesCard(), finalCash,
+        return new CashierStateOutputDto(salesTotal, lastCashierClosure.getSalesCard(), finalCash,
                 lastCashierClosure.getUsedVouchers());
     }
 

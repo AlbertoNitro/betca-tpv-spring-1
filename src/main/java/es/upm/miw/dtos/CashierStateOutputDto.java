@@ -3,7 +3,7 @@ package es.upm.miw.dtos;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class CashierStatusOutputDto {
+public class CashierStateOutputDto {
 
     private BigDecimal salesTotal;
 
@@ -13,11 +13,11 @@ public class CashierStatusOutputDto {
 
     private BigDecimal totalCash;
 
-    public CashierStatusOutputDto() {
+    public CashierStateOutputDto() {
         // Empty for framework
     }
 
-    public CashierStatusOutputDto(BigDecimal salesTotal, BigDecimal totalCard, BigDecimal totalCash, BigDecimal totalVoucher) {
+    public CashierStateOutputDto(BigDecimal salesTotal, BigDecimal totalCard, BigDecimal totalCash, BigDecimal totalVoucher) {
         this.salesTotal = salesTotal;
         this.totalCard = totalCard;
         this.totalCash = totalCash;
@@ -59,7 +59,7 @@ public class CashierStatusOutputDto {
 
     @Override
     public String toString() {
-        return "CashierStatusOutputDto{" +
+        return "CashierStateOutputDto{" +
                 "salesTotal=" + salesTotal +
                 ", totalVoucher=" + totalVoucher +
                 ", totalCard=" + totalCard +
