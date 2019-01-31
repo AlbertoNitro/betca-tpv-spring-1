@@ -13,7 +13,7 @@ notifications:
 services:
   - mongodb
 script:
-#Test unitario y de integracion en perfil DEV, con covertura
+#Test unitario y de integracion en perfil DEV, con cobertura
 - mvn org.jacoco:jacoco-maven-plugin:prepare-agent verify
 
 # SONAR
