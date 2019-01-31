@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestConfig
 class OrderRepositoryIT {
@@ -34,6 +35,8 @@ class OrderRepositoryIT {
         assertNull(dbOrder.getClosingDate());
         assertEquals("company-p1", dbOrder.getProvider().getCompany());
         assertEquals(1,dbOrder.getOrderLines().length);
+        assertEquals(new Integer(4),dbOrder.getOrderLines()[0].getRequiredAmount());
+        assertEquals(new Integer(4),dbOrder.getOrderLines()[0].getFinalAmount());
 
         this.orderRepository.delete(order);
     }

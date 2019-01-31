@@ -145,14 +145,14 @@ tagList:
 # Ticket
 shoppingList:
   - &sh1
-    description: "descrip-a1"
+    description: Zarzuela - Falda T2
     retailPrice: 20
     amount: 1
     discount: 0
     shoppingState: COMMITTED
     article: *ar1
   - &sh2
-    description: "descrip-a2"
+    description: Zarzuela - Falda T4
     retailPrice: 27.8
     amount: 3
     discount: 50.00
@@ -205,12 +205,6 @@ ticketList:
     shoppingList:
       - *sh4
       - *sh5
-
-# Invoice
-invoiceList:
-  - id: 20191
-    ticket: *ti1
-    user: *us4
 
 # Budget
 shoppingList:
