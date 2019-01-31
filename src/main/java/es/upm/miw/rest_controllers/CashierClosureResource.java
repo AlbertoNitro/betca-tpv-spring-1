@@ -3,7 +3,7 @@ package es.upm.miw.rest_controllers;
 import es.upm.miw.business_controllers.CashierClosureController;
 import es.upm.miw.dtos.CashierClosureInputDto;
 import es.upm.miw.dtos.CashierLastOutputDto;
-import es.upm.miw.dtos.CashierStatusOutputDto;
+import es.upm.miw.dtos.CashierStateOutputDto;
 import es.upm.miw.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +20,7 @@ public class CashierClosureResource {
 
     public static final String LAST = "/last";
 
-    public static final String TOTALS = "/totals";
+    public static final String STATE = "/state";
 
     @Autowired
     private CashierClosureController cashierClosureController;
@@ -35,8 +35,8 @@ public class CashierClosureResource {
         return cashierClosureController.readCashierClosureLast();
     }
 
-    @GetMapping(value = LAST + TOTALS)
-    public CashierStatusOutputDto readTotalsFromLast() throws BadRequestException {
+    @GetMapping(value = LAST + STATE)
+    public CashierStateOutputDto readStateFromLast() throws BadRequestException {
         return this.cashierClosureController.readTotalsFromLast();
     }
 

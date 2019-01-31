@@ -2,7 +2,7 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.dtos.CashierClosureInputDto;
 import es.upm.miw.dtos.CashierLastOutputDto;
-import es.upm.miw.dtos.CashierStatusOutputDto;
+import es.upm.miw.dtos.CashierStateOutputDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,12 +31,12 @@ class CashierClosureResourceIT {
     void testGetCashierClosureLastTotals() {
         this.restService.loginAdmin().restBuilder().path(CashierClosureResource.CASHIER_CLOSURES)
                 .post().build();
-        CashierStatusOutputDto cashierStatusOutputDto = this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<CashierStatusOutputDto>()).clazz(CashierStatusOutputDto.class)
+        CashierStateOutputDto cashierStateOutputDto = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<CashierStateOutputDto>()).clazz(CashierStateOutputDto.class)
                 .path(CashierClosureResource.CASHIER_CLOSURES).path(CashierClosureResource.LAST)
-                .path(CashierClosureResource.TOTALS)
+                .path(CashierClosureResource.STATE)
                 .get().build();
-        assertNotNull(cashierStatusOutputDto);
+        assertNotNull(cashierStateOutputDto);
         CashierClosureInputDto cashierClosureInputDto = new CashierClosureInputDto(BigDecimal.ZERO, BigDecimal.ZERO, "");
         this.restService.loginAdmin().restBuilder()
                 .path(CashierClosureResource.CASHIER_CLOSURES).path(CashierClosureResource.LAST)
@@ -49,7 +49,7 @@ class CashierClosureResourceIT {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 this.restService.loginAdmin().restBuilder()
                         .path(CashierClosureResource.CASHIER_CLOSURES).path(CashierClosureResource.LAST)
-                        .path(CashierClosureResource.TOTALS)
+                        .path(CashierClosureResource.STATE)
                         .get().build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
