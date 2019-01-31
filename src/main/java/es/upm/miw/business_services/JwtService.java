@@ -38,11 +38,11 @@ public class JwtService {
         return authorization != null && authorization.startsWith(BEARER) && authorization.split("\\.").length == 3;
     }
 
-    public String user(String authorization) throws JwtException {
+    public String user(String authorization) {
         return this.verify(authorization).getClaim(USER).asString();
     }
 
-    private DecodedJWT verify(String authorization) throws JwtException {
+    private DecodedJWT verify(String authorization) {
         if (!this.isBearer(authorization)) {
             throw new JwtException("It is not Berear");
         }
@@ -56,7 +56,7 @@ public class JwtService {
 
     }
 
-    public List<String> roles(String authorization) throws JwtException {
+    public List<String> roles(String authorization) {
         return Arrays.asList(this.verify(authorization).getClaim(ROLES).asArray(String.class));
     }
 

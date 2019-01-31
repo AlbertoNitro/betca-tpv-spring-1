@@ -36,13 +36,12 @@ public class CashierClosureResource {
     }
 
     @GetMapping(value = LAST + STATE)
-    public CashierStateOutputDto readStateFromLast() throws BadRequestException {
+    public CashierStateOutputDto readStateFromLast() {
         return this.cashierClosureController.readTotalsFromLast();
     }
 
     @PatchMapping(value = LAST)
-    public void closeCashierClosure(@Valid @RequestBody CashierClosureInputDto cashierClosureInputDto)
-            throws BadRequestException {
+    public void closeCashierClosure(@Valid @RequestBody CashierClosureInputDto cashierClosureInputDto) {
         cashierClosureController.close(cashierClosureInputDto);
     }
 

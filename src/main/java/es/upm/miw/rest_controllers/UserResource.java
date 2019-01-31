@@ -4,8 +4,6 @@ import es.upm.miw.business_controllers.UserController;
 import es.upm.miw.dtos.TokenOutputDto;
 import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
-import es.upm.miw.exceptions.ForbiddenException;
-import es.upm.miw.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,8 +36,7 @@ public class UserResource {
     }
 
     @GetMapping(value = MOBILE_ID)
-    public UserDto read(@PathVariable String mobile, @AuthenticationPrincipal User activeUser)
-            throws NotFoundException, ForbiddenException {
+    public UserDto read(@PathVariable String mobile, @AuthenticationPrincipal User activeUser) {
         return this.userController.readUser(mobile, SecurityContextHolder.getContext().getAuthentication().getName(),
                 SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toList()));

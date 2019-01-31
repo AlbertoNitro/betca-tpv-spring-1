@@ -46,8 +46,7 @@ public class Ticket {
         this.voucher = BigDecimal.ZERO;
     }
 
-    public Ticket(int idOfDay, BigDecimal card, BigDecimal cash, BigDecimal voucher, Shopping[] shoppingList, User user)
-            throws BadRequestException {
+    public Ticket(int idOfDay, BigDecimal card, BigDecimal cash, BigDecimal voucher, Shopping[] shoppingList, User user) {
         this();
         this.id = new SimpleDateFormat(DATE_FORMAT).format(new Date()) + idOfDay;
         this.shoppingList = shoppingList;
@@ -55,7 +54,7 @@ public class Ticket {
         this.addPay(card, cash, voucher);
     }
 
-    public void addPay(BigDecimal card, BigDecimal cash, BigDecimal voucher) throws BadRequestException {
+    public void addPay(BigDecimal card, BigDecimal cash, BigDecimal voucher) {
         this.card = this.card.add(card);
         this.cash = this.cash.add(cash);
         this.voucher = this.voucher.add(voucher);

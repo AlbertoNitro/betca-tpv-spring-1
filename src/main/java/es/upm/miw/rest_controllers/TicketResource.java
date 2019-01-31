@@ -2,9 +2,6 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.TicketController;
 import es.upm.miw.dtos.TicketCreationInputDto;
-import es.upm.miw.exceptions.BadRequestException;
-import es.upm.miw.exceptions.NotFoundException;
-import es.upm.miw.exceptions.PdfException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,8 +21,7 @@ public class TicketResource {
     private TicketController ticketController;
 
     @PostMapping(produces = {"application/pdf", "application/json"})
-    public byte[] createTicket(@Valid @RequestBody TicketCreationInputDto ticketCreationDto)
-            throws NotFoundException, PdfException, BadRequestException {
+    public byte[] createTicket(@Valid @RequestBody TicketCreationInputDto ticketCreationDto) {
         return this.ticketController.createTicketAndPdf(ticketCreationDto);
     }
 

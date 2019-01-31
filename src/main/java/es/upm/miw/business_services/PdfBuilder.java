@@ -45,14 +45,14 @@ public class PdfBuilder {
 
     private Document document;
 
-    public PdfBuilder(String path) throws PdfException {
+    public PdfBuilder(String path) {
         this.filename = System.getProperty(USER_HOME) + path + PDF_FILE_EXT;
         this.prepareDocument(new PageSize(THERMAL_PAGE_WIDTH, THERMAL_PAGE_HEIGHT));
         this.document.setMargins(THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_RIGHT, THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_LEFT);
         this.document.setFontSize(THERMAL_FONT_SIZE);
     }
 
-    private void prepareDocument(PageSize pageSize) throws PdfException {
+    private void prepareDocument(PageSize pageSize) {
         File file = new File(this.filename);
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -114,7 +114,7 @@ public class PdfBuilder {
         return this;
     }
 
-    public PdfBuilder image(String fileName) throws PdfException {
+    public PdfBuilder image(String fileName) {
         try {
             Image img = new Image(ImageDataFactory.create(new ClassPathResource("img/" + fileName).getURL()));
             img.setWidth(IMAGE_WIDTH);
@@ -131,7 +131,7 @@ public class PdfBuilder {
         return new PdfTableBuilder(this, this.document, widths);
     }
 
-    public byte[] build() throws PdfException {
+    public byte[] build() {
         this.document.close();
         try {
             return Files.readAllBytes(new File(this.filename).toPath());

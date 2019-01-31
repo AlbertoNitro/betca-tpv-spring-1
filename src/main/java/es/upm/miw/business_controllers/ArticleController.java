@@ -20,12 +20,12 @@ public class ArticleController {
     private ProviderRepository providerRepository;
 
 
-    public ArticleDto readArticle(String code) throws NotFoundException {
+    public ArticleDto readArticle(String code) {
         return new ArticleDto(this.articleRepository.findById(code)
                 .orElseThrow(() -> new NotFoundException("Article code (" + code + ")")));
     }
 
-    public ArticleDto createArticle(ArticleDto articleDto) throws ConflictRequestException, NotFoundException {
+    public ArticleDto createArticle(ArticleDto articleDto) {
         String code = articleDto.getCode();
         if (this.articleRepository.findById(code).isPresent()) {
             throw new ConflictRequestException("Article code (" + code + ")");

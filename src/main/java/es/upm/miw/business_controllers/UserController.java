@@ -32,7 +32,7 @@ public class UserController {
         return new TokenOutputDto(jwtService.createToken(user.getMobile(), user.getUsername(), roles));
     }
 
-    public UserDto readUser(String mobile, String claimMobile, List<String> claimRoles) throws NotFoundException, ForbiddenException {
+    public UserDto readUser(String mobile, String claimMobile, List<String> claimRoles) {
         User user = this.userRepository.findByMobile(mobile)
                 .orElseThrow(() -> new NotFoundException("User mobile:" + mobile));
         this.authorized(claimMobile, claimRoles, mobile, Arrays.stream(user.getRoles())
@@ -40,8 +40,7 @@ public class UserController {
         return new UserDto(user);
     }
 
-    private void authorized(String claimMobile, List<String> claimRoles, String userMobile, List<String> userRoles)
-            throws ForbiddenException {
+    private void authorized(String claimMobile, List<String> claimRoles, String userMobile, List<String> userRoles) {
         if (claimRoles.contains(Role.ADMIN.roleName()) || claimMobile.equals(userMobile)) {
             return;
         }

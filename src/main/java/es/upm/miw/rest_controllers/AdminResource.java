@@ -32,7 +32,7 @@ public class AdminResource {
     }
 
     @PostMapping(value = DB)
-    public void seedDb(@RequestParam(value = "file", required = false) MultipartFile file) throws FileException {
+    public void seedDb(@RequestParam(value = "file", required = false) MultipartFile file) {
         if (file != null) {
             String filename = StringUtils.cleanPath(file.getOriginalFilename());
             if (file.isEmpty()) {

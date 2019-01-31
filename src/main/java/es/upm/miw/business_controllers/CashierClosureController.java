@@ -21,7 +21,7 @@ public class CashierClosureController {
     @Autowired
     private UserRepository userRepository;
 
-    public void createCashierClosure() throws BadRequestException {
+    public void createCashierClosure() {
         CashierClosure lastCashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
         if (!lastCashierClosure.isClosed()) {
             throw new BadRequestException("Already opened: " + lastCashierClosure.getId());
@@ -34,7 +34,7 @@ public class CashierClosureController {
         return new CashierLastOutputDto(lastCashierClosure);
     }
 
-    public CashierStateOutputDto readTotalsFromLast() throws BadRequestException {
+    public CashierStateOutputDto readTotalsFromLast() {
         CashierClosure lastCashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
         if (lastCashierClosure.isClosed()) {
             throw new BadRequestException("Cashier already closed: " + lastCashierClosure.getId());
@@ -49,7 +49,7 @@ public class CashierClosureController {
                 lastCashierClosure.getUsedVouchers());
     }
 
-    public void close(CashierClosureInputDto cashierClosureInputDto) throws BadRequestException {
+    public void close(CashierClosureInputDto cashierClosureInputDto) {
         CashierClosure lastCashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
         if (lastCashierClosure.isClosed()) {
             throw new BadRequestException("Cashier already closed: " + lastCashierClosure.getId());

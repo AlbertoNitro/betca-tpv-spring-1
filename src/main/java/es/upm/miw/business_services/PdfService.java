@@ -3,7 +3,6 @@ package es.upm.miw.business_services;
 import es.upm.miw.documents.Shopping;
 import es.upm.miw.documents.ShoppingState;
 import es.upm.miw.documents.Ticket;
-import es.upm.miw.exceptions.PdfException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,7 @@ public class PdfService {
     @Value("${miw.company.web}")
     private String web;
 
-    public byte[] generateTicket(Ticket ticket) throws PdfException {
+    public byte[] generateTicket(Ticket ticket) {
         final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
         PdfBuilder pdf = new PdfBuilder(path);
         pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
