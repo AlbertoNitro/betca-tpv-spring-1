@@ -8,7 +8,7 @@ import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestConfig
 class OrderRepositoryIT {
@@ -22,10 +22,19 @@ class OrderRepositoryIT {
     @Test
     void testReadAll() {
         Article article = this.articleRepository.findById("8400000000017").get();
-        OrderLine[] orderLines= Arrays.array(new OrderLine(article,4));
-        Order order = new Order("Order",article.getProvider(),orderLines);
+        OrderLine[] orderLines = Arrays.array(new OrderLine(article, 4));
+        Order order = new Order("Order 2Ds3Rf4", article.getProvider(), orderLines);
         this.orderRepository.save(order);
         assertTrue(this.orderRepository.findAll().size() > 0);
+
+        Order dbOrder = this.orderRepository.findAll().stream()
+                .filter(ord -> "Order 2Ds3Rf4".equals(ord.getDescription())).findFirst().get();
+
+        assertNotNull(dbOrder.getOpeningDate());
+        assertNull(dbOrder.getClosingDate());
+        assertEquals("company-p1", dbOrder.getProvider().getCompany());
+        assertEquals(1,dbOrder.getOrderLines().length);
+
         this.orderRepository.delete(order);
     }
 
