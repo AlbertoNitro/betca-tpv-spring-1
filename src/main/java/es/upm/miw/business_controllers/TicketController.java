@@ -78,8 +78,7 @@ public class TicketController {
         return ticket;
     }
 
-    public byte[] createTicketAndPdf(TicketCreationInputDto ticketCreationDto)
-            throws NotFoundException, PdfException, BadRequestException {
+    public byte[] createTicketAndPdf(TicketCreationInputDto ticketCreationDto) {
         return pdfService.generateTicket(this.createTicket(ticketCreationDto));
     }
 

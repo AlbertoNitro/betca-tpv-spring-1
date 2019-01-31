@@ -26,7 +26,7 @@ public class CashierClosureResource {
     private CashierClosureController cashierClosureController;
 
     @PostMapping
-    public void openCashierClosure() throws BadRequestException {
+    public void openCashierClosure() {
         cashierClosureController.createCashierClosure();
     }
 
