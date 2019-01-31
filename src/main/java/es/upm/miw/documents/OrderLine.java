@@ -14,11 +14,11 @@ public class OrderLine {
     public OrderLine() {
     }
 
-    public OrderLine(Article article, int requiredAmount, int finalAmount) {
+    public OrderLine(Article article, int requiredAmount) {
         super();
         this.article = article;
         this.requiredAmount = requiredAmount;
-        this.finalAmount = finalAmount;
+        this.finalAmount = null;
     }
 
     public int getFinalAmount() {
