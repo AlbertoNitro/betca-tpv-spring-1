@@ -44,7 +44,7 @@ class ArticleControllerIT {
     }
 
     @Test
-    void testInitStock() throws NotFoundException, ConflictRequestException {
+    void testInitStock()  {
         assertNotNull(this.articleController.createArticle(articleDto).getStock());
         this.articleRepository.deleteById(this.articleDto.getCode());
     }
