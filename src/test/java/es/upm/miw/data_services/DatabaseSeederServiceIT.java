@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestConfig
@@ -19,7 +20,10 @@ class DatabaseSeederServiceIT {
     private DatabaseSeederService databaseSeederService;
 
     @Test
-    void testUserSeedDatabase() {
+    void testDeleteAllAndInitialize() {
+        this.databaseSeederService.deleteAllAndInitialize();
+        assertFalse(userRepository.findByMobile("666666001").isPresent());
+        this.databaseSeederService.seedDatabase();
         User user = userRepository.findByMobile("666666001").get();
         assertEquals("u001", user.getUsername());
         assertEquals("u001@gmail.com", user.getEmail());

@@ -86,8 +86,8 @@ providerList:
 articleList:
   - &ar1
     code: 8400000000017
-    reference: ref-a1
-    description: descrip-a1
+    reference: Zz Falda T2
+    description: Zarzuela - Falda T2
     retailPrice: 20
     stock: 10
     tax: GENERAL
@@ -95,8 +95,8 @@ articleList:
     provider: *pr1
   - &ar2
     code: 8400000000024
-    reference: ref-a2
-    description: descrip-a2
+    reference: Zz Falda T4
+    description: Zarzuela - Falda T4
     retailPrice: 27.8
     stock: 5
     tax: FREE
