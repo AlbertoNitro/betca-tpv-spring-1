@@ -4,7 +4,6 @@ import es.upm.miw.business_controllers.CashierClosureController;
 import es.upm.miw.dtos.CashierClosureInputDto;
 import es.upm.miw.dtos.CashierLastOutputDto;
 import es.upm.miw.dtos.CashierStateOutputDto;
-import es.upm.miw.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

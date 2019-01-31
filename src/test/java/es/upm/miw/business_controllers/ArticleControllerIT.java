@@ -5,7 +5,6 @@ import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.exceptions.ConflictRequestException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,7 @@ class ArticleControllerIT {
     }
 
     @Test
-    void testInitStock()  {
+    void testInitStock() {
         assertNotNull(this.articleController.createArticle(articleDto).getStock());
         this.articleRepository.deleteById(this.articleDto.getCode());
     }

@@ -57,7 +57,7 @@ class ArticlesFamilyRepositoryIT {
         assertTrue(dbArticleFamily1.getArticlesFamilyList().isEmpty());
         assertEquals("Zarzuela - Falda T2", dbArticleFamily1.getDescription());
         assertEquals("Zz Falda T2", dbArticleFamily1.getReference());
-        assertTrue(dbArticleFamily1.getStock()<11);
+        assertTrue(dbArticleFamily1.getStock() < 11);
         assertEquals(FamilyType.ARTICLE, dbArticleFamily1.getFamilyType());
 
         this.familyCompositeRepository.deleteAll();
