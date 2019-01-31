@@ -1,7 +1,5 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.exceptions.JwtException;
-import es.upm.miw.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.HttpClientErrorException;
@@ -30,10 +28,10 @@ class AdminResourceIT {
     }
 
     @Test
-    void testSeedDBUploadError(){
+    void testSeedDBUploadError() {
         assertThrows(HttpClientErrorException.NotFound.class, () ->
                 this.restService.loginAdmin().restBuilder().loadFile("testEmpty.yml").path(AdminResource.ADMINS)
-                .path(AdminResource.DB).post().log().build());
+                        .path(AdminResource.DB).post().log().build());
     }
 
     @Test

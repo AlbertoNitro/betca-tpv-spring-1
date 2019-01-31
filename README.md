@@ -74,7 +74,7 @@ Integración continua con **Travis-CI**. Se despliega para pruebas con el servic
 services:
   - mongodb
 script:
-- mvn org.jacoco:jacoco-maven-plugin:prepare-agent verify  #Test en el perfil "dev" y con covertura
+- mvn org.jacoco:jacoco-maven-plugin:prepare-agent verify  #Test en el perfil "dev" y con cobertura
 ```
 
 ### Sonarcloud
