@@ -18,10 +18,10 @@ public class OrderLine {
         super();
         this.article = article;
         this.requiredAmount = requiredAmount;
-        this.finalAmount = null;
+        this.finalAmount = requiredAmount;
     }
 
-    public int getFinalAmount() {
+    public Integer getFinalAmount() {
         return finalAmount;
     }
 
@@ -39,7 +39,11 @@ public class OrderLine {
 
     @Override
     public String toString() {
-        return "OrderLine [article=" + article + ", requiredAmount=" + requiredAmount + ", finalAmount=" + finalAmount + "]";
+        return "OrderLine{" +
+                "article=" + article +
+                ", requiredAmount=" + requiredAmount +
+                ", finalAmount=" + finalAmount +
+                '}';
     }
 
 }

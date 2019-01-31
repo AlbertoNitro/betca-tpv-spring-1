@@ -46,24 +46,12 @@ public class Invoice {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public Ticket getTicket() {
         return ticket;
     }
 
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-    }
-
     public LocalDateTime getCreationDated() {
         return creationDate;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
     }
 
     public int simpleId() {
@@ -74,16 +62,8 @@ public class Invoice {
         return baseTax;
     }
 
-    public void setBaseTax(BigDecimal baseTax) {
-        this.baseTax = baseTax;
-    }
-
     public BigDecimal getTax() {
         return tax;
-    }
-
-    public void setTax(BigDecimal tax) {
-        this.tax = tax;
     }
 
     public User getUser() {
