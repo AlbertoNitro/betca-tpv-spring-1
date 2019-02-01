@@ -60,8 +60,8 @@ public class ApiExceptionHandler {
             ForbiddenException.class
     })
     @ResponseBody
-    public ErrorMessage forbiddenRequest(Exception exception) {
-        return new ErrorMessage(exception, "");
+    public ErrorMessage forbiddenRequest(HttpServletRequest request, Exception exception) {
+        return new ErrorMessage(exception, request.getRequestURI());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -69,9 +69,9 @@ public class ApiExceptionHandler {
             Exception.class
     })
     @ResponseBody
-    public ErrorMessage exception(Exception exception) {
+    public ErrorMessage exception(HttpServletRequest request, Exception exception) {
         LogManager.getLogger(this.getClass()).debug(">>> EXCEPTION  ..." + exception.toString());
-        return new ErrorMessage("Server Error. " + exception.getMessage());
+        return new ErrorMessage(exception, request.getRequestURI());
     }
 
 }

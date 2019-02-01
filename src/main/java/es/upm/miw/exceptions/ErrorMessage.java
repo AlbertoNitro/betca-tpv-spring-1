@@ -14,12 +14,6 @@ public class ErrorMessage {
         this.path = path;
     }
 
-    public ErrorMessage(String error) {
-        this.error = error;
-        this.message = error;
-        this.path = "/";
-    }
-
     public String getError() {
         return error;
     }

@@ -37,6 +37,12 @@ class OrderRepositoryIT {
         assertEquals(new Integer(4), dbOrder.getOrderLines()[0].getRequiredAmount());
         assertEquals(new Integer(4), dbOrder.getOrderLines()[0].getFinalAmount());
 
+        dbOrder.setDescription("new description");
+        dbOrder.close();
+
+        assertNotNull(dbOrder.getClosingDate());
+
+
         this.orderRepository.delete(order);
     }
 

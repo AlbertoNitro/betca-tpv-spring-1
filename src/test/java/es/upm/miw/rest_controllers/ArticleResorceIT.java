@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @ApiTestConfig
@@ -30,5 +32,27 @@ class ArticleResorceIT {
                         .get().build());
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
+
+    @Test
+    void testCreateArticleRepeated() {
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder()
+                        .path(ArticleResource.ARTICLES)
+                        .body(new ArticleDto("8400000000017", "repeated", "", BigDecimal.TEN, 10))
+                        .post().build());
+        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
+    }
+
+
+    @Test
+    void testCreateArticleNegativePrice() {
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder()
+                        .path(ArticleResource.ARTICLES)
+                        .body(new ArticleDto("4800000000011", "new", "", new BigDecimal("-1"), 10))
+                        .post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
 
 }

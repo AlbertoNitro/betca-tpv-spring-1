@@ -55,7 +55,14 @@ public class PdfBuilder {
     private void prepareDocument(PageSize pageSize) {
         File file = new File(this.filename);
         if (!file.exists()) {
-            file.getParentFile().mkdirs();
+            try {
+                file.getParentFile().mkdirs();
+            } catch (SecurityException s) {
+                LogManager.getLogger(this.getClass()).error(
+                        "PdfBuilder::prepareDocuemnt. Error when creating the pdf document (" + this.filename + "). "
+                                + s);
+                throw new PdfException("Can’t create PDF (" + this.filename + ")");
+            }
         }
         PdfWriter pdfWriter;
         PdfDocument pdf;
