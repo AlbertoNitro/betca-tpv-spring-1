@@ -161,6 +161,10 @@ public class DatabaseSeederService {
         LogManager.getLogger(this.getClass()).warn("------- Seed...   " + "-----------");
     }
 
+    public String nextCodeEan(){
+        throw new RuntimeException("Method nextCodeEan not implemented");
+    }
+
 }
 
 

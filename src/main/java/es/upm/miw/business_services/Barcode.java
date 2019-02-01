@@ -1,6 +1,7 @@
 package es.upm.miw.business_services;
 
 public class Barcode {
+
     public String ean13ControlCodeCalculator(String code) {
         char[] charDigits = code.toCharArray();
         int[] ean13 = {1, 3};

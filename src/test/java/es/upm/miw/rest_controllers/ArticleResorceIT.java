@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.math.BigDecimal;
 
@@ -54,5 +55,13 @@ class ArticleResorceIT {
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 
-
+    @Test
+    void testCreateArticleWithoutCodeNextCodeEanNotImplemented() {
+        HttpServerErrorException.InternalServerError exception = assertThrows(HttpServerErrorException.InternalServerError.class, () ->
+                this.restService.loginAdmin().restBuilder()
+                        .path(ArticleResource.ARTICLES)
+                        .body(new ArticleDto(null, "new", "", BigDecimal.TEN, 10))
+                        .post().build());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
+    }
 }

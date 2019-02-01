@@ -1,5 +1,6 @@
 package es.upm.miw.business_controllers;
 
+import es.upm.miw.data_services.DatabaseSeederService;
 import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Provider;
 import es.upm.miw.dtos.ArticleDto;
@@ -19,6 +20,9 @@ public class ArticleController {
     @Autowired
     private ProviderRepository providerRepository;
 
+    @Autowired
+    private DatabaseSeederService databaseSeederService;
+
 
     public ArticleDto readArticle(String code) {
         return new ArticleDto(this.articleRepository.findById(code)
@@ -27,6 +31,9 @@ public class ArticleController {
 
     public ArticleDto createArticle(ArticleDto articleDto) {
         String code = articleDto.getCode();
+        if (code == null) {
+            code = this.databaseSeederService.nextCodeEan();
+        }
         if (this.articleRepository.findById(code).isPresent()) {
             throw new ConflictRequestException("Article code (" + code + ")");
         }
