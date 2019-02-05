@@ -376,20 +376,20 @@ se habilitará la referencia del ticket para que el cliente pueda acceder al tic
 
 [Más información...](../../wiki/Offers)
 
-## 12. Orders 
-> **Autor: xxx** 
->* Gestionar la tramitación de pedidos. Se organizarán por proveedor. 
->* Permitir crear un pedido a partir de algún pedido anterior
-
-[Más información...](../../wiki/Orders)
-
-## 13. Operator Manager 
+## 12. Operator Manager 
 > **Autor: xxx** 
 >* Gestionar a los vendedores (operator & Manager)
 >* Gestiona de ficha de entrada y salida por día
 >* Da un informe mensual de días y horas
 
 [Más información...](../../wiki/Operator-Manager)
+
+## 13. Orders 
+> **Autor: xxx** 
+>* Gestionar la tramitación de pedidos. Se organizarán por proveedor. 
+>* Permitir crear un pedido a partir de algún pedido anterior
+
+[Más información...](../../wiki/Orders)
 
 ## 14. Orders Entry
 > **Autor: xxx**  
