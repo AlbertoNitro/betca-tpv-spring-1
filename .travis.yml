@@ -4,7 +4,7 @@ jdk:
 branches:
   only:
   - develop
-  - /^release-.*$/
+  - /^release-[0-999].[0-999]$/
   - master
 notifications:
   email:

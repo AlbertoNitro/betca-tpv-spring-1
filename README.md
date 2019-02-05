@@ -1,14 +1,19 @@
-# Tecnología Spring: Proyecto TPV - Back-end
+# Proyecto TPV - Back-end - Spring
 #### Back-end con Tecnologías de Código Abierto (SPRING)
 #### [Máster en Ingeniería Web por la U.P.M.](http://miw.etsisi.upm.es)
 [![Build Status](https://travis-ci.org/miw-upm/betca-tpv-spring.svg?branch=develop)](https://travis-ci.org/miw-upm/betca-tpv-spring)
 ![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=es.upm.miw%3Abetca-tpv-spring&metric=alert_status)
 > Proyecto Back-end completo para el uso de la tecnología Spring.  
+> Api en acción: [https://betca-tpv-spring.herokuapp.com/api/v0/swagger-ui.html](https://betca-tpv-spring.herokuapp.com/api/v0/swagger-ui.html).  
+> Web en acción: [https://betca-tpv-angular.herokuapp.com](https://betca-tpv-angular.herokuapp.com).  
 > El Front-end se desarrolla en Angular en el proyecto [betca-tpv-angular](https://github.com/miw-upm/betca-tpv-angular).  
-
+> Ejecución en local:
+> * Se debe tener arrancado el motor de MongoDB: `mongodb://localhost:27017/tpv`  
+> * Ejecutar el **API** en linea de comando, mediante: `> mvn clean spring-boot:run`  
 
 ## Tecnologías necesarias
 `Java` `Maven` `Spring` `Mongodb`
+
 ### Clonar el proyecto
  Clonar el repositorio en tu equipo, **mediante consola**:
 ```sh
@@ -20,12 +25,17 @@ Importar el proyecto mediante **IntelliJ IDEA**
 1. Marcar **Create Project from external model**, elegir **Maven**
 1. **Next** … **Finish**
 
+## Presentación
+Este proyecto es la práctica de Angular desarrollada de forma colaborativa por todos los alumnos.
+Se parte de la versión `core`, ya implementada, y se pretende ampliar con un conjunto de mejoras.  
+Un **T**erminal **P**unto de **V**enta es un sistema informático que gestiona el proceso de venta mediante una interfaz accesible para los vendedores o compradores.
+Un único sistema informático permite la creación e impresión del recibo ticket o factura de venta —con los detalles de las referencias y precios— de los artículos vendidos, actualiza los cambios en el nivel de existencias de mercancías (STOCK) en la base de datos...
 
 ## Ecosistema
 `Git` `GitHub` `Travis-CI` `Sonarclud` `Heroku` `mLab`
 > Se utilizará un flujo de trabajo ramificado (_**Git Workflow**_).
-> Una **historia** por alumno, organizada como un **proyecto** de tipo **Automated kanban**.
-> Cada **historia** se dividirá en **tareas**, cada **tarea** será una **issue#** que será el nombre de la **rama**.  
+> Una **historia** por **alumno**, organizada como un **proyecto** de tipo **Automated kanban**.
+> Cada **historia** se dividirá en **tareas**, cada **tarea** será una **issue#**, que será el nombre de la **rama**.  
 > **Se recomienda aportaciones frecuentes a la rama `develop`** :sweat_smile:
 
 ### Metodología de trabajo
@@ -44,7 +54,7 @@ Y si fuera necesario, actualizar la rama **develop** con la remota **origin/deve
 ```sh
 > git checkout -b issue#xx
 ```
- Y si se continúa, y se necesitara actualizar la rama:
+ Y si se continúa, y se necesitara actualizar la rama **issue#** con las nuevas incorporaciones de **develop** :
 ```sh
 > git checkout issue#xx
 > git merge -m "Merge develop into issue #xx" develop
@@ -99,7 +109,7 @@ public class SwaggerConfig {
 ```
 
 ### Heroku & mLab
-Se realiza un despliegue en **Heroku** con las bases de datos de MongoDB en **mLab**.  
+Se realiza un despliegue en **Heroku** con bases de datos de MongoDB en **mLab**.  
 En la cuenta de **Heroku**, en la página `-> Account settings -> API Key`, se ha obtenido la `API KEY`.  
 En la cuenta de **Travis-CI**, dentro del proyecto, en `-> More options -> Settings`, se ha creado una variable de entorno llamada `HEROKU` cuyo contenido es la **API key** de **Heroku**.  
 Se incorpora el siguiente código en el fichero `.travis.yml`
