@@ -2,7 +2,7 @@ package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
 import es.upm.miw.dtos.ArticleDto;
-import es.upm.miw.exceptions.ConflictRequestException;
+import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ class ArticleControllerIT {
     @Test
     void testConflictRequestException() {
         this.articleDto.setCode("8400000000017");
-        assertThrows(ConflictRequestException.class, () -> this.articleController.createArticle(this.articleDto));
+        assertThrows(ConflictException.class, () -> this.articleController.createArticle(this.articleDto));
     }
 
     @Test

@@ -14,7 +14,7 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({
-            JwtException.class,
+            UnauthorizedException.class,
             org.springframework.security.access.AccessDeniedException.class
     })
     @ResponseBody
@@ -24,8 +24,7 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
-            NotFoundException.class,
-            FileException.class
+            NotFoundException.class
     })
     @ResponseBody
     public ErrorMessage notFoundRequest(HttpServletRequest request, Exception exception) {
@@ -47,7 +46,7 @@ public class ApiExceptionHandler {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler({
-            ConflictRequestException.class
+            ConflictException.class
     })
     @ResponseBody
     public ErrorMessage conflictRequest(HttpServletRequest request, Exception exception) {

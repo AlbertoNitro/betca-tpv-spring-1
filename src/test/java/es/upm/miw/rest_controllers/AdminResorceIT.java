@@ -1,5 +1,6 @@
 package es.upm.miw.rest_controllers;
 
+import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.HttpClientErrorException;
@@ -32,6 +33,14 @@ class AdminResourceIT {
         assertThrows(HttpClientErrorException.NotFound.class, () ->
                 this.restService.loginAdmin().restBuilder().loadFile("testEmpty.yml").path(AdminResource.ADMINS)
                         .path(AdminResource.DB).post().log().build());
+    }
+
+    @Test
+    void testSeedDBUploadErrorNotException() throws IOException {
+                String json = this.restService.loginAdmin().restBuilder(new RestBuilder<String>()).clazz(String.class)
+                        .loadFile("testEmpty.yml").path(AdminResource.ADMINS).path(AdminResource.DB)
+                        .post().log().notError().build();
+        LogManager.getLogger(this.getClass()).info("Error Message: " + json);
     }
 
     @Test
