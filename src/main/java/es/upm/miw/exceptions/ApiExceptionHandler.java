@@ -49,7 +49,7 @@ public class ApiExceptionHandler {
             ConflictException.class
     })
     @ResponseBody
-    public ErrorMessage conflictRequest(HttpServletRequest request, Exception exception) {
+    public ErrorMessage conflict(HttpServletRequest request, Exception exception) {
         return new ErrorMessage(exception, request.getRequestURI());
     }
 
@@ -59,7 +59,7 @@ public class ApiExceptionHandler {
             ForbiddenException.class
     })
     @ResponseBody
-    public ErrorMessage forbiddenRequest(HttpServletRequest request, Exception exception) {
+    public ErrorMessage forbidden(HttpServletRequest request, Exception exception) {
         return new ErrorMessage(exception, request.getRequestURI());
     }
 
