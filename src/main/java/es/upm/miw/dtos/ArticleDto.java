@@ -80,13 +80,13 @@ public class ArticleDto extends ArticleMinimumDto {
         return provider;
     }
 
-    public ArticleDto setProvider(String provider) {
-        this.provider = provider;
+    public ArticleDto setProvider(Provider provider) {
+        this.provider = provider.getId();
         return this;
     }
 
-    public ArticleDto setProvider(Provider provider) {
-        this.provider = provider.getId();
+    public ArticleDto setProvider(String provider) {
+        this.provider = provider;
         return this;
     }
 
