@@ -2,8 +2,6 @@ package es.upm.miw.config;
 
 import es.upm.miw.business_services.JwtService;
 import es.upm.miw.documents.Role;
-import es.upm.miw.exceptions.JwtException;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,25 +30,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req,
-                                    HttpServletResponse res,
-                                    FilterChain chain) throws IOException, ServletException {
-        String authHeader = req.getHeader(AUTHORIZATION);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        String authHeader = request.getHeader(AUTHORIZATION);
         if (jwtService.isBearer(authHeader)) {
             List<GrantedAuthority> authorities;
-            try {
-                authorities = jwtService.roles(authHeader).stream()
-                        .map(role -> new SimpleGrantedAuthority(Role.valueOf(role).roleName())).collect(Collectors.toList());
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(jwtService.user(authHeader), null, authorities);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (JwtException e) {
-                LogManager.getLogger(this.getClass().getName()).debug(">>> FILTER JWT UNAUTHORIZED ..."
-                        + req.getHeader(AUTHORIZATION) + e.getMessage());
-                res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            }
+            authorities = jwtService.roles(authHeader).stream()
+                    .map(role -> new SimpleGrantedAuthority(Role.valueOf(role).roleName())).collect(Collectors.toList());
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(jwtService.user(authHeader), null, authorities);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        chain.doFilter(req, res);
+        chain.doFilter(request, response);
     }
 
 }
