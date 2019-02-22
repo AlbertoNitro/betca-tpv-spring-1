@@ -2,7 +2,7 @@
 #### Back-end con Tecnologías de Código Abierto (SPRING)
 #### [Máster en Ingeniería Web por la U.P.M.](http://miw.etsisi.upm.es)
 [![Build Status](https://travis-ci.org/miw-upm/betca-tpv-spring.svg?branch=develop)](https://travis-ci.org/miw-upm/betca-tpv-spring)
-![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=es.upm.miw%3Abetca-tpv-spring&metric=alert_status)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=es.upm.miw%3Abetca-tpv-spring&metric=alert_status)](https://sonarcloud.io/code?id=es.upm.miw%3Abetca-tpv-spring)
 > Proyecto Back-end completo para el uso de la tecnología Spring.  
 > Api en acción: [https://betca-tpv-spring.herokuapp.com/api/v0/swagger-ui.html](https://betca-tpv-spring.herokuapp.com/api/v0/swagger-ui.html).  
 > Web en acción: [https://betca-tpv-angular.herokuapp.com](https://betca-tpv-angular.herokuapp.com).  
