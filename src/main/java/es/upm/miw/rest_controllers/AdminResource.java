@@ -40,7 +40,7 @@ public class AdminResource {
     private String buildTimestamp;
 
     @GetMapping(value = INFO)
-    public InfoOutputDto info() {
+    public InfoOutputDto applicationInfo() {
         return new InfoOutputDto(this.applicationName, this.buildVersion, this.buildTimestamp);
     }
 
