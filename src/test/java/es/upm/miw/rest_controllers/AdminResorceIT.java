@@ -1,5 +1,6 @@
 package es.upm.miw.rest_controllers;
 
+import es.upm.miw.dtos.InfoOutputDto;
 import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,13 @@ class AdminResourceIT {
 
     @Autowired
     private RestService restService;
+
+    @Test
+    void testInfo(){
+        InfoOutputDto info=this.restService.loginAdmin().restBuilder(new RestBuilder<InfoOutputDto>())
+                .clazz(InfoOutputDto.class).path(AdminResource.ADMINS).path(AdminResource.INFO).get().build();
+        System.out.println("===>>>"+info);
+    }
 
     @Test
     void testDeleteDB() {

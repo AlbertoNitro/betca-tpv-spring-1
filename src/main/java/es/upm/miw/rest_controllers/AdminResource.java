@@ -1,8 +1,10 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.AdminController;
+import es.upm.miw.dtos.InfoOutputDto;
 import es.upm.miw.exceptions.FileException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @PreAuthorize("hasRole('ADMIN')")
 @RestController
@@ -20,11 +23,27 @@ public class AdminResource {
 
     public static final String DB = "/db";
 
+    public static final String INFO = "/info";
+
     @Autowired
     private ConfigurableApplicationContext configurableApplicationContext;
 
     @Autowired
     private AdminController adminController;
+
+    @Value("${application.name}")
+    private String applicationName;
+
+    @Value("${build.version}")
+    private String buildVersion;
+
+    @Value("${build.timestamp}")
+    private String buildTimestamp;
+
+    @GetMapping(value=INFO)
+    public InfoOutputDto info(){
+        return new InfoOutputDto(this.applicationName,this.buildVersion, this.buildTimestamp);
+    }
 
     @DeleteMapping(value = DB)
     public void deleteDb() {
