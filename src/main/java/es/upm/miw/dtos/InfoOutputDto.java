@@ -1,7 +1,5 @@
 package es.upm.miw.dtos;
 
-import java.time.LocalDateTime;
-
 public class InfoOutputDto {
 
     private String name;

@@ -8,6 +8,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ApiTestConfig
@@ -20,7 +21,9 @@ class AdminResourceIT {
     void testInfo(){
         InfoOutputDto info=this.restService.loginAdmin().restBuilder(new RestBuilder<InfoOutputDto>())
                 .clazz(InfoOutputDto.class).path(AdminResource.ADMINS).path(AdminResource.INFO).get().build();
-        System.out.println("===>>>"+info);
+        assertNotNull(info.getName());
+        assertNotNull(info.getVersion());
+        assertNotNull(info.getDate());
     }
 
     @Test

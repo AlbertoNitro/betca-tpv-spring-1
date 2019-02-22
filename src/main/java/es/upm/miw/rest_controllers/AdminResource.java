@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @PreAuthorize("hasRole('ADMIN')")
 @RestController
@@ -40,9 +39,9 @@ public class AdminResource {
     @Value("${build.timestamp}")
     private String buildTimestamp;
 
-    @GetMapping(value=INFO)
-    public InfoOutputDto info(){
-        return new InfoOutputDto(this.applicationName,this.buildVersion, this.buildTimestamp);
+    @GetMapping(value = INFO)
+    public InfoOutputDto info() {
+        return new InfoOutputDto(this.applicationName, this.buildVersion, this.buildTimestamp);
     }
 
     @DeleteMapping(value = DB)
