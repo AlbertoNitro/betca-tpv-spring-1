@@ -263,8 +263,8 @@ Para ejecutar en un perfil determinado localmente:
 > Para `Web Storm`, todo el código debe estar formateado mediante: `-> Code -> Reformat Code`, con los chekbox `[x]Optimize imports`, `[x]Rearrange entries` y `Cleanup code` activados.  
 
 ## Fase 2. Importar los proyectos
-* BACK-END (IntelliJ): https://github.com/miw-upm/betca-tpv-spring.
 * FROND-END (Web Storm): https://github.com/miw-upm/betca-tpv-angular.
+* BACK-END (IntelliJ): https://github.com/miw-upm/betca-tpv-spring.
 
 ## Fase 3. Determinar y limitar el alcance de la práctica  
 1. Determinar el enunciado
@@ -299,7 +299,7 @@ Como ejemplo proponemos la siguiente división:
    
 ## Tareas transversales
 * Planificar antes los cambios a realizar, y cuando se tiene claro, actualizar la rama **issue#xx** con **develop** justo antes de empezar. Realizar una **estimación temporal** y **anotarlo en la tarea**.
-* Cuando nos sentamos a trabajar, comprobar que la rama **issue#xx** está actualizada respecto a **develop** y hacer un **commit de inicio de tarea**.
+* Cuando nos sentamos a trabajar, comprobar que la rama **issue#xx** está actualizada respecto a **develop**.
 * No es recomendable dejar de trabajar sin aportar a develop las mejoras, siempre **sin romper develop**.
 * Realizar aportaciones frecuentes a la rama **develop**, del código estable, aunque este a medias. **Ojo** con los ficheros muy susceptibles de colisionar, como por ejemplo **app.module.ts**, **app-routing.module.ts**, **home.component.ts**..., en este caso, modificarlos y subirlos a **develop** con rapidez.
 * Vigilar y pensar bien los **comentarios de los commits**, acordarse de añadir la referencia del issue: **#xx**.
