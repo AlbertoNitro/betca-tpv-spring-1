@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -63,6 +64,22 @@ class ArticlesFamilyRepositoryIT {
         this.familyCompositeRepository.deleteAll();
         this.familyArticleRepository.deleteAll();
 
+    }
+
+    @Test
+    void testFindAllByFamilyType(){
+        ArticlesFamily articlesFamilyComposite = new FamilyComposite(FamilyType.SIZES, "test", "test");
+        ArticlesFamily articleFamily1 = new FamilyArticle(this.articleRepository.findById("8400000000024").get());
+        this.articlesFamilyRepository.save(articleFamily1);
+
+        articlesFamilyComposite.add(articleFamily1);
+        this.articlesFamilyRepository.save(articlesFamilyComposite);
+
+        List<ArticlesFamily> dbArticles = this.articlesFamilyRepository.findByFamilyType(FamilyType.SIZES);
+        assertEquals(1, dbArticles.size());
+
+        this.familyCompositeRepository.deleteAll();
+        this.familyArticleRepository.deleteAll();
     }
 
 }
