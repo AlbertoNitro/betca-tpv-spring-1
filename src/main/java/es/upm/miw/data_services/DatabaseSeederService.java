@@ -137,6 +137,20 @@ public class DatabaseSeederService {
         }
     }
 
+    private void seedDatabaseWithArticlesFamilyForView(){
+        LogManager.getLogger(this.getClass()).warn("------- Create Article Family Root -----------");
+        ArticlesFamily root = new FamilyComposite(FamilyType.ARTICLES, "root", "root");
+
+        ArticlesFamily c1 = new FamilyArticle(this.articleRepository.findById("8400000000031").get());
+        ArticlesFamily c2 =  new FamilyArticle(this.articleRepository.findById("8400000000048").get());
+        this.articlesFamilyRepository.save(c1);
+        this.articlesFamilyRepository.save(c2);
+
+        root.add(c1);
+        root.add(c2);
+        this.articlesFamilyRepository.save(root);
+    }
+
     public void seedDatabase(InputStream input) {
         Yaml yamlParser = new Yaml(new Constructor(DatabaseGraph.class));
         DatabaseGraph tpvGraph = yamlParser.load(input);
@@ -157,6 +171,9 @@ public class DatabaseSeederService {
         this.familyCompositeRepository.saveAll(tpvGraph.getFamilyCompositeList());
         this.invoiceRepository.saveAll(tpvGraph.getInvoiceList());
         // -----------------------------------------------------------------------
+
+        // Seed ArticlesFamilyRepository  ----------------------------------------
+        this.seedDatabaseWithArticlesFamilyForView();
 
         LogManager.getLogger(this.getClass()).warn("------- Seed...   " + "-----------");
     }
