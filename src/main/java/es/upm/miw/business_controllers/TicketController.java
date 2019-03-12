@@ -78,9 +78,9 @@ public class TicketController {
         return ticket;
     }
 
-    public ArrayList<TicketQueryResultDto> advancedTicketQuery(TicketQueryInputDto ticketQueryDto) {
-        ArrayList<TicketQueryResultDto> ticketResults = new ArrayList<>();
-        ArrayList<Ticket> ticketsFound = new ArrayList<>();
+    public List<TicketQueryResultDto> advancedTicketQuery(TicketQueryInputDto ticketQueryDto) {
+        List<TicketQueryResultDto> ticketResults = new ArrayList<>();
+        List<Ticket> ticketsFound = new ArrayList<>();
         if (ticketQueryDto.getUserMobile() != null) {
             User user = this.userRepository.findByMobile(ticketQueryDto.getUserMobile())
                     .orElseThrow(() -> new NotFoundException("User mobile:" + ticketQueryDto.getUserMobile()));
@@ -89,7 +89,7 @@ public class TicketController {
         for(Ticket item: ticketsFound){
             ticketResults.add(new TicketQueryResultDto(item));
         }
-        if(ticketResults.size() < 1) {
+        if(ticketResults.isEmpty()) {
             throw new NotFoundException("ticket not found");
         } else {
             return ticketResults;

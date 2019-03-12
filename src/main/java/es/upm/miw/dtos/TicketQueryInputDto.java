@@ -17,7 +17,9 @@ public class TicketQueryInputDto {
 
     private Boolean pending;
 
-    public TicketQueryInputDto(){}
+    public TicketQueryInputDto() {
+        //empty for quick creation
+    }
 
     public String getUserMobile() {
         return userMobile;
