@@ -1,6 +1,7 @@
-package es.upm.miw.repositories;
+package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
+import es.upm.miw.data_services.DatabaseSeederService;
 import es.upm.miw.dtos.ProviderMinimunDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,21 +11,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestConfig
-class ProviderRepositoryIT {
+public class ProviderControllerIT {
 
     @Autowired
-    private ProviderRepository providerRepository;
+    private ProviderController providerController;
 
     @Test
     void testReadAll() {
-        assertTrue(this.providerRepository.findAll().size() > 1);
-    }
-
-    @Test
-    void testFindAllProviders() {
-        List<ProviderMinimunDto> providers = providerRepository.findAllProviders();
-        System.out.println(providers);
+        List<ProviderMinimunDto> providers = providerController.readAll();
         assertTrue(providers.size() > 1);
     }
-
 }
