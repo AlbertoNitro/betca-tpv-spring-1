@@ -4,6 +4,8 @@ import es.upm.miw.business_services.PdfService;
 import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ShoppingDto;
 import es.upm.miw.dtos.TicketCreationInputDto;
+import es.upm.miw.dtos.TicketQueryInputDto;
+import es.upm.miw.dtos.TicketQueryResultDto;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +76,24 @@ public class TicketController {
         cashierClosure.card(ticketCreationDto.getCard());
         this.cashierClosureRepository.save(cashierClosure);
         return ticket;
+    }
+
+    public ArrayList<TicketQueryResultDto> advancedTicketQuery(TicketQueryInputDto ticketQueryDto) {
+        ArrayList<TicketQueryResultDto> ticketResults = new ArrayList<>();
+        ArrayList<Ticket> ticketsFound = new ArrayList<>();
+        if (ticketQueryDto.getUserMobile() != null) {
+            User user = this.userRepository.findByMobile(ticketQueryDto.getUserMobile())
+                    .orElseThrow(() -> new NotFoundException("User mobile:" + ticketQueryDto.getUserMobile()));
+            ticketsFound = this.ticketRepository.findByUser(user.getId());
+        }
+        for(Ticket item: ticketsFound){
+            ticketResults.add(new TicketQueryResultDto(item));
+        }
+        if(ticketResults.size() < 1) {
+            throw new NotFoundException("ticket not found");
+        } else {
+            return ticketResults;
+        }
     }
 
     public byte[] createTicketAndPdf(TicketCreationInputDto ticketCreationDto) {
