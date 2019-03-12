@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.util.List;
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('OPERATOR')")
 @RestController
@@ -30,7 +30,7 @@ public class TicketResource {
     }
 
     @PostMapping(value = QUERY)
-    public ArrayList<TicketQueryResultDto> advancedTicketQuery(@RequestBody TicketQueryInputDto ticketQueryDto) {
+    public List<TicketQueryResultDto> advancedTicketQuery(@RequestBody TicketQueryInputDto ticketQueryDto) {
         return this.ticketController.advancedTicketQuery(ticketQueryDto);
     }
 
