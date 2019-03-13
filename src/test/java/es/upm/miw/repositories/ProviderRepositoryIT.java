@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,6 +30,21 @@ class ProviderRepositoryIT {
         this.providerRepository.save(inactive);
         this.providerRepository.save(active);
     }
+
+
+    @Test
+    void testFindById(){
+        Optional<Provider> provider = this.providerRepository.findById(active.getId());
+        assertTrue(provider.isPresent());
+        assertTrue(provider.get().getCompany().equals("active-company"));
+    }
+
+    @Test
+    void testFindByIdNotFound(){
+        Optional<Provider> provider = this.providerRepository.findById("non-existent-id");
+        assertFalse(provider.isPresent());
+    }
+
     @Test
     void testReadAll() {
         assertTrue(this.providerRepository.findAll().size() > 1);

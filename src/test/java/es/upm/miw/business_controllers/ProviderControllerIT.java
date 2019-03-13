@@ -2,12 +2,15 @@ package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
 import es.upm.miw.data_services.DatabaseSeederService;
+import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
+import es.upm.miw.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestConfig
@@ -26,5 +29,16 @@ public class ProviderControllerIT {
     void testRealAllActives(){
         List<ProviderMinimunDto> providers = providerController.readAllActives();
         assertTrue(providers.size() > 1);
+    }
+
+    @Test
+    void testRead(){
+        String existentId = providerController.readAll().get(0).getId();
+        ProviderDto provider = providerController.read(existentId);
+    }
+
+    @Test
+    void testReadNotFound(){
+        assertThrows(NotFoundException.class, () -> providerController.read("non-existent-id"));
     }
 }

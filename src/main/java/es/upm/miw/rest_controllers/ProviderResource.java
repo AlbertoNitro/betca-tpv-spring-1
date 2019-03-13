@@ -1,10 +1,12 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.ProviderController;
+import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +19,7 @@ public class ProviderResource {
 
     public static final String PROVIDERS = "/providers";
     public static final String ACTIVES = "/actives";
+    public static final String ID = "/{id}";
 
     @Autowired
     private ProviderController providerController;
@@ -24,6 +27,11 @@ public class ProviderResource {
     @GetMapping
     public List<ProviderMinimunDto> readAll() {
         return this.providerController.readAll();
+    }
+
+    @GetMapping(value = ID)
+    public ProviderDto read(@PathVariable String id) {
+        return this.providerController.read(id);
     }
 
     @GetMapping(value = ACTIVES)

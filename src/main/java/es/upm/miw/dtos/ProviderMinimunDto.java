@@ -13,6 +13,14 @@ public class ProviderMinimunDto {
     @NotNull
     private String nif;
 
+    public ProviderMinimunDto(){}
+
+    protected ProviderMinimunDto(String id, String company, String nif){
+        this.id = id;
+        this.company = company;
+        this.nif = nif;
+    }
+
     public String getId() {
         return id;
     }
