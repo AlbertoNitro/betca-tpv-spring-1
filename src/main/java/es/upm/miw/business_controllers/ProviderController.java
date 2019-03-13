@@ -16,4 +16,8 @@ public class ProviderController {
     public List<ProviderMinimunDto> readAll() {
         return this.providerRepository.findAllProviders();
     }
+
+    public List<ProviderMinimunDto> readAllActives() {
+        return this.providerRepository.findByActiveTrue();
+    }
 }

@@ -21,4 +21,10 @@ public class ProviderControllerIT {
         List<ProviderMinimunDto> providers = providerController.readAll();
         assertTrue(providers.size() > 1);
     }
+
+    @Test
+    void testRealAllActives(){
+        List<ProviderMinimunDto> providers = providerController.readAllActives();
+        assertTrue(providers.size() > 1);
+    }
 }

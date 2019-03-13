@@ -23,4 +23,13 @@ public class ProviderResourceIT {
                 .get().build());
         assertTrue(providers.size() > 1);
     }
+
+    @Test
+    void testRealAllActives() {
+        List<ProviderMinimunDto> actives = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<ProviderMinimunDto[]>()).clazz(ProviderMinimunDto[].class)
+                .path(ProviderResource.PROVIDERS).path(ProviderResource.ACTIVES)
+                .get().build());
+        assertTrue(actives.size() > 1);
+    }
 }

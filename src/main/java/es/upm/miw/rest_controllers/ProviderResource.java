@@ -16,6 +16,7 @@ import java.util.List;
 public class ProviderResource {
 
     public static final String PROVIDERS = "/providers";
+    public static final String ACTIVES = "/actives";
 
     @Autowired
     private ProviderController providerController;
@@ -25,4 +26,8 @@ public class ProviderResource {
         return this.providerController.readAll();
     }
 
+    @GetMapping(value = ACTIVES)
+    public List<ProviderMinimunDto> readAllActives() {
+        return this.providerController.readAllActives();
+    }
 }
