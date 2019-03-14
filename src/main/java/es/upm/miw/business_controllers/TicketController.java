@@ -94,15 +94,15 @@ public class TicketController {
         ticketsFoundByMobile = this.findTicketByMobile(userMobile);
         ticketsFoundByDateRange = this.findTicketsByDateRange(dateStart, dateEnd);
 
-        LogManager.getLogger().warn("ticketsFoundByMobile: >>>>> " + ticketsFoundByMobile.size());
-        LogManager.getLogger().warn("ticketsFoundByDateRange: >>>>> " + ticketsFoundByDateRange.size());
+        LogManager.getLogger().debug("ticketsFoundByMobile: >>>>> " + ticketsFoundByMobile.size());
+        LogManager.getLogger().debug("ticketsFoundByDateRange: >>>>> " + ticketsFoundByDateRange.size());
 
         if (userMobile!=null && (dateStart!=null && dateEnd!=null)) {
-            LogManager.getLogger().warn("++++++++ Composite Search: By Mobile AND Date Range ++++++++");
+            LogManager.getLogger().debug("++++++++ Composite Search: By Mobile AND Date Range ++++++++");
             for(TicketQueryResultDto dateRangeItem: ticketsFoundByDateRange){
                 for(TicketQueryResultDto mobileItem: ticketsFoundByMobile) {
                     if(dateRangeItem.getId().equals(mobileItem.getId())) {
-                        LogManager.getLogger().warn("ticketsFoundByMobile List CONTAINS " + dateRangeItem.getId());
+                        LogManager.getLogger().debug("ticketsFoundByMobile List CONTAINS " + dateRangeItem.getId());
                         ticketResults.add(dateRangeItem);
                     }
                 }
