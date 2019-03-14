@@ -41,4 +41,9 @@ public class ProviderResource {
     public ProviderDto create(@Valid @RequestBody ProviderDto providerDto) {
         return this.providerController.create(providerDto);
     }
+
+    @PutMapping(value = ID)
+    public ProviderDto update(@PathVariable String id, @Valid @RequestBody ProviderDto providerDto) {
+        return this.providerController.update(id, providerDto);
+    }
 }

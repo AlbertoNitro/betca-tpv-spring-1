@@ -2,6 +2,10 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +21,17 @@ public class ProviderResourceIT {
 
     @Autowired
     private RestService restService;
+    private ProviderMinimunDto existentProvider;
+
+
+    @BeforeEach
+    void before(){
+        List<ProviderMinimunDto> providers = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<ProviderMinimunDto[]>()).clazz(ProviderMinimunDto[].class)
+                .path(ProviderResource.PROVIDERS)
+                .get().build());
+        this.existentProvider = providers.get(0);
+    }
 
     @Test
     void testReadNotFound() {
@@ -29,14 +44,9 @@ public class ProviderResourceIT {
 
     @Test
     void testRead() {
-        List<ProviderMinimunDto> providers = Arrays.asList(this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<ProviderMinimunDto[]>()).clazz(ProviderMinimunDto[].class)
-                .path(ProviderResource.PROVIDERS)
-                .get().build());
-        String existentId = providers.get(0).getId();
         ProviderDto providerDto= this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<ProviderDto>()).clazz(ProviderDto.class)
-                .path(ProviderResource.PROVIDERS).path("/" +  existentId)
+                .path(ProviderResource.PROVIDERS).path("/" +  existentProvider.getId())
                 .get().build();
     }
 
@@ -67,20 +77,47 @@ public class ProviderResourceIT {
     }
 
     @Test
+    void testCreate(){
+        restCreateService(new ProviderDto("new-provider")).build();
+    }
+
+    @Test
     void testCreateConflict() {
-        ProviderDto providerDto = new ProviderDto("my-company");
-        restCreateService(providerDto).build();
+        ProviderDto providerDto = new ProviderDto(existentProvider.getCompany());
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 restCreateService(providerDto).build());
         assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
     }
 
     @Test
-    void testCreateNoCompany() {
-        ProviderDto providerDto = new ProviderDto();
+    void testCreateNullCompany() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-            restCreateService(providerDto).build());
+            restCreateService(new ProviderDto()).build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 
+    private RestBuilder<ProviderDto> restUpdateBuilder(String id, ProviderDto providerDto){
+        return this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<ProviderDto>()).clazz(ProviderDto.class)
+                .path(ProviderResource.PROVIDERS).path("/" + id)
+                .body(providerDto)
+                .put();
+    }
+    @Test
+    void testUpdate() {
+        ProviderDto providerDto = new ProviderDto(existentProvider.getCompany());
+        providerDto.setId(existentProvider.getId());
+        providerDto.setNif("updated-nif");
+        ProviderDto result = restUpdateBuilder(existentProvider.getId(), providerDto).build();
+        assertEquals(providerDto.getNif(), result.getNif());
+    }
+
+    @Test
+    void testUpdateNullCompany() {
+        ProviderDto providerDto = new ProviderDto();
+        providerDto.setId(existentProvider.getId());
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+            restUpdateBuilder(existentProvider.getId(), providerDto).build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
 }
