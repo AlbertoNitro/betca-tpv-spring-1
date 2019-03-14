@@ -84,12 +84,9 @@ public class TicketController {
         String userMobile = ticketQueryDto.getUserMobile();
         LocalDateTime dateStart = ticketQueryDto.getDateStart();
         LocalDateTime dateEnd = ticketQueryDto.getDateEnd();
-        BigDecimal totalMin = ticketQueryDto.getTotalMin();
-        BigDecimal totalMax = ticketQueryDto.getTotalMax();
-        Boolean pending = ticketQueryDto.getPending();
         List<TicketQueryResultDto> ticketResults = new ArrayList<>();
-        List<TicketQueryResultDto> ticketsFoundByMobile = new ArrayList<>();
-        List<TicketQueryResultDto> ticketsFoundByDateRange = new ArrayList<>();
+        List<TicketQueryResultDto> ticketsFoundByMobile;
+        List<TicketQueryResultDto> ticketsFoundByDateRange;
 
         ticketsFoundByMobile = this.findTicketByMobile(userMobile);
         ticketsFoundByDateRange = this.findTicketsByDateRange(dateStart, dateEnd);
@@ -97,16 +94,9 @@ public class TicketController {
         LogManager.getLogger().debug("ticketsFoundByMobile: >>>>> " + ticketsFoundByMobile.size());
         LogManager.getLogger().debug("ticketsFoundByDateRange: >>>>> " + ticketsFoundByDateRange.size());
 
-        if (userMobile!=null && (dateStart!=null && dateEnd!=null)) {
+        if(userMobile!=null && (dateStart!=null && dateEnd!=null)) {
             LogManager.getLogger().debug("++++++++ Composite Search: By Mobile AND Date Range ++++++++");
-            for(TicketQueryResultDto dateRangeItem: ticketsFoundByDateRange){
-                for(TicketQueryResultDto mobileItem: ticketsFoundByMobile) {
-                    if(dateRangeItem.getId().equals(mobileItem.getId())) {
-                        LogManager.getLogger().debug("ticketsFoundByMobile List CONTAINS " + dateRangeItem.getId());
-                        ticketResults.add(dateRangeItem);
-                    }
-                }
-            }
+            ticketResults = getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
         } else if(ticketResults.isEmpty()) {
             ticketResults = (userMobile==null)? ticketResults : ticketsFoundByMobile;
             ticketResults = (dateStart==null&&dateEnd==null)? ticketResults : ticketsFoundByDateRange;
@@ -138,6 +128,25 @@ public class TicketController {
 
     private List<TicketQueryResultDto> findTicketsByDateRange(LocalDateTime dateFrom, LocalDateTime dateTo) {
         return this.ticketRepository.findByDateRange(dateFrom, dateTo);
+    }
+
+    private Boolean listContainsTicket(List<TicketQueryResultDto> list1, String ticketId) {
+        List<String> listIds = new ArrayList<>();
+        for(TicketQueryResultDto item: list1) {
+            listIds.add(item.getId());
+        }
+        return listIds.contains(ticketId);
+    }
+
+    private List<TicketQueryResultDto> getCompositeSearchResults(List<TicketQueryResultDto> ticketsFoundByMobile,
+                                                                 List<TicketQueryResultDto> ticketsFoundByDateRange) {
+        List<TicketQueryResultDto> results = new ArrayList<>();
+        for(TicketQueryResultDto dateRangeItem: ticketsFoundByDateRange) {
+            if(this.listContainsTicket(ticketsFoundByMobile, dateRangeItem.getId())) {
+                results.add(dateRangeItem);
+            }
+        }
+        return results;
     }
 
 }
