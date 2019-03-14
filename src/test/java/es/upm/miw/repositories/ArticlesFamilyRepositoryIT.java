@@ -67,7 +67,7 @@ class ArticlesFamilyRepositoryIT {
     }
 
     @Test
-    void testFindAllByFamilyType(){
+    void testFindAllByFamilyType() {
         ArticlesFamily articlesFamilyComposite = new FamilyComposite(FamilyType.SIZES, "test", "test");
         ArticlesFamily articleFamily1 = new FamilyArticle(this.articleRepository.findById("8400000000024").get());
         this.articlesFamilyRepository.save(articleFamily1);
@@ -82,4 +82,17 @@ class ArticlesFamilyRepositoryIT {
         this.familyArticleRepository.deleteAll();
     }
 
+    @Test
+    void testFindAllFamilyCompositeByFamilyType() {
+        familyCompositeRepository.saveAll(Arrays.asList(
+                new FamilyComposite(FamilyType.ARTICLES, "B", "Books"),
+                new FamilyComposite(FamilyType.ARTICLES, "Gm", "Games")
+        ));
+        assertEquals(2, familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES).size());
+        assertEquals("Books", familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES)
+                .get(0).getDescription());
+        assertEquals("Gm",familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES)
+                .get(1).getReference());
+        familyCompositeRepository.deleteAll();
+    }
 }

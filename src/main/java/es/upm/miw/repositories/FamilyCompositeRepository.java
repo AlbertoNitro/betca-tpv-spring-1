@@ -7,7 +7,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface FamilyCompositeRepository extends MongoRepository<FamilyComposite, String> {
-
     List<FamilyComposite> findAllFamilyCompositeByFamilyType(FamilyType familyType);
-
 }
