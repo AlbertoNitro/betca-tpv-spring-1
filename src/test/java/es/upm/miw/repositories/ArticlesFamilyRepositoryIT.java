@@ -82,4 +82,8 @@ class ArticlesFamilyRepositoryIT {
         this.familyArticleRepository.deleteAll();
     }
 
+    @Test
+    void testFindAllFamilyCompositeByFamilyType (){
+
+    }
 }
