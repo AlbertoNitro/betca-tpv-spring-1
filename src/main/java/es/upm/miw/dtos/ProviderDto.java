@@ -14,7 +14,8 @@ public class ProviderDto extends ProviderMinimunDto {
 
     private Boolean active;
 
-    public ProviderDto(){}
+    public ProviderDto() {
+    }
 
     public ProviderDto(Provider provider) {
         super(provider.getId(), provider.getCompany(), provider.getNif());
@@ -26,7 +27,7 @@ public class ProviderDto extends ProviderMinimunDto {
     }
 
     public ProviderDto(String company) {
-         this.setCompany(company);
+        this.setCompany(company);
     }
 
     public String getAddress() {

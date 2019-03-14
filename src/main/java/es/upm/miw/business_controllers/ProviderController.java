@@ -42,7 +42,7 @@ public class ProviderController {
     }
 
     public ProviderDto update(String id, ProviderDto providerDto) {
-        if (id== null || !id.equals(providerDto.getId()))
+        if (id == null || !id.equals(providerDto.getId()))
             throw new BadRequestException("Provider id (" + providerDto.getId() + ")");
         if (!this.providerRepository.findById(id).isPresent())
             throw new NotFoundException("Provider id (" + id + ")");

@@ -11,9 +11,10 @@ public class ProviderMinimunDto {
 
     private String nif;
 
-    public ProviderMinimunDto(){}
+    public ProviderMinimunDto() {
+    }
 
-    protected ProviderMinimunDto(String id, String company, String nif){
+    protected ProviderMinimunDto(String id, String company, String nif) {
         this.id = id;
         this.company = company;
         this.nif = nif;

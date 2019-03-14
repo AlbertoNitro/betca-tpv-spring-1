@@ -2,9 +2,6 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,7 @@ public class ProviderResourceIT {
 
 
     @BeforeEach
-    void before(){
+    void before() {
         List<ProviderMinimunDto> providers = Arrays.asList(this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<ProviderMinimunDto[]>()).clazz(ProviderMinimunDto[].class)
                 .path(ProviderResource.PROVIDERS)
@@ -37,16 +34,16 @@ public class ProviderResourceIT {
     void testReadNotFound() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 this.restService.loginAdmin().restBuilder(new RestBuilder<ProviderMinimunDto[]>()).clazz(ProviderMinimunDto[].class)
-                .path(ProviderResource.PROVIDERS).path("/non-existent-id")
-                .get().build());
+                        .path(ProviderResource.PROVIDERS).path("/non-existent-id")
+                        .get().build());
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 
     @Test
     void testRead() {
-        ProviderDto providerDto= this.restService.loginAdmin()
+        ProviderDto providerDto = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<ProviderDto>()).clazz(ProviderDto.class)
-                .path(ProviderResource.PROVIDERS).path("/" +  existentProvider.getId())
+                .path(ProviderResource.PROVIDERS).path("/" + existentProvider.getId())
                 .get().build();
     }
 
@@ -68,7 +65,7 @@ public class ProviderResourceIT {
         assertTrue(actives.size() > 1);
     }
 
-    private RestBuilder<ProviderDto> restCreateService(ProviderDto providerDto){
+    private RestBuilder<ProviderDto> restCreateService(ProviderDto providerDto) {
         return this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<ProviderDto>()).clazz(ProviderDto.class)
                 .path(ProviderResource.PROVIDERS)
@@ -77,7 +74,7 @@ public class ProviderResourceIT {
     }
 
     @Test
-    void testCreate(){
+    void testCreate() {
         restCreateService(new ProviderDto("new-provider")).build();
     }
 
@@ -92,17 +89,18 @@ public class ProviderResourceIT {
     @Test
     void testCreateNullCompany() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-            restCreateService(new ProviderDto()).build());
+                restCreateService(new ProviderDto()).build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 
-    private RestBuilder<ProviderDto> restUpdateBuilder(String id, ProviderDto providerDto){
+    private RestBuilder<ProviderDto> restUpdateBuilder(String id, ProviderDto providerDto) {
         return this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<ProviderDto>()).clazz(ProviderDto.class)
                 .path(ProviderResource.PROVIDERS).path("/" + id)
                 .body(providerDto)
                 .put();
     }
+
     @Test
     void testUpdate() {
         ProviderDto providerDto = new ProviderDto(existentProvider.getCompany());
@@ -117,7 +115,7 @@ public class ProviderResourceIT {
         ProviderDto providerDto = new ProviderDto();
         providerDto.setId(existentProvider.getId());
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-            restUpdateBuilder(existentProvider.getId(), providerDto).build());
+                restUpdateBuilder(existentProvider.getId(), providerDto).build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 }

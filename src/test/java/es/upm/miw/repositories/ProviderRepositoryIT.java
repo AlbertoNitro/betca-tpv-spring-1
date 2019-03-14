@@ -22,6 +22,10 @@ class ProviderRepositoryIT {
     private Provider inactive;
     private Provider active;
 
+    private static boolean containsCompany(List<ProviderMinimunDto> providers, String company) {
+        return providers.stream().anyMatch(item -> company.equals(item.getCompany()));
+    }
+
     @BeforeEach
     void seedDb() {
         this.active = new Provider("active-company");
@@ -31,16 +35,15 @@ class ProviderRepositoryIT {
         this.providerRepository.save(active);
     }
 
-
     @Test
-    void testFindById(){
+    void testFindById() {
         Optional<Provider> provider = this.providerRepository.findById(active.getId());
         assertTrue(provider.isPresent());
         assertTrue(provider.get().getCompany().equals("active-company"));
     }
 
     @Test
-    void testFindByIdNotFound(){
+    void testFindByIdNotFound() {
         Optional<Provider> provider = this.providerRepository.findById("non-existent-id");
         assertFalse(provider.isPresent());
     }
@@ -61,10 +64,6 @@ class ProviderRepositoryIT {
         List<ProviderMinimunDto> providers = providerRepository.findByActiveTrue();
         assertTrue(containsCompany(providers, "active-company"));
         assertFalse(containsCompany(providers, "inactive-company"));
-    }
-
-    private static boolean containsCompany(List<ProviderMinimunDto> providers, String company){
-        return providers.stream().anyMatch(item -> company.equals(item.getCompany()));
     }
 
     @AfterEach

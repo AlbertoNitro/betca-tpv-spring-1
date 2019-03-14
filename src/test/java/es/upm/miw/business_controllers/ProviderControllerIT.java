@@ -27,19 +27,19 @@ public class ProviderControllerIT {
     }
 
     @Test
-    void testRealAllActives(){
+    void testRealAllActives() {
         List<ProviderMinimunDto> providers = providerController.readAllActives();
         assertTrue(providers.size() > 1);
     }
 
     @Test
-    void testRead(){
+    void testRead() {
         String existentId = providerController.readAll().get(0).getId();
         ProviderDto provider = providerController.read(existentId);
     }
 
     @Test
-    void testReadNotFound(){
+    void testReadNotFound() {
         assertThrows(NotFoundException.class, () -> providerController.read("non-existent-id"));
     }
 
@@ -64,7 +64,7 @@ public class ProviderControllerIT {
     void testUpdateNotFound() {
         ProviderDto providerDto = new ProviderDto();
         providerDto.setId("no-existent-id");
-        assertThrows(NotFoundException.class, () -> this.providerController.update( providerDto.getId(), providerDto));
+        assertThrows(NotFoundException.class, () -> this.providerController.update(providerDto.getId(), providerDto));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ProviderControllerIT {
         String id = providerDto.getId();
         providerDto.setId("different-id");
         ProviderDto finalProviderDto = providerDto;
-        assertThrows(BadRequestException.class, () -> this.providerController.update(id, finalProviderDto));;
+        assertThrows(BadRequestException.class, () -> this.providerController.update(id, finalProviderDto));
     }
 
 }
