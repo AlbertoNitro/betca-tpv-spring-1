@@ -4,14 +4,21 @@ import javax.validation.constraints.NotNull;
 
 public class ProviderMinimunDto {
 
-    @NotNull
     private String id;
 
     @NotNull
     private String company;
 
-    @NotNull
     private String nif;
+
+    public ProviderMinimunDto() {
+    }
+
+    protected ProviderMinimunDto(String id, String company, String nif) {
+        this.id = id;
+        this.company = company;
+        this.nif = nif;
+    }
 
     public String getId() {
         return id;
