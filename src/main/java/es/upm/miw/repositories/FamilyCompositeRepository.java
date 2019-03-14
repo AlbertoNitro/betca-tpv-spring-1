@@ -5,4 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface FamilyCompositeRepository extends MongoRepository<FamilyComposite, String> {
 
+
 }
