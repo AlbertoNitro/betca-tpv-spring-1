@@ -91,6 +91,10 @@ public class Ticket {
         return creationDate;
     }
 
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public Shopping[] getShoppingList() {
         return shoppingList;
     }
