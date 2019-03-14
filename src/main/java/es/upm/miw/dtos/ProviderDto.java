@@ -25,6 +25,10 @@ public class ProviderDto extends ProviderMinimunDto {
         this.active = provider.isActive();
     }
 
+    public ProviderDto(String company) {
+         this.setCompany(company);
+    }
+
     public String getAddress() {
         return address;
     }

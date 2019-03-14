@@ -1,7 +1,9 @@
 package es.upm.miw.business_controllers;
 
+import es.upm.miw.documents.Provider;
 import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
+import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,4 +29,14 @@ public class ProviderController {
     public List<ProviderMinimunDto> readAllActives() {
         return this.providerRepository.findByActiveTrue();
     }
+
+    public ProviderDto create(ProviderDto providerDto) {
+        String company = providerDto.getCompany();
+        if (this.providerRepository.findByCompany(company).isPresent())
+            throw new ConflictException("Provider company (" + company + ")");
+        Provider provider = new Provider(providerDto);
+        this.providerRepository.save(provider);
+        return new ProviderDto(provider);
+    }
+
 }

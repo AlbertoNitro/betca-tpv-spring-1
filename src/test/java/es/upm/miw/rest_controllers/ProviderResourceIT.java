@@ -1,6 +1,5 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.documents.User;
 import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
 import org.junit.jupiter.api.Test;
@@ -58,4 +57,30 @@ public class ProviderResourceIT {
                 .get().build());
         assertTrue(actives.size() > 1);
     }
+
+    private RestBuilder<ProviderDto> restCreateService(ProviderDto providerDto){
+        return this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<ProviderDto>()).clazz(ProviderDto.class)
+                .path(ProviderResource.PROVIDERS)
+                .body(providerDto)
+                .post();
+    }
+
+    @Test
+    void testCreateConflict() {
+        ProviderDto providerDto = new ProviderDto("my-company");
+        restCreateService(providerDto).build();
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                restCreateService(providerDto).build());
+        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
+    }
+
+    @Test
+    void testCreateNoCompany() {
+        ProviderDto providerDto = new ProviderDto();
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+            restCreateService(providerDto).build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
 }
