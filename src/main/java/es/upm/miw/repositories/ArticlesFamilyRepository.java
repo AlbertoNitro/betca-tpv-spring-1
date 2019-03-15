@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface ArticlesFamilyRepository extends MongoRepository<ArticlesFamily, String> {
 
-    List<ArticlesFamily> findByFamilyType(FamilyType FamilyType);
-
 }
