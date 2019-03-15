@@ -80,11 +80,11 @@ class ArticlesFamilyRepositoryIT {
                 new FamilyComposite(FamilyType.ARTICLES, "B", "Books"),
                 new FamilyComposite(FamilyType.ARTICLES, "Gm", "Games")
         ));
-        assertEquals(2, familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES).size());
+        assertEquals(3, familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES).size());
         assertEquals("Books", familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES)
-                .get(0).getDescription());
+                .get(1).getDescription());
         assertEquals("Gm",familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES)
-                .get(1).getReference());
+                .get(2).getReference());
         familyCompositeRepository.deleteAll();
     }
 }
