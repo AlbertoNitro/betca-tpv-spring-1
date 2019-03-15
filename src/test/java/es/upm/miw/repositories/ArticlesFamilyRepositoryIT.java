@@ -66,9 +66,9 @@ class ArticlesFamilyRepositoryIT {
     }
 
     @Test
-    void testFindFamilyCompositeByDescription(){
+    void testFindFamilyCompositeByDescription() {
         familyCompositeRepository.save(
-          new FamilyComposite(FamilyType.ARTICLES, "T", "test")
+                new FamilyComposite(FamilyType.ARTICLES, "T", "test")
         );
         assertEquals("test", familyCompositeRepository.findByDescription("test").getDescription());
         familyCompositeRepository.deleteAll();
@@ -80,11 +80,10 @@ class ArticlesFamilyRepositoryIT {
                 new FamilyComposite(FamilyType.ARTICLES, "B", "Books"),
                 new FamilyComposite(FamilyType.ARTICLES, "Gm", "Games")
         ));
-        assertEquals(3, familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES).size());
-        assertEquals("Books", familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES)
-                .get(1).getDescription());
-        assertEquals("Gm",familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES)
-                .get(2).getReference());
+        assertTrue(familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES).stream().anyMatch(
+                familyComposite -> "Books".equals(familyComposite.getDescription())
+                )
+        );
         familyCompositeRepository.deleteAll();
     }
 }
