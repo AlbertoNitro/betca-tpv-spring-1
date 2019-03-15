@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface FamilyCompositeRepository extends MongoRepository<FamilyComposite, String> {
     List<FamilyComposite> findAllFamilyCompositeByFamilyType(FamilyType familyType);
+    FamilyComposite findByDescription(String description);
 }

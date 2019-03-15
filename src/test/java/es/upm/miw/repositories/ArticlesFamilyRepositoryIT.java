@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -67,19 +66,12 @@ class ArticlesFamilyRepositoryIT {
     }
 
     @Test
-    void testFindAllByFamilyType() {
-        ArticlesFamily articlesFamilyComposite = new FamilyComposite(FamilyType.SIZES, "test", "test");
-        ArticlesFamily articleFamily1 = new FamilyArticle(this.articleRepository.findById("8400000000024").get());
-        this.articlesFamilyRepository.save(articleFamily1);
-
-        articlesFamilyComposite.add(articleFamily1);
-        this.articlesFamilyRepository.save(articlesFamilyComposite);
-
-        List<ArticlesFamily> dbArticles = this.articlesFamilyRepository.findByFamilyType(FamilyType.SIZES);
-        assertEquals(1, dbArticles.size());
-
-        this.familyCompositeRepository.deleteAll();
-        this.familyArticleRepository.deleteAll();
+    void testFindFamilyCompositeByDescription(){
+        familyCompositeRepository.save(
+          new FamilyComposite(FamilyType.ARTICLES, "T", "test")
+        );
+        assertEquals("test", familyCompositeRepository.findByDescription("test").getDescription());
+        familyCompositeRepository.deleteAll();
     }
 
     @Test
@@ -88,11 +80,11 @@ class ArticlesFamilyRepositoryIT {
                 new FamilyComposite(FamilyType.ARTICLES, "B", "Books"),
                 new FamilyComposite(FamilyType.ARTICLES, "Gm", "Games")
         ));
-        assertEquals(2, familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES).size());
+        assertEquals(3, familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES).size());
         assertEquals("Books", familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES)
-                .get(0).getDescription());
+                .get(1).getDescription());
         assertEquals("Gm",familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES)
-                .get(1).getReference());
+                .get(2).getReference());
         familyCompositeRepository.deleteAll();
     }
 }

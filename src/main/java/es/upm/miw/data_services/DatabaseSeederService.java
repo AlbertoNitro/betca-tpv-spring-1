@@ -113,7 +113,6 @@ public class DatabaseSeederService {
         this.providerRepository.deleteAll();
         this.userRepository.deleteAll();
         this.voucherRepository.deleteAll();
-
         // -------------------------------------------------------------------------
         this.initialize();
     }
