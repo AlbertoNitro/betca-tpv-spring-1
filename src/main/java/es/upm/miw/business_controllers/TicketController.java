@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -83,29 +84,75 @@ public class TicketController {
         String userMobile = ticketQueryDto.getUserMobile();
         LocalDateTime dateStart = ticketQueryDto.getDateStart();
         LocalDateTime dateEnd = ticketQueryDto.getDateEnd();
-        List<TicketQueryOutputDto> ticketResults = new ArrayList<>();
+        BigDecimal totalMin = ticketQueryDto.getTotalMin();
+        BigDecimal totalMax = ticketQueryDto.getTotalMax();
+        List<TicketQueryOutputDto> ticketResults;
         List<TicketQueryOutputDto> ticketsFoundByMobile;
         List<TicketQueryOutputDto> ticketsFoundByDateRange;
+        List<TicketQueryOutputDto> ticketsFoundByTotalRange;
+        Boolean findByMobileAndDateRange = userMobile!=null && dateStart!=null && dateEnd!=null;
+        Boolean findByTotalRange = totalMin != null && totalMax != null;
+        Boolean findByUserMobile = userMobile != null;
+        Boolean findByDateRange = dateStart != null && dateEnd != null;
 
         ticketsFoundByMobile = this.findTicketByMobile(userMobile);
         ticketsFoundByDateRange = this.findTicketsByDateRange(dateStart, dateEnd);
+        ticketsFoundByTotalRange = this.findTicketsByTotalRange(totalMin, totalMax);
 
         LogManager.getLogger().debug("ticketsFoundByMobile: >>>>> " + ticketsFoundByMobile.size());
         LogManager.getLogger().debug("ticketsFoundByDateRange: >>>>> " + ticketsFoundByDateRange.size());
+        LogManager.getLogger().debug("ticketsFoundByTotalRange: >>>>> " + ticketsFoundByTotalRange.size());
 
-        if(userMobile!=null && (dateStart!=null && dateEnd!=null)) {
-            LogManager.getLogger().debug("++++++++ Composite Search: By Mobile AND Date Range ++++++++");
-            ticketResults = getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
-        } else if(ticketResults.isEmpty()) {
-            ticketResults = (userMobile==null)? ticketResults : ticketsFoundByMobile;
-            ticketResults = (dateStart==null&&dateEnd==null)? ticketResults : ticketsFoundByDateRange;
-        }
+        ticketResults = processTicketResults(ticketsFoundByMobile, ticketsFoundByDateRange, ticketsFoundByTotalRange,
+                findByMobileAndDateRange, findByTotalRange, findByUserMobile, findByDateRange);
 
         if(ticketResults.isEmpty()) {
             throw new NotFoundException("No matching tickets found");
         } else {
             return ticketResults;
         }
+    }
+
+    private List<TicketQueryOutputDto> processTicketResults(List<TicketQueryOutputDto> ticketsFoundByMobile,
+                                                            List<TicketQueryOutputDto> ticketsFoundByDateRange,
+                                                            List<TicketQueryOutputDto> ticketsFoundByTotalRange,
+                                                            Boolean findByMobileAndDateRange,Boolean findByTotalRange,
+                                                            Boolean findByUserMobile, Boolean findByDateRange) {
+        List<TicketQueryOutputDto> ticketResults = new ArrayList<>();
+
+        if(findByMobileAndDateRange && findByTotalRange) {
+            ticketResults = getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
+            ticketResults = getCompositeSearchResults(ticketResults, ticketsFoundByTotalRange);
+            return ticketResults;
+        } else if(findByMobileAndDateRange) {
+            return getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
+        } else if(findByUserMobile && findByTotalRange) {
+            return getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByTotalRange);
+        } else if(findByDateRange && findByTotalRange) {
+            return getCompositeSearchResults(ticketsFoundByDateRange, ticketsFoundByTotalRange);
+        } else {
+            ticketResults = (findByTotalRange)? ticketsFoundByTotalRange : ticketResults;
+            ticketResults = (findByUserMobile)? ticketsFoundByMobile : ticketResults;
+            ticketResults = (findByDateRange)? ticketsFoundByDateRange : ticketResults;
+        }
+        return ticketResults;
+    }
+
+    private List<TicketQueryOutputDto> findTicketsByTotalRange(BigDecimal totalMin, BigDecimal totalMax) {
+        List<TicketQueryOutputDto> results = new ArrayList<>();
+        List<Ticket> allTickets = this.ticketRepository.findAll();
+        if(totalMin!=null && totalMax!=null) {
+            for(Ticket ticket: allTickets) {
+                Boolean greaterThanMin = ticket.getTotal().compareTo(totalMin)>0;
+                Boolean equalThanMin = ticket.getTotal().compareTo(totalMin)==0;
+                Boolean equalThanMax = ticket.getTotal().compareTo(totalMax)==0;
+                Boolean lesserThanMax = ticket.getTotal().compareTo(totalMax)<0;
+                if((greaterThanMin || equalThanMin) && (equalThanMax||lesserThanMax)) {
+                    results.add(new TicketQueryOutputDto(ticket));
+                }
+            }
+            return results;
+        } else return results;
     }
 
     public byte[] createTicketAndPdf(TicketCreationInputDto ticketCreationDto) {
