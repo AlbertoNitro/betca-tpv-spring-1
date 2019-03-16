@@ -1,6 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.CashierClosureController;
+import es.upm.miw.dtos.CashMovementInputDto;
 import es.upm.miw.dtos.CashierClosureInputDto;
 import es.upm.miw.dtos.CashierLastOutputDto;
 import es.upm.miw.dtos.CashierStateOutputDto;
@@ -20,6 +21,10 @@ public class CashierClosureResource {
     public static final String LAST = "/last";
 
     public static final String STATE = "/state";
+
+    public static final String DEPOSIT = "/deposit";
+
+    public static final String WITHDRAWAL = "/withdrawal";
 
     @Autowired
     private CashierClosureController cashierClosureController;
@@ -44,4 +49,13 @@ public class CashierClosureResource {
         cashierClosureController.close(cashierClosureInputDto);
     }
 
+    @PostMapping(value = DEPOSIT)
+    public void depositCashMovement(@RequestBody CashMovementInputDto cashMovementInputDto){
+        cashierClosureController.deposit(cashMovementInputDto);
+    }
+
+    @PostMapping(value = WITHDRAWAL)
+    public void withdrawalCashMovement(@RequestBody CashMovementInputDto cashMovementInputDto){
+        cashierClosureController.withdrawal(cashMovementInputDto);
+    }
 }
