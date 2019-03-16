@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -83,22 +84,32 @@ public class TicketController {
         String userMobile = ticketQueryDto.getUserMobile();
         LocalDateTime dateStart = ticketQueryDto.getDateStart();
         LocalDateTime dateEnd = ticketQueryDto.getDateEnd();
+        BigDecimal totalMin = ticketQueryDto.getTotalMin();
+        BigDecimal totalMax = ticketQueryDto.getTotalMax();
         List<TicketQueryOutputDto> ticketResults = new ArrayList<>();
         List<TicketQueryOutputDto> ticketsFoundByMobile;
         List<TicketQueryOutputDto> ticketsFoundByDateRange;
+        List<TicketQueryOutputDto> ticketsFoundByTotalRange;
 
         ticketsFoundByMobile = this.findTicketByMobile(userMobile);
         ticketsFoundByDateRange = this.findTicketsByDateRange(dateStart, dateEnd);
+        ticketsFoundByTotalRange = this.findTicketsByTotalRange(totalMin, totalMax);
 
         LogManager.getLogger().debug("ticketsFoundByMobile: >>>>> " + ticketsFoundByMobile.size());
         LogManager.getLogger().debug("ticketsFoundByDateRange: >>>>> " + ticketsFoundByDateRange.size());
+        LogManager.getLogger().debug("ticketsFoundByTotalRange: >>>>> " + ticketsFoundByTotalRange.size());
 
         if(userMobile!=null && (dateStart!=null && dateEnd!=null)) {
             LogManager.getLogger().debug("++++++++ Composite Search: By Mobile AND Date Range ++++++++");
             ticketResults = getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
         } else if(ticketResults.isEmpty()) {
+            ticketResults = (totalMin==null&&totalMax==null)? ticketResults : ticketsFoundByTotalRange;
             ticketResults = (userMobile==null)? ticketResults : ticketsFoundByMobile;
             ticketResults = (dateStart==null&&dateEnd==null)? ticketResults : ticketsFoundByDateRange;
+            //Check for composite search AND by Date Range as well
+            ticketResults = ((totalMin!=null&&totalMax!=null)
+                    && (userMobile!=null || (dateStart!=null && dateEnd!=null)))
+                    ? getCompositeSearchResults(ticketResults, ticketsFoundByTotalRange) : ticketResults;
         }
 
         if(ticketResults.isEmpty()) {
@@ -106,6 +117,21 @@ public class TicketController {
         } else {
             return ticketResults;
         }
+    }
+
+    private List<TicketQueryOutputDto> findTicketsByTotalRange(BigDecimal totalMin, BigDecimal totalMax) {
+        List<TicketQueryOutputDto> results = new ArrayList<>();
+        List<Ticket> allTickets = this.ticketRepository.findAll();
+        for(Ticket ticket: allTickets) {
+            Boolean greaterThanMin = ticket.getTotal().compareTo(totalMin)>0;
+            Boolean equalThanMin = ticket.getTotal().compareTo(totalMin)==0;
+            Boolean equalThanMax = ticket.getTotal().compareTo(totalMax)==0;
+            Boolean lesserThanMax = ticket.getTotal().compareTo(totalMax)<0;
+            if((greaterThanMin || equalThanMin) && (equalThanMax||lesserThanMax)) {
+                results.add(new TicketQueryOutputDto(ticket));
+            }
+        }
+        return results;
     }
 
     public byte[] createTicketAndPdf(TicketCreationInputDto ticketCreationDto) {

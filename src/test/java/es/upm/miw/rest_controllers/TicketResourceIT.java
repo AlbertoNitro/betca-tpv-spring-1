@@ -193,4 +193,39 @@ class TicketResourceIT {
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(1, results.length);
     }
+
+    @Test
+    void testFindTicketByTotalRange() {
+        ShoppingDto shoppingDto = new ShoppingDto("1", "", new BigDecimal("100.00"), 1,
+                BigDecimal.ZERO, new BigDecimal("100.00"), true);
+        TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto("666666005",
+                new BigDecimal("100.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
+                "Nota del ticket...");
+        Ticket ticket1 = this.ticketController.createTicketForTests(ticketCreationInputDto);
+        ticketCreationInputDto = new TicketCreationInputDto("666666005",
+                new BigDecimal("200.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto),
+                "Nota del ticket...");
+        Ticket ticket2 = this.ticketController.createTicketForTests(ticketCreationInputDto);
+        ticketCreationInputDto = new TicketCreationInputDto("666666005",
+                new BigDecimal("300.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto,
+                shoppingDto),"Nota del ticket...");
+        Ticket ticket3 = this.ticketController.createTicketForTests(ticketCreationInputDto);
+        ticketCreationInputDto = new TicketCreationInputDto("666666005",
+                new BigDecimal("400.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto,
+                shoppingDto, shoppingDto),"Nota del ticket...");
+        Ticket ticket4 = this.ticketController.createTicketForTests(ticketCreationInputDto);
+        this.ticketRepository.save(ticket1);
+        this.ticketRepository.save(ticket2);
+        this.ticketRepository.save(ticket3);
+        this.ticketRepository.save(ticket4);
+        //Search by Total Range
+        TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
+        searchTicketDto.setTotalMin(new BigDecimal("200.00"));
+        searchTicketDto.setTotalMax(new BigDecimal("300.00"));
+        //Searching
+        TicketQueryOutputDto[] results = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
+                .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
+        assertEquals(2, results.length);
+    }
 }
