@@ -19,6 +19,7 @@ public class TicketQueryInputDto {
 
     public TicketQueryInputDto() {
         //empty for quick creation
+        this.pending = false;
     }
 
     public String getUserMobile() {

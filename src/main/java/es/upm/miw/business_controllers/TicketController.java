@@ -90,10 +90,15 @@ public class TicketController {
         List<TicketQueryOutputDto> ticketsFoundByMobile;
         List<TicketQueryOutputDto> ticketsFoundByDateRange;
         List<TicketQueryOutputDto> ticketsFoundByTotalRange;
-        Boolean findByMobileAndDateRange = userMobile!=null && dateStart!=null && dateEnd!=null;
         Boolean findByTotalRange = totalMin != null && totalMax != null;
         Boolean findByUserMobile = userMobile != null;
         Boolean findByDateRange = dateStart != null && dateEnd != null;
+        Boolean findByPending = ticketQueryDto.getPending();
+        boolean findByPendingOnly = findByPending && !findByUserMobile && !findByDateRange && !findByTotalRange;
+
+        if (findByPendingOnly) {
+            return this.findTicketsByPending();
+        }
 
         ticketsFoundByMobile = this.findTicketByMobile(userMobile);
         ticketsFoundByDateRange = this.findTicketsByDateRange(dateStart, dateEnd);
@@ -104,7 +109,11 @@ public class TicketController {
         LogManager.getLogger().debug("ticketsFoundByTotalRange: >>>>> " + ticketsFoundByTotalRange.size());
 
         ticketResults = processTicketResults(ticketsFoundByMobile, ticketsFoundByDateRange, ticketsFoundByTotalRange,
-                findByMobileAndDateRange, findByTotalRange, findByUserMobile, findByDateRange);
+                findByTotalRange, findByUserMobile, findByDateRange);
+
+        if(findByPending) {
+            ticketResults = this.getPendingTickets(this.getTicketsFromOutputDto(ticketResults));
+        }
 
         if(ticketResults.isEmpty()) {
             throw new NotFoundException("No matching tickets found");
@@ -113,18 +122,45 @@ public class TicketController {
         }
     }
 
+    private List<Ticket> getTicketsFromOutputDto(List<TicketQueryOutputDto> ticketResults) {
+        List<Ticket> tickets = new ArrayList<>();
+        for(TicketQueryOutputDto item: ticketResults) {
+            this.ticketRepository.findById(item.getId()).ifPresent(tickets::add);
+        }
+        return tickets;
+    }
+
+    private List<TicketQueryOutputDto> findTicketsByPending() {
+        List<Ticket> allTickets = this.ticketRepository.findAll();
+        List<TicketQueryOutputDto> results;
+        results = this.getPendingTickets(allTickets);
+        return results;
+    }
+
+    private List<TicketQueryOutputDto> getPendingTickets(List<Ticket> allTickets) {
+        List<TicketQueryOutputDto> results = new ArrayList<>();
+        for(Ticket item: allTickets) {
+            for(Shopping article : item.getShoppingList()) {
+                if(article.getShoppingState() == ShoppingState.NOT_COMMITTED) {
+                    results.add(new TicketQueryOutputDto(item));
+                }
+            }
+        }
+        return results;
+    }
+
     private List<TicketQueryOutputDto> processTicketResults(List<TicketQueryOutputDto> ticketsFoundByMobile,
                                                             List<TicketQueryOutputDto> ticketsFoundByDateRange,
                                                             List<TicketQueryOutputDto> ticketsFoundByTotalRange,
-                                                            Boolean findByMobileAndDateRange,Boolean findByTotalRange,
-                                                            Boolean findByUserMobile, Boolean findByDateRange) {
+                                                            Boolean findByTotalRange, Boolean findByUserMobile,
+                                                            Boolean findByDateRange) {
         List<TicketQueryOutputDto> ticketResults = new ArrayList<>();
 
-        if(findByMobileAndDateRange && findByTotalRange) {
+        if(findByUserMobile && findByDateRange && findByTotalRange) {
             ticketResults = getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
             ticketResults = getCompositeSearchResults(ticketResults, ticketsFoundByTotalRange);
             return ticketResults;
-        } else if(findByMobileAndDateRange) {
+        } else if(findByUserMobile && findByDateRange) {
             return getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
         } else if(findByUserMobile && findByTotalRange) {
             return getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByTotalRange);
@@ -184,12 +220,12 @@ public class TicketController {
         return listIds.contains(ticketId);
     }
 
-    private List<TicketQueryOutputDto> getCompositeSearchResults(List<TicketQueryOutputDto> ticketsFoundByMobile,
-                                                                 List<TicketQueryOutputDto> ticketsFoundByDateRange) {
+    private List<TicketQueryOutputDto> getCompositeSearchResults(List<TicketQueryOutputDto> itemsList1,
+                                                                 List<TicketQueryOutputDto> itemsList2) {
         List<TicketQueryOutputDto> results = new ArrayList<>();
-        for(TicketQueryOutputDto dateRangeItem: ticketsFoundByDateRange) {
-            if(this.listContainsTicket(ticketsFoundByMobile, dateRangeItem.getId())) {
-                results.add(dateRangeItem);
+        for(TicketQueryOutputDto list1item: itemsList2) {
+            if(this.listContainsTicket(itemsList1, list1item.getId())) {
+                results.add(list1item);
             }
         }
         return results;
