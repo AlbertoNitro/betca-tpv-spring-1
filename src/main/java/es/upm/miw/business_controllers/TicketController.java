@@ -90,6 +90,10 @@ public class TicketController {
         List<TicketQueryOutputDto> ticketsFoundByMobile;
         List<TicketQueryOutputDto> ticketsFoundByDateRange;
         List<TicketQueryOutputDto> ticketsFoundByTotalRange;
+        Boolean findByMobileAndDateRange = userMobile!=null && dateStart!=null && dateEnd!=null;
+        Boolean findByTotalRange = totalMin != null && totalMax != null;
+        Boolean findByUserMobile = userMobile != null;
+        Boolean findByDateRange = dateStart != null && dateEnd != null;
 
         ticketsFoundByMobile = this.findTicketByMobile(userMobile);
         ticketsFoundByDateRange = this.findTicketsByDateRange(dateStart, dateEnd);
@@ -100,23 +104,9 @@ public class TicketController {
         LogManager.getLogger().debug("ticketsFoundByTotalRange: >>>>> " + ticketsFoundByTotalRange.size());
 
         ticketResults = processTicketResults(userMobile, dateStart, dateEnd, totalMin, totalMax,
-                ticketsFoundByMobile, ticketsFoundByDateRange, ticketsFoundByTotalRange);
-/*
-        if(userMobile!=null && (dateStart!=null && dateEnd!=null)) {
-            LogManager.getLogger().debug("++++++++ Composite Search: By Mobile AND Date Range ++++++++");
-            ticketResults = getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
-            ticketResults = (totalMin!=null&&totalMax!=null)
-                    ? getCompositeSearchResults(ticketResults, ticketsFoundByTotalRange) : ticketResults;
-        } else if(ticketResults.isEmpty()) {
-            ticketResults = (totalMin==null&&totalMax==null)? ticketResults : ticketsFoundByTotalRange;
-            ticketResults = (userMobile==null)? ticketResults : ticketsFoundByMobile;
-            ticketResults = (dateStart==null&&dateEnd==null)? ticketResults : ticketsFoundByDateRange;
-            //Check for composite search AND by Date Range as well
-            ticketResults = ((totalMin!=null&&totalMax!=null)
-                    && (userMobile!=null || (dateStart!=null && dateEnd!=null)))
-                    ? getCompositeSearchResults(ticketResults, ticketsFoundByTotalRange) : ticketResults;
-        }
-*/
+                ticketsFoundByMobile, ticketsFoundByDateRange, ticketsFoundByTotalRange, findByMobileAndDateRange,
+                findByTotalRange, findByUserMobile, findByDateRange);
+
         if(ticketResults.isEmpty()) {
             throw new NotFoundException("No matching tickets found");
         } else {
@@ -128,12 +118,10 @@ public class TicketController {
                                                             LocalDateTime dateEnd, BigDecimal totalMin, BigDecimal totalMax,
                                                             List<TicketQueryOutputDto> ticketsFoundByMobile,
                                                             List<TicketQueryOutputDto> ticketsFoundByDateRange,
-                                                            List<TicketQueryOutputDto> ticketsFoundByTotalRange) {
+                                                            List<TicketQueryOutputDto> ticketsFoundByTotalRange,
+                                                            Boolean findByMobileAndDateRange,Boolean findByTotalRange,
+                                                            Boolean findByUserMobile, Boolean findByDateRange) {
         List<TicketQueryOutputDto> ticketResults = new ArrayList<>();
-        Boolean findByMobileAndDateRange = userMobile!=null && dateStart!=null && dateEnd!=null;
-        Boolean findByTotalRange = totalMin != null && totalMax != null;
-        Boolean findByUserMobile = userMobile != null;
-        Boolean findByDateRange = dateStart != null && dateEnd != null;
 
         if(findByMobileAndDateRange && findByTotalRange) {
             ticketResults = getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
