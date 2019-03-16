@@ -17,4 +17,6 @@ public class ArticlesFamilyController {
     public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(FamilyType familyType) {
         return familyCompositeRepository.findAllFamilyCompositeByFamilyType(familyType);
     }
+
+
 }
