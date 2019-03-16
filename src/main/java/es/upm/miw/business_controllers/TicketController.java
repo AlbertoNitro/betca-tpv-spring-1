@@ -5,7 +5,7 @@ import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ShoppingDto;
 import es.upm.miw.dtos.TicketCreationInputDto;
 import es.upm.miw.dtos.TicketQueryInputDto;
-import es.upm.miw.dtos.TicketQueryResultDto;
+import es.upm.miw.dtos.TicketQueryOutputDto;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.*;
 import org.apache.logging.log4j.LogManager;
@@ -79,13 +79,13 @@ public class TicketController {
         return ticket;
     }
 
-    public List<TicketQueryResultDto> advancedTicketQuery(TicketQueryInputDto ticketQueryDto) {
+    public List<TicketQueryOutputDto> advancedTicketQuery(TicketQueryInputDto ticketQueryDto) {
         String userMobile = ticketQueryDto.getUserMobile();
         LocalDateTime dateStart = ticketQueryDto.getDateStart();
         LocalDateTime dateEnd = ticketQueryDto.getDateEnd();
-        List<TicketQueryResultDto> ticketResults = new ArrayList<>();
-        List<TicketQueryResultDto> ticketsFoundByMobile;
-        List<TicketQueryResultDto> ticketsFoundByDateRange;
+        List<TicketQueryOutputDto> ticketResults = new ArrayList<>();
+        List<TicketQueryOutputDto> ticketsFoundByMobile;
+        List<TicketQueryOutputDto> ticketsFoundByDateRange;
 
         ticketsFoundByMobile = this.findTicketByMobile(userMobile);
         ticketsFoundByDateRange = this.findTicketsByDateRange(dateStart, dateEnd);
@@ -116,7 +116,7 @@ public class TicketController {
         return this.createTicket(ticketCreationDto);
     }
 
-    private List<TicketQueryResultDto> findTicketByMobile(String userMobile) {
+    private List<TicketQueryOutputDto> findTicketByMobile(String userMobile) {
         if(userMobile == null) {
             return new ArrayList<>();
         }
@@ -125,22 +125,22 @@ public class TicketController {
         return this.ticketRepository.findByUser(user.getId());
     }
 
-    private List<TicketQueryResultDto> findTicketsByDateRange(LocalDateTime dateFrom, LocalDateTime dateTo) {
+    private List<TicketQueryOutputDto> findTicketsByDateRange(LocalDateTime dateFrom, LocalDateTime dateTo) {
         return this.ticketRepository.findByDateRange(dateFrom, dateTo);
     }
 
-    private Boolean listContainsTicket(List<TicketQueryResultDto> list1, String ticketId) {
+    private Boolean listContainsTicket(List<TicketQueryOutputDto> list1, String ticketId) {
         List<String> listIds = new ArrayList<>();
-        for(TicketQueryResultDto item: list1) {
+        for(TicketQueryOutputDto item: list1) {
             listIds.add(item.getId());
         }
         return listIds.contains(ticketId);
     }
 
-    private List<TicketQueryResultDto> getCompositeSearchResults(List<TicketQueryResultDto> ticketsFoundByMobile,
-                                                                 List<TicketQueryResultDto> ticketsFoundByDateRange) {
-        List<TicketQueryResultDto> results = new ArrayList<>();
-        for(TicketQueryResultDto dateRangeItem: ticketsFoundByDateRange) {
+    private List<TicketQueryOutputDto> getCompositeSearchResults(List<TicketQueryOutputDto> ticketsFoundByMobile,
+                                                                 List<TicketQueryOutputDto> ticketsFoundByDateRange) {
+        List<TicketQueryOutputDto> results = new ArrayList<>();
+        for(TicketQueryOutputDto dateRangeItem: ticketsFoundByDateRange) {
             if(this.listContainsTicket(ticketsFoundByMobile, dateRangeItem.getId())) {
                 results.add(dateRangeItem);
             }

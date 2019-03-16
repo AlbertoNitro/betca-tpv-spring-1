@@ -5,7 +5,7 @@ import es.upm.miw.documents.Ticket;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class TicketQueryResultDto {
+public class TicketQueryOutputDto {
 
     private String id;
 
@@ -13,9 +13,9 @@ public class TicketQueryResultDto {
 
     private BigDecimal total;
 
-    public TicketQueryResultDto() {}
+    public TicketQueryOutputDto() {}
 
-    public TicketQueryResultDto(Ticket ticket) {
+    public TicketQueryOutputDto(Ticket ticket) {
         this.id = ticket.getId();
         this.creationDate = ticket.getCreationDate();
         this.total = ticket.getTotal();
@@ -47,7 +47,7 @@ public class TicketQueryResultDto {
 
     @Override
     public String toString() {
-        return "TicketQueryResultDto{" +
+        return "TicketQueryOutputDto{" +
                 "id='" + id +
                 ", creationDate=" + creationDate +
                 ", total=" + total +
