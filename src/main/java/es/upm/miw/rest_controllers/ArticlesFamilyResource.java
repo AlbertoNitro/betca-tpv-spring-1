@@ -24,4 +24,5 @@ public class ArticlesFamilyResource {
     public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(@Valid @RequestParam FamilyType familyType){
         return articlesFamilyController.readAllFamilyCompositeByFamilyType(familyType);
     }
+
 }
