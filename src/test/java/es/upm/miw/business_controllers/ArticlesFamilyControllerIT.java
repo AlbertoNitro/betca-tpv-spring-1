@@ -23,7 +23,7 @@ public class ArticlesFamilyControllerIT {
     @Test
     void testDeleteFamilyCompositeItem() {
         assertEquals("test", familyCompositeRepository.findByDescription("test").getDescription());
-        articlesFamilyController.deleteFamilyCompositeItem(new ArticleFamilyMinimumDto(FamilyType.ARTICLES,"test"));
+        articlesFamilyController.deleteFamilyCompositeItem("test");
         assertNull(familyCompositeRepository.findByDescription("test"));
         familyCompositeRepository.save(new FamilyComposite(FamilyType.ARTICLES,"T","test"));
     }
