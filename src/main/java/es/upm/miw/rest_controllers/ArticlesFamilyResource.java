@@ -25,4 +25,8 @@ public class ArticlesFamilyResource {
         return articlesFamilyController.readAllFamilyCompositeByFamilyType(familyType);
     }
 
+    @DeleteMapping
+    public ArticleFamilyMinimumDto deleteFamilyCompositeItem (@Valid @RequestBody ArticleFamilyMinimumDto articleFamilyMinimumDto){
+        return articlesFamilyController.deleteFamilyCompositeItem(articleFamilyMinimumDto);
+    }
 }
