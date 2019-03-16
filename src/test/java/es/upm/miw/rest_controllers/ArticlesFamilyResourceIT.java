@@ -34,12 +34,11 @@ public class ArticlesFamilyResourceIT {
     @Test
     void testDeleteFamilyCompositeItem() {
         assertNotNull(familyCompositeRepository.findByDescription("test"));
-        ArticleFamilyMinimumDto articleFamilyMinimumDto = this.restService.loginOperator()
+        this.restService.loginOperator()
                 .restBuilder(new RestBuilder<ArticleFamilyMinimumDto>()).clazz(ArticleFamilyMinimumDto.class)
                 .path(ArticlesFamilyResource.ARTICLES_FAMILY)
-                .body(new ArticleFamilyMinimumDto(FamilyType.ARTICLES,"test")).delete().build();
+                .param("description","test").delete().build();
         assertNull(familyCompositeRepository.findByDescription("test"));
-        assertEquals("test",articleFamilyMinimumDto.getDescription());
         familyCompositeRepository.save(new FamilyComposite(FamilyType.ARTICLES, "T", "test"));
     }
 }
