@@ -5,10 +5,7 @@ import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,7 +21,7 @@ public class ArticlesFamilyResource {
     private ArticlesFamilyController articlesFamilyController;
 
     @GetMapping
-    public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(@Valid @PathVariable FamilyType familyType){
+    public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(@Valid @RequestParam FamilyType familyType){
         return articlesFamilyController.readAllFamilyCompositeByFamilyType(familyType);
     }
 }
