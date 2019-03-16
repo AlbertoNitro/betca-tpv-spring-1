@@ -1,6 +1,7 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.documents.CashierClosure;
+import es.upm.miw.dtos.CashMovementInputDto;
 import es.upm.miw.dtos.CashierClosureInputDto;
 import es.upm.miw.dtos.CashierLastOutputDto;
 import es.upm.miw.dtos.CashierStateOutputDto;
@@ -56,6 +57,18 @@ public class CashierClosureController {
         }
         lastCashierClosure.close(cashierClosureInputDto.getFinalCard(), cashierClosureInputDto.getFinalCash(),
                 cashierClosureInputDto.getComment());
+        this.cashierClosureRepository.save(lastCashierClosure);
+    }
+
+    public void deposit(CashMovementInputDto cashMovementInputDto){
+        CashierClosure lastCashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
+        lastCashierClosure.deposit(cashMovementInputDto.getCash(), cashMovementInputDto.getComment());
+        this.cashierClosureRepository.save(lastCashierClosure);
+    }
+
+    public void withdrawal(CashMovementInputDto cashMovementInputDto){
+        CashierClosure lastCashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
+        lastCashierClosure.withdrawal(cashMovementInputDto.getCash(), cashMovementInputDto.getComment());
         this.cashierClosureRepository.save(lastCashierClosure);
     }
 
