@@ -14,6 +14,11 @@ public class ArticleFamilyMinimumDto {
     public ArticleFamilyMinimumDto() {
     }
 
+    public ArticleFamilyMinimumDto(FamilyType familyType, String description) {
+        this.familyType = familyType;
+        this.description = description;
+    }
+
     public FamilyType getFamilyType() {
         return familyType;
     }
