@@ -41,7 +41,6 @@ class DatabaseSeederServiceIT {
         this.databaseSeederService.seedDatabase();
         FamilyComposite articleFamily = this.familyCompositeRepository.findByDescription("root");
         assertEquals("root", articleFamily.getDescription());
-        this.familyCompositeRepository.deleteAll();
     }
 
 }
