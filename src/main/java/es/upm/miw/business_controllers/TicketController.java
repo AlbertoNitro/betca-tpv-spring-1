@@ -103,9 +103,8 @@ public class TicketController {
         LogManager.getLogger().debug("ticketsFoundByDateRange: >>>>> " + ticketsFoundByDateRange.size());
         LogManager.getLogger().debug("ticketsFoundByTotalRange: >>>>> " + ticketsFoundByTotalRange.size());
 
-        ticketResults = processTicketResults(userMobile, dateStart, dateEnd, totalMin, totalMax,
-                ticketsFoundByMobile, ticketsFoundByDateRange, ticketsFoundByTotalRange, findByMobileAndDateRange,
-                findByTotalRange, findByUserMobile, findByDateRange);
+        ticketResults = processTicketResults(ticketsFoundByMobile, ticketsFoundByDateRange, ticketsFoundByTotalRange,
+                findByMobileAndDateRange, findByTotalRange, findByUserMobile, findByDateRange);
 
         if(ticketResults.isEmpty()) {
             throw new NotFoundException("No matching tickets found");
@@ -114,9 +113,7 @@ public class TicketController {
         }
     }
 
-    private List<TicketQueryOutputDto> processTicketResults(String userMobile, LocalDateTime dateStart,
-                                                            LocalDateTime dateEnd, BigDecimal totalMin, BigDecimal totalMax,
-                                                            List<TicketQueryOutputDto> ticketsFoundByMobile,
+    private List<TicketQueryOutputDto> processTicketResults(List<TicketQueryOutputDto> ticketsFoundByMobile,
                                                             List<TicketQueryOutputDto> ticketsFoundByDateRange,
                                                             List<TicketQueryOutputDto> ticketsFoundByTotalRange,
                                                             Boolean findByMobileAndDateRange,Boolean findByTotalRange,
