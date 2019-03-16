@@ -5,6 +5,7 @@ import es.upm.miw.documents.Ticket;
 import es.upm.miw.dtos.*;
 import es.upm.miw.repositories.TicketRepository;
 import es.upm.miw.repositories.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,9 +34,17 @@ class TicketResourceIT {
     @Autowired
     private TicketRepository ticketRepository;
 
+    private List<Ticket> initialTicketDB;
+
     @BeforeEach
-    void ticketRepoCleanup() {
+    void backupTicketDB() {
+        initialTicketDB = this.ticketRepository.findAll();
+    }
+
+    @AfterEach
+    void resetTicketDB() {
         this.ticketRepository.deleteAll();
+        this.ticketRepository.saveAll(this.initialTicketDB);
     }
 
     @Test
