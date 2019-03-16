@@ -5,7 +5,6 @@ import es.upm.miw.documents.Ticket;
 import es.upm.miw.dtos.*;
 import es.upm.miw.repositories.TicketRepository;
 import es.upm.miw.repositories.UserRepository;
-import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -92,8 +91,8 @@ class TicketResourceIT {
         TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
         searchTicketDto.setUserMobile(userMobile);
         //Busqueda
-        TicketQueryResultDto[] results = this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<TicketQueryResultDto[]>().clazz(TicketQueryResultDto[].class))
+        TicketQueryOutputDto[] results = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(1, results.length);
     }
@@ -107,8 +106,8 @@ class TicketResourceIT {
         searchTicketDto.setUserMobile(userMobile);
         //Generar excepcion
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                this.restService.loginAdmin().restBuilder(new RestBuilder<TicketQueryResultDto[]>()
-                        .clazz(TicketQueryResultDto[].class)).log()
+                this.restService.loginAdmin().restBuilder(new RestBuilder<TicketQueryOutputDto[]>()
+                        .clazz(TicketQueryOutputDto[].class)).log()
                         .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build());
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
@@ -121,8 +120,8 @@ class TicketResourceIT {
         searchTicketDto.setUserMobile(userMobile);
         //Generar excepcion
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                this.restService.loginAdmin().restBuilder(new RestBuilder<TicketQueryResultDto[]>()
-                        .clazz(TicketQueryResultDto[].class)).log()
+                this.restService.loginAdmin().restBuilder(new RestBuilder<TicketQueryOutputDto[]>()
+                        .clazz(TicketQueryOutputDto[].class)).log()
                         .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build());
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
@@ -153,8 +152,8 @@ class TicketResourceIT {
         searchTicketDto.setDateStart(dateStart);
         searchTicketDto.setDateEnd(dateEnd);
         //Searching
-        TicketQueryResultDto[] results = this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<TicketQueryResultDto[]>().clazz(TicketQueryResultDto[].class))
+        TicketQueryOutputDto[] results = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(2, results.length);
     }
@@ -189,8 +188,8 @@ class TicketResourceIT {
         searchTicketDto.setDateStart(dateStart);
         searchTicketDto.setDateEnd(dateEnd);
         //Searching
-        TicketQueryResultDto[] results = this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<TicketQueryResultDto[]>().clazz(TicketQueryResultDto[].class))
+        TicketQueryOutputDto[] results = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(1, results.length);
     }
