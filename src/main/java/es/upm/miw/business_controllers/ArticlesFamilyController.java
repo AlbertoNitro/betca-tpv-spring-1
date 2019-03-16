@@ -18,8 +18,7 @@ public class ArticlesFamilyController {
         return familyCompositeRepository.findAllFamilyCompositeByFamilyType(familyType);
     }
 
-    public ArticleFamilyMinimumDto deleteFamilyCompositeItem (ArticleFamilyMinimumDto dto){
-        familyCompositeRepository.delete(familyCompositeRepository.findByDescription(dto.getDescription()));
-        return dto;
+    public void deleteFamilyCompositeItem (String description){
+        familyCompositeRepository.delete(familyCompositeRepository.findByDescription(description));
     }
 }

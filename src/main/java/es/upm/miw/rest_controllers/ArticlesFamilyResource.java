@@ -26,7 +26,7 @@ public class ArticlesFamilyResource {
     }
 
     @DeleteMapping
-    public ArticleFamilyMinimumDto deleteFamilyCompositeItem (@Valid @RequestBody ArticleFamilyMinimumDto articleFamilyMinimumDto){
-        return articlesFamilyController.deleteFamilyCompositeItem(articleFamilyMinimumDto);
+    public void deleteFamilyCompositeItem (@Valid @RequestParam String description){
+        articlesFamilyController.deleteFamilyCompositeItem(description);
     }
 }
