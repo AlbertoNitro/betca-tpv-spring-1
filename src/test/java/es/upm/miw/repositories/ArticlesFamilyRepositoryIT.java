@@ -68,7 +68,6 @@ class ArticlesFamilyRepositoryIT {
 
     @Test
     void testFindAllFamilyCompositeByFamilyType() {
-        System.out.println(familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES));
         assertTrue(familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES).stream().anyMatch(
                 familyComposite -> "Books".equals(familyComposite.getDescription())
                 )
