@@ -64,6 +64,8 @@ voucherList:
     value: 5.2
   - id: 0123456789
     value: 50
+  - id: 1111111111
+    value: 25
 
 # Providers
 providerList:
@@ -179,6 +181,24 @@ shoppingList:
     discount: 0
     shoppingState: COMMITTED
     article: *ar5
+  - &shb1
+    description: "test-budget"
+    retailPrice: 20
+    amount: 1
+    discount: 0
+    article: *ar1
+  - &shb2
+    description: "descrip-a2"
+    retailPrice: 27.8
+    amount: 3
+    discount: 50.00
+    article: *ar2
+  - &shb3
+    description: "descrip-a1"
+    retailPrice: 20
+    amount: 1
+    discount: 10
+    article: *ar1
 
 ticketList:
   - &ti1
@@ -207,28 +227,20 @@ ticketList:
       - *sh5
 
 # Budget
-shoppingList:
-  - &shb1
-    description: "test-budget"
-    retailPrice: 20
-    amount: 1
-    discount: 0
-    article: *ar1
-  - &shb2
-    description: "descrip-a2"
-    retailPrice: 27.8
-    amount: 3
-    discount: 50.00
-    article: *ar2
-  - &shb3
-    description: "descrip-a1"
-    retailPrice: 20
-    amount: 1
-    discount: 10
-    article: *ar1
 budgetList:
   - shoppingList:
     - *shb1
     - *shb2
     - *shb3
 
+# FamilyComposite
+familyCompositeList:
+  - familyType: ARTICLES
+    reference: "B"
+    description: "Books"
+  - familyType: ARTICLES
+    reference: "Gm"
+    description: "Games"
+  - familyType: ARTICLES
+    reference: "T"
+    description: "test"

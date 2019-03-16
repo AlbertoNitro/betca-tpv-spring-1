@@ -59,31 +59,19 @@ class ArticlesFamilyRepositoryIT {
         assertEquals("Zz Falda T2", dbArticleFamily1.getReference());
         assertTrue(dbArticleFamily1.getStock() < 11);
         assertEquals(FamilyType.ARTICLE, dbArticleFamily1.getFamilyType());
-
-        this.familyCompositeRepository.deleteAll();
-        this.familyArticleRepository.deleteAll();
-
     }
 
     @Test
     void testFindFamilyCompositeByDescription() {
-        familyCompositeRepository.save(
-                new FamilyComposite(FamilyType.ARTICLES, "T", "test")
-        );
         assertEquals("test", familyCompositeRepository.findByDescription("test").getDescription());
-        familyCompositeRepository.deleteAll();
     }
 
     @Test
     void testFindAllFamilyCompositeByFamilyType() {
-        familyCompositeRepository.saveAll(Arrays.asList(
-                new FamilyComposite(FamilyType.ARTICLES, "B", "Books"),
-                new FamilyComposite(FamilyType.ARTICLES, "Gm", "Games")
-        ));
+        System.out.println(familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES));
         assertTrue(familyCompositeRepository.findAllFamilyCompositeByFamilyType(FamilyType.ARTICLES).stream().anyMatch(
                 familyComposite -> "Books".equals(familyComposite.getDescription())
                 )
         );
-        familyCompositeRepository.deleteAll();
     }
 }
