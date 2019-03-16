@@ -90,10 +90,15 @@ public class TicketController {
         List<TicketQueryOutputDto> ticketsFoundByMobile;
         List<TicketQueryOutputDto> ticketsFoundByDateRange;
         List<TicketQueryOutputDto> ticketsFoundByTotalRange;
-        Boolean findByMobileAndDateRange = userMobile!=null && dateStart!=null && dateEnd!=null;
         Boolean findByTotalRange = totalMin != null && totalMax != null;
         Boolean findByUserMobile = userMobile != null;
         Boolean findByDateRange = dateStart != null && dateEnd != null;
+        Boolean findByPending = ticketQueryDto.getPending();
+        Boolean findByPendingOnly = findByPending && !findByUserMobile && !findByDateRange && !findByTotalRange;
+
+        if (findByPendingOnly) {
+            return this.findTicketsByPending();
+        }
 
         ticketsFoundByMobile = this.findTicketByMobile(userMobile);
         ticketsFoundByDateRange = this.findTicketsByDateRange(dateStart, dateEnd);
@@ -104,7 +109,7 @@ public class TicketController {
         LogManager.getLogger().debug("ticketsFoundByTotalRange: >>>>> " + ticketsFoundByTotalRange.size());
 
         ticketResults = processTicketResults(ticketsFoundByMobile, ticketsFoundByDateRange, ticketsFoundByTotalRange,
-                findByMobileAndDateRange, findByTotalRange, findByUserMobile, findByDateRange);
+                findByTotalRange, findByUserMobile, findByDateRange);
 
         if(ticketResults.isEmpty()) {
             throw new NotFoundException("No matching tickets found");
@@ -113,18 +118,37 @@ public class TicketController {
         }
     }
 
+    private List<TicketQueryOutputDto> findTicketsByPending() {
+        List<Ticket> allTickets = this.ticketRepository.findAll();
+        List<TicketQueryOutputDto> results;
+        results = this.getPendingTickets(allTickets);
+        return results;
+    }
+
+    private List<TicketQueryOutputDto> getPendingTickets(List<Ticket> allTickets) {
+        List<TicketQueryOutputDto> results = new ArrayList<>();
+        for(Ticket item: allTickets) {
+            for(Shopping article : item.getShoppingList()) {
+                if(article.getShoppingState() == ShoppingState.NOT_COMMITTED) {
+                    results.add(new TicketQueryOutputDto(item));
+                }
+            }
+        }
+        return results;
+    }
+
     private List<TicketQueryOutputDto> processTicketResults(List<TicketQueryOutputDto> ticketsFoundByMobile,
                                                             List<TicketQueryOutputDto> ticketsFoundByDateRange,
                                                             List<TicketQueryOutputDto> ticketsFoundByTotalRange,
-                                                            Boolean findByMobileAndDateRange,Boolean findByTotalRange,
-                                                            Boolean findByUserMobile, Boolean findByDateRange) {
+                                                            Boolean findByTotalRange, Boolean findByUserMobile,
+                                                            Boolean findByDateRange) {
         List<TicketQueryOutputDto> ticketResults = new ArrayList<>();
 
-        if(findByMobileAndDateRange && findByTotalRange) {
+        if(findByUserMobile && findByDateRange && findByTotalRange) {
             ticketResults = getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
             ticketResults = getCompositeSearchResults(ticketResults, ticketsFoundByTotalRange);
             return ticketResults;
-        } else if(findByMobileAndDateRange) {
+        } else if(findByUserMobile && findByDateRange) {
             return getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByDateRange);
         } else if(findByUserMobile && findByTotalRange) {
             return getCompositeSearchResults(ticketsFoundByMobile, ticketsFoundByTotalRange);

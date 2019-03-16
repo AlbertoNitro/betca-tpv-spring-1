@@ -376,4 +376,34 @@ class TicketResourceIT {
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(1, results.length);
     }
+
+    @Test
+    void testFindByPendingStatus() {
+        this.ticketRepository.deleteAll();
+        String userMobile = "666666004";
+        ShoppingDto shoppingDto =
+                new ShoppingDto("1", "", new BigDecimal("100.00"), 1, BigDecimal.ZERO,
+                        new BigDecimal("100.00"), false);
+        TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile,
+                BigDecimal.TEN, BigDecimal.TEN, BigDecimal.TEN, Arrays.asList(shoppingDto),
+                "Nota del ticket...");
+        this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
+        this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
+        shoppingDto =
+                new ShoppingDto("1", "", new BigDecimal("200.00"), 1, BigDecimal.ZERO,
+                        new BigDecimal("200.00"), true);
+        ticketCreationInputDto = new TicketCreationInputDto(userMobile,
+                new BigDecimal("200.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
+                "Nota del ticket...");
+        this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
+        TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
+        searchTicketDto.setPending(true);
+        TicketQueryOutputDto[] results = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
+                .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
+        assertEquals(2, results.length);
+    }
 }
