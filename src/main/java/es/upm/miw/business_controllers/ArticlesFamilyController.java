@@ -17,4 +17,9 @@ public class ArticlesFamilyController {
     public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(FamilyType familyType) {
         return familyCompositeRepository.findAllFamilyCompositeByFamilyType(familyType);
     }
+
+    public ArticleFamilyMinimumDto deleteFamilyCompositeItem (ArticleFamilyMinimumDto dto){
+        familyCompositeRepository.delete(familyCompositeRepository.findByDescription(dto.getDescription()));
+        return dto;
+    }
 }
