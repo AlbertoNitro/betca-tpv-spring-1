@@ -243,7 +243,7 @@ class TicketResourceIT {
     }
 
     @Test
-    void findTicketByTotalRangeAndUserMobile() {
+    void testFindTicketByTotalRangeAndUserMobile() {
         String userMobile1 = "666666005";
         String userMobile2 = "666666004";
         ShoppingDto shoppingDto = new ShoppingDto("1", "", new BigDecimal("100.00"), 1,
@@ -405,5 +405,35 @@ class TicketResourceIT {
                 .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(2, results.length);
+    }
+
+    @Test
+    void testFindByPendingAndByUserMobileAndByTotalRange() {
+        this.ticketRepository.deleteAll();
+        String userMobile1 = "666666005";
+        String userMobile2 = "666666004";
+        ShoppingDto shoppingDto = new ShoppingDto("1", "", new BigDecimal("100.00"), 1,
+                BigDecimal.ZERO, new BigDecimal("100.00"), false);
+        TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
+                new BigDecimal("100.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
+                "Nota del ticket...");
+        this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
+        ticketCreationInputDto = new TicketCreationInputDto(userMobile2,
+                new BigDecimal("200.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto),
+                "Nota del ticket...");
+        this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
+        //Search by Total Range AND User Mobile
+        TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
+        searchTicketDto.setPending(true);
+        searchTicketDto.setUserMobile(userMobile1);
+        searchTicketDto.setTotalMin(new BigDecimal("100.00"));
+        searchTicketDto.setTotalMax(new BigDecimal("200.00"));
+        //Searching
+        TicketQueryOutputDto[] results = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
+                .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
+        assertEquals(1, results.length);
     }
 }

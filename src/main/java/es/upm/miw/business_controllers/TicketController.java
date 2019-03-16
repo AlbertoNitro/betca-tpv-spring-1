@@ -94,7 +94,7 @@ public class TicketController {
         Boolean findByUserMobile = userMobile != null;
         Boolean findByDateRange = dateStart != null && dateEnd != null;
         Boolean findByPending = ticketQueryDto.getPending();
-        Boolean findByPendingOnly = findByPending && !findByUserMobile && !findByDateRange && !findByTotalRange;
+        boolean findByPendingOnly = findByPending && !findByUserMobile && !findByDateRange && !findByTotalRange;
 
         if (findByPendingOnly) {
             return this.findTicketsByPending();
@@ -111,11 +111,23 @@ public class TicketController {
         ticketResults = processTicketResults(ticketsFoundByMobile, ticketsFoundByDateRange, ticketsFoundByTotalRange,
                 findByTotalRange, findByUserMobile, findByDateRange);
 
+        if(findByPending) {
+            ticketResults = this.getPendingTickets(this.getTicketsFromOutputDto(ticketResults));
+        }
+
         if(ticketResults.isEmpty()) {
             throw new NotFoundException("No matching tickets found");
         } else {
             return ticketResults;
         }
+    }
+
+    private List<Ticket> getTicketsFromOutputDto(List<TicketQueryOutputDto> ticketResults) {
+        List<Ticket> tickets = new ArrayList<>();
+        for(TicketQueryOutputDto item: ticketResults) {
+            this.ticketRepository.findById(item.getId()).ifPresent(tickets::add);
+        }
+        return tickets;
     }
 
     private List<TicketQueryOutputDto> findTicketsByPending() {
@@ -208,12 +220,12 @@ public class TicketController {
         return listIds.contains(ticketId);
     }
 
-    private List<TicketQueryOutputDto> getCompositeSearchResults(List<TicketQueryOutputDto> ticketsFoundByMobile,
-                                                                 List<TicketQueryOutputDto> ticketsFoundByDateRange) {
+    private List<TicketQueryOutputDto> getCompositeSearchResults(List<TicketQueryOutputDto> itemsList1,
+                                                                 List<TicketQueryOutputDto> itemsList2) {
         List<TicketQueryOutputDto> results = new ArrayList<>();
-        for(TicketQueryOutputDto dateRangeItem: ticketsFoundByDateRange) {
-            if(this.listContainsTicket(ticketsFoundByMobile, dateRangeItem.getId())) {
-                results.add(dateRangeItem);
+        for(TicketQueryOutputDto list1item: itemsList2) {
+            if(this.listContainsTicket(itemsList1, list1item.getId())) {
+                results.add(list1item);
             }
         }
         return results;
