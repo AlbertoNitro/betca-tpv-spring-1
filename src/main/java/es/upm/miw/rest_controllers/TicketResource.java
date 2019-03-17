@@ -20,6 +20,7 @@ import java.util.List;
 public class TicketResource {
     public static final String TICKETS = "/tickets";
     public static final String QUERY = "/query";
+    public static final String ORDER_ID = "/orderId";
 
     @Autowired
     private TicketController ticketController;
@@ -32,6 +33,11 @@ public class TicketResource {
     @PostMapping(value = QUERY)
     public List<TicketQueryOutputDto> advancedTicketQuery(@RequestBody TicketQueryInputDto ticketQueryDto) {
         return this.ticketController.advancedTicketQuery(ticketQueryDto);
+    }
+
+    @PostMapping(value = QUERY+ORDER_ID)
+    public List<TicketQueryOutputDto> advancedTicketQueryByOrderId(@RequestBody TicketQueryInputDto ticketQueryDto) {
+        return this.ticketController.advancedTicketQueryByOrderId(ticketQueryDto);
     }
 
 }

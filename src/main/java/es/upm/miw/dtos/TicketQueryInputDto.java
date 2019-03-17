@@ -17,6 +17,8 @@ public class TicketQueryInputDto {
 
     private Boolean pending;
 
+    private String orderId;
+
     public TicketQueryInputDto() {
         //empty for quick creation
         this.pending = false;
@@ -70,6 +72,14 @@ public class TicketQueryInputDto {
         this.pending = pending;
     }
 
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
     @Override
     public String toString() {
         return "TicketQueryInputDto{" +
@@ -79,6 +89,7 @@ public class TicketQueryInputDto {
                 ", totalMin=" + totalMin +
                 ", totalMax=" + totalMax +
                 ", pending=" + pending +
+                ", orderId=" + orderId +
                 '}';
     }
 }
