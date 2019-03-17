@@ -35,8 +35,7 @@ public class ArticleResource {
 
     @PostMapping(value = FAMILY_SIZE)
     public FamilySizeInputDto createFamilySize(@Valid @RequestBody FamilySizeInputDto familySizeInputDto) {
-        // TODO: Business Controller
-        return familySizeInputDto;
+        return this.articleController.createFamilySize(familySizeInputDto);
     }
 
 

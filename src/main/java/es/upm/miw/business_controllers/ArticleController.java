@@ -2,8 +2,11 @@ package es.upm.miw.business_controllers;
 
 import es.upm.miw.data_services.DatabaseSeederService;
 import es.upm.miw.documents.Article;
+import es.upm.miw.documents.FamilyComposite;
+import es.upm.miw.documents.FamilyType;
 import es.upm.miw.documents.Provider;
 import es.upm.miw.dtos.ArticleDto;
+import es.upm.miw.dtos.FamilySizeInputDto;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
@@ -47,6 +50,16 @@ public class ArticleController {
                 .reference(articleDto.getReference()).stock(stock).provider(provider).build();
         this.articleRepository.save(article);
         return new ArticleDto(article);
+    }
+
+    public FamilySizeInputDto createFamilySize(FamilySizeInputDto familySizeInputDto) {
+        String reference = familySizeInputDto.getReference();
+        String description = familySizeInputDto.getDescription();
+        FamilyComposite familyComposite = new FamilyComposite(FamilyType.SIZES, reference, description);
+
+        // foreach size create new leaf and add to the composite, then create new composite
+
+        return new FamilySizeInputDto(familyComposite);
     }
 
 }
