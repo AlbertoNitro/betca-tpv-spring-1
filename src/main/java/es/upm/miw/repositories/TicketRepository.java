@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public interface TicketRepository extends MongoRepository<Ticket, String> {
@@ -16,5 +17,7 @@ public interface TicketRepository extends MongoRepository<Ticket, String> {
 
     @Query("{creationDate: {$gte: ?0, $lte: ?1}}")
     List<TicketQueryOutputDto> findByDateRange(LocalDateTime dateFrom, LocalDateTime dateTo);
+
+    List<Ticket> findByCreationDateBetween(Date dateFrom, Date dateTo);
 
 }
