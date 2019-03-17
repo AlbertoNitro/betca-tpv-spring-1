@@ -4,7 +4,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class FamilySizeDto {
+public class FamilySizeInputDto {
 
     @NotNull
     private String reference;
@@ -31,7 +31,7 @@ public class FamilySizeDto {
 
     @Override
     public String toString() {
-        return "FamilySizeDto{" +
+        return "FamilySizeInputDto{" +
                 "reference='" + reference + '\'' +
                 ", description='" + description + '\'' +
                 ", provider='" + provider + '\'' +
