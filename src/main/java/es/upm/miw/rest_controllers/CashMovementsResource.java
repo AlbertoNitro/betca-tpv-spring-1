@@ -1,7 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.CashierClosureController;
-import es.upm.miw.dtos.CashMovementInputDto;
+import es.upm.miw.dtos.input.CashMovementInputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;

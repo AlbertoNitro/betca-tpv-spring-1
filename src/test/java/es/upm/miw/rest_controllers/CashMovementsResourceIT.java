@@ -1,6 +1,6 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.dtos.CashMovementInputDto;
+import es.upm.miw.dtos.input.CashMovementInputDto;
 import org.apache.http.HttpResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

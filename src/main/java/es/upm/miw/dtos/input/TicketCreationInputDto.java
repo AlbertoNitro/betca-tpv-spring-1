@@ -1,5 +1,6 @@
-package es.upm.miw.dtos;
+package es.upm.miw.dtos.input;
 
+import es.upm.miw.dtos.ShoppingDto;
 import es.upm.miw.dtos.validations.BigDecimalPositive;
 import es.upm.miw.dtos.validations.ListNotEmpty;
 

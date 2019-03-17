@@ -1,7 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.AdminController;
-import es.upm.miw.dtos.InfoOutputDto;
+import es.upm.miw.dtos.output.InfoOutputDto;
 import es.upm.miw.exceptions.FileException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

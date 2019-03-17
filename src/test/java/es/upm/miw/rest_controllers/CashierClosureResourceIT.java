@@ -1,8 +1,8 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.dtos.CashierClosureInputDto;
-import es.upm.miw.dtos.CashierLastOutputDto;
-import es.upm.miw.dtos.CashierStateOutputDto;
+import es.upm.miw.dtos.input.CashierClosureInputDto;
+import es.upm.miw.dtos.output.CashierLastOutputDto;
+import es.upm.miw.dtos.output.CashierStateOutputDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

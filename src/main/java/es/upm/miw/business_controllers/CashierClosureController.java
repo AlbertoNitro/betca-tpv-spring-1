@@ -1,10 +1,10 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.documents.CashierClosure;
-import es.upm.miw.dtos.CashMovementInputDto;
-import es.upm.miw.dtos.CashierClosureInputDto;
-import es.upm.miw.dtos.CashierLastOutputDto;
-import es.upm.miw.dtos.CashierStateOutputDto;
+import es.upm.miw.dtos.input.CashMovementInputDto;
+import es.upm.miw.dtos.input.CashierClosureInputDto;
+import es.upm.miw.dtos.output.CashierLastOutputDto;
+import es.upm.miw.dtos.output.CashierStateOutputDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.CashierClosureRepository;
 import es.upm.miw.repositories.UserRepository;
