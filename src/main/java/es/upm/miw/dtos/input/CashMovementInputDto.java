@@ -11,6 +11,10 @@ public class CashMovementInputDto {
     @NotNull
     private String comment;
 
+    public CashMovementInputDto() {
+        // Empty for framework
+    }
+
     public CashMovementInputDto(BigDecimal cash, String comment) {
         this.cash = cash;
         this.comment = comment;
