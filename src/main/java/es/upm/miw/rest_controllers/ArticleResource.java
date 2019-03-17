@@ -2,7 +2,7 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.ArticleController;
 import es.upm.miw.dtos.ArticleDto;
-import es.upm.miw.dtos.FamilySizeDto;
+import es.upm.miw.dtos.FamilySizeInputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +34,9 @@ public class ArticleResource {
     }
 
     @PostMapping(value = FAMILY_SIZE)
-    public FamilySizeDto createFamilySize(@Valid @RequestBody FamilySizeDto familySizeDto) {
+    public FamilySizeInputDto createFamilySize(@Valid @RequestBody FamilySizeInputDto familySizeInputDto) {
         // TODO: Business Controller
-        return familySizeDto;
+        return familySizeInputDto;
     }
 
 
