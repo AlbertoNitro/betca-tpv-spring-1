@@ -22,10 +22,6 @@ public class CashierClosureResource {
 
     public static final String STATE = "/state";
 
-    public static final String DEPOSIT = "/deposit";
-
-    public static final String WITHDRAWAL = "/withdrawal";
-
     @Autowired
     private CashierClosureController cashierClosureController;
 
@@ -47,15 +43,5 @@ public class CashierClosureResource {
     @PatchMapping(value = LAST)
     public void closeCashierClosure(@Valid @RequestBody CashierClosureInputDto cashierClosureInputDto) {
         cashierClosureController.close(cashierClosureInputDto);
-    }
-
-    @PostMapping(value = DEPOSIT)
-    public void depositCashMovement(@RequestBody CashMovementInputDto cashMovementInputDto){
-        cashierClosureController.deposit(cashMovementInputDto);
-    }
-
-    @PostMapping(value = WITHDRAWAL)
-    public void withdrawalCashMovement(@RequestBody CashMovementInputDto cashMovementInputDto){
-        cashierClosureController.withdrawal(cashMovementInputDto);
     }
 }
