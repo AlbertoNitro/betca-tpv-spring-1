@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.upm.miw.business_controllers.StatisticController;
-import es.upm.miw.dtos.StatisticDtoOutput;
+import es.upm.miw.dtos.output.StatisticDtoOutput;
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 @RestController

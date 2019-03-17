@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import es.upm.miw.documents.Ticket;
-import es.upm.miw.dtos.StatisticDtoOutput;
+import es.upm.miw.dtos.output.StatisticDtoOutput;
 import es.upm.miw.repositories.TicketRepository;
 
 @Controller

@@ -1,4 +1,4 @@
-package es.upm.miw.dtos;
+package es.upm.miw.dtos.input;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;

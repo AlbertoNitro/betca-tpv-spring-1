@@ -1,7 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.UserController;
-import es.upm.miw.dtos.TokenOutputDto;
+import es.upm.miw.dtos.output.TokenOutputDto;
 import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
 import org.springframework.beans.factory.annotation.Autowired;

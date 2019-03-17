@@ -3,7 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.business_services.JwtService;
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
-import es.upm.miw.dtos.TokenOutputDto;
+import es.upm.miw.dtos.output.TokenOutputDto;
 import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
 import es.upm.miw.exceptions.ForbiddenException;
