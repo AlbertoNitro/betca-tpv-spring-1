@@ -1,7 +1,6 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.CashierClosureController;
-import es.upm.miw.dtos.CashMovementInputDto;
 import es.upm.miw.dtos.CashierClosureInputDto;
 import es.upm.miw.dtos.CashierLastOutputDto;
 import es.upm.miw.dtos.CashierStateOutputDto;
