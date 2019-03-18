@@ -3,6 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.data_services.DatabaseSeederService;
 import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ArticleDto;
+import es.upm.miw.dtos.ArticleSearchDto;
 import es.upm.miw.dtos.input.FamilySizeInputDto;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class ArticleController {
@@ -36,6 +38,10 @@ public class ArticleController {
     public ArticleDto readArticle(String code) {
         return new ArticleDto(this.articleRepository.findById(code)
                 .orElseThrow(() -> new NotFoundException("Article code (" + code + ")")));
+    }
+
+    public List<ArticleSearchDto> readArticles(String description) {
+        return this.articleRepository.findByDescriptionLikeIgnoreCaseNullSafe(description);
     }
 
     public ArticleDto createArticle(ArticleDto articleDto) {
