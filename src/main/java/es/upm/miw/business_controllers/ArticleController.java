@@ -3,6 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.data_services.DatabaseSeederService;
 import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ArticleDto;
+import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.dtos.ArticleSearchDto;
 import es.upm.miw.dtos.input.FamilySizeInputDto;
 import es.upm.miw.exceptions.ConflictException;
@@ -36,6 +37,15 @@ public class ArticleController {
     @Autowired
     private FamilyCompositeRepository familyCompositeRepository;
 
+    public List<ArticleMinimumDto> readArticlesMinimum() {
+        List<Article> articles = articleRepository.findAll();
+        List<ArticleMinimumDto> dtos = new ArrayList<>();
+        for (Article article : articles) {
+            dtos.add(new ArticleMinimumDto(article));
+        }
+        return dtos;
+    }
+
     public ArticleDto readArticle(String code) {
         return new ArticleDto(this.articleRepository.findById(code)
                 .orElseThrow(() -> new NotFoundException("Article code (" + code + ")")));
@@ -49,11 +59,11 @@ public class ArticleController {
         return this.articleRepository.findByStockGreaterThanEqual(stock);
     }
 
-    public List<ArticleSearchDto> readArticlesMinPrice(BigDecimal minPrice){
+    public List<ArticleSearchDto> readArticlesMinPrice(BigDecimal minPrice) {
         return this.articleRepository.findByRetailPriceGreaterThanEqual(minPrice);
     }
 
-    public List<ArticleSearchDto> readArticlesMaxPrice(BigDecimal maxPrice){
+    public List<ArticleSearchDto> readArticlesMaxPrice(BigDecimal maxPrice) {
         return this.articleRepository.findByRetailPriceLessThanEqual(maxPrice);
     }
 

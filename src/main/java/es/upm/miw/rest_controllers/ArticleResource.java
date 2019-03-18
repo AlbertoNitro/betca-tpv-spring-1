@@ -2,6 +2,7 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.ArticleController;
 import es.upm.miw.dtos.ArticleDto;
+import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.dtos.ArticleSearchDto;
 import es.upm.miw.dtos.input.FamilySizeInputDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class ArticleResource {
 
     public static final String FAMILY_SIZE = "/family-size";
 
+    public static final String MINIMUM = "/minimum";
+
     public static final String QUERY = "/query";
 
     public static final String QUERY2 = "/query2";
@@ -37,6 +40,11 @@ public class ArticleResource {
     @GetMapping(value = CODE_ID)
     public ArticleDto readArticle(@PathVariable String code) {
         return this.articleController.readArticle(code);
+    }
+
+    @GetMapping(value = MINIMUM)
+    public List<ArticleMinimumDto> readArticlesMinimum() {
+        return  this.articleController.readArticlesMinimum();
     }
 
     @PostMapping
@@ -60,12 +68,12 @@ public class ArticleResource {
     }
 
     @GetMapping(value = QUERY3)
-    public List<ArticleSearchDto> readArticlesMinPrice(@RequestBody BigDecimal minPrice){
+    public List<ArticleSearchDto> readArticlesMinPrice(@RequestBody BigDecimal minPrice) {
         return this.articleController.readArticlesMinPrice(minPrice);
     }
 
     @GetMapping(value = QUERY4)
-    public List<ArticleSearchDto> readArticlesMaxPrice(@RequestBody BigDecimal maxPrice){
+    public List<ArticleSearchDto> readArticlesMaxPrice(@RequestBody BigDecimal maxPrice) {
         return this.articleController.readArticlesMinPrice(maxPrice);
     }
 }
