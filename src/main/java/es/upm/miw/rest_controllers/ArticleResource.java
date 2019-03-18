@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('OPERATOR')")
@@ -23,6 +24,12 @@ public class ArticleResource {
     public static final String FAMILY_SIZE = "/family-size";
 
     public static final String QUERY = "/query";
+
+    public static final String QUERY2 = "/query2";
+
+    public static final String QUERY3 = "/query3";
+
+    public static final String QUERY4 = "/query4";
 
     @Autowired
     private ArticleController articleController;
@@ -47,5 +54,18 @@ public class ArticleResource {
         return this.articleController.readArticles(description);
     }
 
+    @GetMapping(value = QUERY2)
+    public List<ArticleSearchDto> readArticles(@RequestBody int stock) {
+        return this.articleController.readArticles(stock);
+    }
 
+    @GetMapping(value = QUERY3)
+    public List<ArticleSearchDto> readArticlesMinPrice(@RequestBody BigDecimal minPrice){
+        return this.articleController.readArticlesMinPrice(minPrice);
+    }
+
+    @GetMapping(value = QUERY4)
+    public List<ArticleSearchDto> readArticlesMaxPrice(@RequestBody BigDecimal maxPrice){
+        return this.articleController.readArticlesMinPrice(maxPrice);
+    }
 }

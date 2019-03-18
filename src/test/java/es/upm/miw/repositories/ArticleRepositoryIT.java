@@ -60,4 +60,42 @@ class ArticleRepositoryIT {
         assertFalse(articleList.isEmpty());
     }
 
+    @Test
+    void testFindByStockGreaterThanNullSafe(){
+        List<ArticleSearchDto> articleList = articleRepository.findByStockGreaterThanEqual(1);
+        assertEquals(5, articleList.size());
+
+        List<ArticleSearchDto> articleList2 = articleRepository.findByStockGreaterThanEqual(0);
+        assertEquals(7, articleList2.size());
+
+        List<ArticleSearchDto> articleList3 = articleRepository.findByStockGreaterThanEqual(10);
+        assertEquals(1, articleList3.size());
+
+        List<ArticleSearchDto> articleList4 = articleRepository.findByStockGreaterThanEqual(11);
+        assertEquals(0, articleList4.size());
+    }
+
+    @Test
+    void testFindByRetailPriceGreaterThanEqual(){
+        List<ArticleSearchDto> articleList = articleRepository.findByRetailPriceGreaterThanEqual(BigDecimal.valueOf(0.24));
+        assertEquals(6, articleList.size());
+
+        List<ArticleSearchDto> articleList2 = articleRepository.findByRetailPriceGreaterThanEqual(BigDecimal.valueOf(0));
+        assertEquals(7, articleList2.size());
+
+        List<ArticleSearchDto> articleList3 = articleRepository.findByRetailPriceGreaterThanEqual(BigDecimal.valueOf(20));
+        assertEquals(4, articleList3.size());
+    }
+
+    @Test
+    void testFindByRetailPriceLessThanEqual(){
+        List<ArticleSearchDto> articleList = articleRepository.findByRetailPriceLessThanEqual(BigDecimal.valueOf(0.24));
+        assertEquals(1, articleList.size());
+
+        List<ArticleSearchDto> articleList2 = articleRepository.findByRetailPriceLessThanEqual(BigDecimal.valueOf(0));
+        assertEquals(0, articleList2.size());
+
+        List<ArticleSearchDto> articleList3 = articleRepository.findByRetailPriceLessThanEqual(BigDecimal.valueOf(20));
+        assertEquals(4, articleList3.size());
+    }
 }

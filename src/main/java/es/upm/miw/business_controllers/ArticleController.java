@@ -14,6 +14,7 @@ import es.upm.miw.repositories.ProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,18 @@ public class ArticleController {
 
     public List<ArticleSearchDto> readArticles(String description) {
         return this.articleRepository.findByDescriptionLikeIgnoreCaseNullSafe(description);
+    }
+
+    public List<ArticleSearchDto> readArticles(int stock) {
+        return this.articleRepository.findByStockGreaterThanEqual(stock);
+    }
+
+    public List<ArticleSearchDto> readArticlesMinPrice(BigDecimal minPrice){
+        return this.articleRepository.findByRetailPriceGreaterThanEqual(minPrice);
+    }
+
+    public List<ArticleSearchDto> readArticlesMaxPrice(BigDecimal maxPrice){
+        return this.articleRepository.findByRetailPriceLessThanEqual(maxPrice);
     }
 
     public ArticleDto createArticle(ArticleDto articleDto) {
