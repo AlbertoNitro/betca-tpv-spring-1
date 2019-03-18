@@ -1,6 +1,6 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.dtos.InfoOutputDto;
+import es.upm.miw.dtos.output.InfoOutputDto;
 import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

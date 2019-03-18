@@ -2,8 +2,8 @@ package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
 import es.upm.miw.data_services.DatabaseSeederService;
-import es.upm.miw.dtos.CashMovementInputDto;
-import es.upm.miw.dtos.CashierLastOutputDto;
+import es.upm.miw.dtos.input.CashMovementInputDto;
+import es.upm.miw.dtos.output.CashierLastOutputDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

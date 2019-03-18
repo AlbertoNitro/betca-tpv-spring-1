@@ -2,7 +2,7 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.ArticleController;
 import es.upm.miw.dtos.ArticleDto;
-import es.upm.miw.dtos.FamilySizeInputDto;
+import es.upm.miw.dtos.input.FamilySizeInputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

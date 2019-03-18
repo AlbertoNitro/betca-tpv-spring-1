@@ -1,4 +1,4 @@
-package es.upm.miw.dtos;
+package es.upm.miw.dtos.output;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

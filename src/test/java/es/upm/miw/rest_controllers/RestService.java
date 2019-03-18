@@ -2,7 +2,7 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_services.JwtService;
 import es.upm.miw.documents.Role;
-import es.upm.miw.dtos.TokenOutputDto;
+import es.upm.miw.dtos.output.TokenOutputDto;
 import es.upm.miw.exceptions.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

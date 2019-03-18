@@ -1,10 +1,8 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.dtos.CashMovementInputDto;
-import es.upm.miw.dtos.CashierClosureInputDto;
-import es.upm.miw.dtos.CashierLastOutputDto;
-import es.upm.miw.dtos.CashierStateOutputDto;
-import org.apache.http.HttpResponse;
+import es.upm.miw.dtos.input.CashierClosureInputDto;
+import es.upm.miw.dtos.output.CashierLastOutputDto;
+import es.upm.miw.dtos.output.CashierStateOutputDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,39 +52,5 @@ class CashierClosureResourceIT {
                         .path(CashierClosureResource.STATE)
                         .get().build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
-    }
-
-    @Test
-    void testPostDeposit() {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                this.restService.loginAdmin().restBuilder()
-                        .path(CashierClosureResource.CASHIER_CLOSURES)
-                        .path(CashierClosureResource.DEPOSIT)
-                        .post().build());
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
-        CashMovementInputDto cashMovementInputDto = new CashMovementInputDto(BigDecimal.TEN, "deposit 10e");
-        HttpResponse response = (HttpResponse) this.restService.loginAdmin().restBuilder()
-                .path(CashierClosureResource.CASHIER_CLOSURES)
-                .path(CashierClosureResource.DEPOSIT)
-                .body(cashMovementInputDto)
-                .post().build();
-        assertNull(response);
-    }
-
-    @Test
-    void testPostWithdrawal() {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                this.restService.loginAdmin().restBuilder()
-                        .path(CashierClosureResource.CASHIER_CLOSURES)
-                        .path(CashierClosureResource.WITHDRAWAL)
-                        .post().build());
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
-        CashMovementInputDto cashMovementInputDto = new CashMovementInputDto(BigDecimal.TEN, "withdrawl 10e");
-        HttpResponse response = (HttpResponse) this.restService.loginAdmin().restBuilder()
-                .path(CashierClosureResource.CASHIER_CLOSURES)
-                .path(CashierClosureResource.WITHDRAWAL)
-                .body(cashMovementInputDto)
-                .post().build();
-        assertNull(response);
     }
 }
