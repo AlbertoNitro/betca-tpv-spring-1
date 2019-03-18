@@ -1,18 +1,19 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.data_services.DatabaseSeederService;
-import es.upm.miw.documents.Article;
-import es.upm.miw.documents.FamilyComposite;
-import es.upm.miw.documents.FamilyType;
-import es.upm.miw.documents.Provider;
+import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ArticleDto;
-import es.upm.miw.dtos.FamilySizeInputDto;
+import es.upm.miw.dtos.input.FamilySizeInputDto;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
+import es.upm.miw.repositories.FamilyArticleRepository;
+import es.upm.miw.repositories.FamilyCompositeRepository;
 import es.upm.miw.repositories.ProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import java.util.ArrayList;
 
 @Controller
 public class ArticleController {
@@ -26,6 +27,11 @@ public class ArticleController {
     @Autowired
     private DatabaseSeederService databaseSeederService;
 
+    @Autowired
+    private FamilyArticleRepository familyArticleRepository;
+
+    @Autowired
+    private FamilyCompositeRepository familyCompositeRepository;
 
     public ArticleDto readArticle(String code) {
         return new ArticleDto(this.articleRepository.findById(code)
@@ -55,9 +61,21 @@ public class ArticleController {
     public FamilySizeInputDto createFamilySize(FamilySizeInputDto familySizeInputDto) {
         String reference = familySizeInputDto.getReference();
         String description = familySizeInputDto.getDescription();
-        FamilyComposite familyComposite = new FamilyComposite(FamilyType.SIZES, reference, description);
+        Provider provider = new Provider(familySizeInputDto.getProvider());
+        ArrayList<String> sizesArray = familySizeInputDto.getSizesArray();
 
-        // foreach size create new leaf and add to the composite, then create new composite
+        FamilyComposite familyComposite = new FamilyComposite(FamilyType.SIZES, reference, description);
+        sizesArray.forEach(size -> {
+            Article article = Article.builder(this.databaseSeederService.nextCodeEan())
+                    .reference(reference + " T-" + size)
+                    .description(description + " T-" + size)
+                    .provider(provider)
+                    .build();
+            FamilyArticle familyArticle = new FamilyArticle(article);
+            this.familyArticleRepository.save(familyArticle);
+            familyComposite.add(familyArticle);
+        });
+        this.familyCompositeRepository.save(familyComposite);
 
         return new FamilySizeInputDto(familyComposite);
     }
