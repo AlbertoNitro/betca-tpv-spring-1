@@ -61,7 +61,7 @@ class ArticleRepositoryIT {
     }
 
     @Test
-    void testFindByStockGreaterThanNullSafe(){
+    void testFindByStockGreaterThanEqual(){
         List<ArticleSearchDto> articleList = articleRepository.findByStockGreaterThanEqual(1);
         assertEquals(5, articleList.size());
 
