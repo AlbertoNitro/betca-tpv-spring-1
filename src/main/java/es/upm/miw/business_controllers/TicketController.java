@@ -3,9 +3,9 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.business_services.PdfService;
 import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ShoppingDto;
-import es.upm.miw.dtos.TicketCreationInputDto;
-import es.upm.miw.dtos.TicketQueryInputDto;
-import es.upm.miw.dtos.TicketQueryOutputDto;
+import es.upm.miw.dtos.input.TicketCreationInputDto;
+import es.upm.miw.dtos.input.TicketQueryInputDto;
+import es.upm.miw.dtos.output.TicketQueryOutputDto;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.*;
 import org.apache.logging.log4j.LogManager;
@@ -205,11 +205,19 @@ public class TicketController {
         }
         User user = this.userRepository.findByMobile(userMobile)
                 .orElseThrow(() -> new NotFoundException("User mobile:" + userMobile));
-        return this.ticketRepository.findByUser(user.getId());
+        return this.getQueryOutputDtoList(this.ticketRepository.findByUser(user.getId()));
+    }
+
+    private List<TicketQueryOutputDto> getQueryOutputDtoList(List<Ticket> list) {
+        List<TicketQueryOutputDto> results = new ArrayList<>();
+        for(Ticket ticket: list) {
+            results.add(new TicketQueryOutputDto(ticket));
+        }
+        return results;
     }
 
     private List<TicketQueryOutputDto> findTicketsByDateRange(LocalDateTime dateFrom, LocalDateTime dateTo) {
-        return this.ticketRepository.findByDateRange(dateFrom, dateTo);
+        return this.getQueryOutputDtoList(this.ticketRepository.findByCreationDateBetween(dateFrom, dateTo));
     }
 
     private Boolean listContainsTicket(List<TicketQueryOutputDto> list1, String ticketId) {

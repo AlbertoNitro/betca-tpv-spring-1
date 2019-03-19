@@ -1,10 +1,9 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.CashierClosureController;
-import es.upm.miw.dtos.CashMovementInputDto;
-import es.upm.miw.dtos.CashierClosureInputDto;
-import es.upm.miw.dtos.CashierLastOutputDto;
-import es.upm.miw.dtos.CashierStateOutputDto;
+import es.upm.miw.dtos.input.CashierClosureInputDto;
+import es.upm.miw.dtos.output.CashierLastOutputDto;
+import es.upm.miw.dtos.output.CashierStateOutputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +20,6 @@ public class CashierClosureResource {
     public static final String LAST = "/last";
 
     public static final String STATE = "/state";
-
-    public static final String DEPOSIT = "/deposit";
-
-    public static final String WITHDRAWAL = "/withdrawal";
 
     @Autowired
     private CashierClosureController cashierClosureController;
@@ -47,15 +42,5 @@ public class CashierClosureResource {
     @PatchMapping(value = LAST)
     public void closeCashierClosure(@Valid @RequestBody CashierClosureInputDto cashierClosureInputDto) {
         cashierClosureController.close(cashierClosureInputDto);
-    }
-
-    @PostMapping(value = DEPOSIT)
-    public void depositCashMovement(@RequestBody CashMovementInputDto cashMovementInputDto){
-        cashierClosureController.deposit(cashMovementInputDto);
-    }
-
-    @PostMapping(value = WITHDRAWAL)
-    public void withdrawalCashMovement(@RequestBody CashMovementInputDto cashMovementInputDto){
-        cashierClosureController.withdrawal(cashMovementInputDto);
     }
 }

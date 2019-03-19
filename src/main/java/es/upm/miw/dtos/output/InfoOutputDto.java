@@ -1,4 +1,4 @@
-package es.upm.miw.dtos;
+package es.upm.miw.dtos.output;
 
 public class InfoOutputDto {
 

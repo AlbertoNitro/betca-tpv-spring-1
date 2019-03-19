@@ -1,4 +1,4 @@
-package es.upm.miw.dtos;
+package es.upm.miw.dtos.input;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

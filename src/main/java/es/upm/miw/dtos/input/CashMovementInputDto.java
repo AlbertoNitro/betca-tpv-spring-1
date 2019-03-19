@@ -1,4 +1,4 @@
-package es.upm.miw.dtos;
+package es.upm.miw.dtos.input;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -10,6 +10,10 @@ public class CashMovementInputDto {
 
     @NotNull
     private String comment;
+
+    public CashMovementInputDto() {
+        // Empty for framework
+    }
 
     public CashMovementInputDto(BigDecimal cash, String comment) {
         this.cash = cash;
