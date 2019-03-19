@@ -39,6 +39,11 @@ public class ArticleResource {
     @Autowired
     private ArticleController articleController;
 
+    @GetMapping
+    public List<ArticleSearchDto> readAll() {
+        return this.articleController.readAll();
+    }
+
     @GetMapping(value = CODE_ID)
     public ArticleDto readArticle(@PathVariable String code) {
         return this.articleController.readArticle(code);
@@ -46,7 +51,7 @@ public class ArticleResource {
 
     @GetMapping(value = MINIMUM)
     public List<ArticleMinimumDto> readArticlesMinimum() {
-        return  this.articleController.readArticlesMinimum();
+        return this.articleController.readArticlesMinimum();
     }
 
     @PostMapping
@@ -80,7 +85,17 @@ public class ArticleResource {
     }
 
     @GetMapping(value = QUERY5)
-    public List<ArticleSearchDto> readArticles(){
+    public List<ArticleSearchDto> readArticles() {
         return this.articleController.readArticles();
+    }
+
+    @PutMapping(value = CODE_ID)
+    public ArticleDto update(@PathVariable String code, @Valid @RequestBody ArticleDto articleDto) {
+        return this.articleController.update(code, articleDto);
+    }
+
+    @DeleteMapping(value = CODE_ID)
+    public void delete(@PathVariable String code) {
+        this.articleController.delete(code);
     }
 }
