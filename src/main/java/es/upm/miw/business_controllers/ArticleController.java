@@ -67,6 +67,10 @@ public class ArticleController {
         return this.articleRepository.findByRetailPriceLessThanEqual(maxPrice);
     }
 
+    public List<ArticleSearchDto> readArticles(){
+        return this.articleRepository.findByReferenceNullAndProviderNull();
+    }
+
     public ArticleDto createArticle(ArticleDto articleDto) {
         String code = articleDto.getCode();
         if (code == null) {
