@@ -205,11 +205,19 @@ public class TicketController {
         }
         User user = this.userRepository.findByMobile(userMobile)
                 .orElseThrow(() -> new NotFoundException("User mobile:" + userMobile));
-        return this.ticketRepository.findByUser(user.getId());
+        return this.getQueryOutputDtoList(this.ticketRepository.findByUser(user.getId()));
+    }
+
+    private List<TicketQueryOutputDto> getQueryOutputDtoList(List<Ticket> list) {
+        List<TicketQueryOutputDto> results = new ArrayList<>();
+        for(Ticket ticket: list) {
+            results.add(new TicketQueryOutputDto(ticket));
+        }
+        return results;
     }
 
     private List<TicketQueryOutputDto> findTicketsByDateRange(LocalDateTime dateFrom, LocalDateTime dateTo) {
-        return this.ticketRepository.findByDateRange(dateFrom, dateTo);
+        return this.getQueryOutputDtoList(this.ticketRepository.findByCreationDateBetween(dateFrom, dateTo));
     }
 
     private Boolean listContainsTicket(List<TicketQueryOutputDto> list1, String ticketId) {
