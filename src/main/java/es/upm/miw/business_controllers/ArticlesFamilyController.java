@@ -1,7 +1,9 @@
 package es.upm.miw.business_controllers;
 
+import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
+import es.upm.miw.dtos.FamilyCompositeDto;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,5 +22,14 @@ public class ArticlesFamilyController {
 
     public void deleteFamilyCompositeItem (String description){
         familyCompositeRepository.delete(familyCompositeRepository.findByDescription(description));
+    }
+
+    public FamilyCompositeDto createFamilyComposite (FamilyCompositeDto familyCompositeDto){
+        familyCompositeRepository.save(new FamilyComposite(
+                familyCompositeDto.getFamilyType(),
+                familyCompositeDto.getReference(),
+                familyCompositeDto.getDescription()
+        ));
+        return familyCompositeDto;
     }
 }
