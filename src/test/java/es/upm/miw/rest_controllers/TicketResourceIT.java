@@ -109,7 +109,7 @@ class TicketResourceIT {
 
     @Test
     void testFindTicketByUserMobile() {
-        //Crear ticket
+        //Create ticket
         String userMobile = "666666005";
         ShoppingDto shoppingDto = new ShoppingDto("1", "", new BigDecimal("100.00"), 1,
                 BigDecimal.ZERO, new BigDecimal("100.00"), true);
@@ -118,10 +118,10 @@ class TicketResourceIT {
                 "Nota del ticket...");
         this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
                 .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
-        //Preparacion de busqueda
+        //Search setup
         TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
         searchTicketDto.setUserMobile(userMobile);
-        //Busqueda
+        //Search
         TicketQueryOutputDto[] results = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
@@ -143,10 +143,10 @@ class TicketResourceIT {
     @Test
     void testFindTicketByUserMobileNotFoundException() {
         String userMobile = "999111222";
-        //Preparacion de busqueda
+        //Search setup
         TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
         searchTicketDto.setUserMobile(userMobile);
-        //Generar excepcion
+        //Generate Exception
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 this.restService.loginAdmin().restBuilder(new RestBuilder<TicketQueryOutputDto[]>()
                         .clazz(TicketQueryOutputDto[].class)).log()
@@ -505,6 +505,20 @@ class TicketResourceIT {
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).path(TicketResource.ORDER_ID)
                 .body(searchTicketDto).post().build();
         assertEquals(1, results.length);
+    }
 
+    @Test
+    void testAdvancedTicketQueryByOrderIdNotFoundException() {
+        String orderId = "888666";
+        //Search setup
+        TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
+        searchTicketDto.setOrderId(orderId);
+        //Generate Exception
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder(new RestBuilder<TicketQueryOutputDto[]>()
+                        .clazz(TicketQueryOutputDto[].class)).log()
+                        .path(TicketResource.TICKETS).path(TicketResource.QUERY).path(TicketResource.ORDER_ID)
+                        .body(searchTicketDto).post().build());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 }
