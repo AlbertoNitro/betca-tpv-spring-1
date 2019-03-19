@@ -1,11 +1,16 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.TicketController;
+import es.upm.miw.documents.Article;
+import es.upm.miw.documents.Order;
+import es.upm.miw.documents.OrderLine;
 import es.upm.miw.documents.Ticket;
 import es.upm.miw.dtos.*;
 import es.upm.miw.dtos.input.TicketCreationInputDto;
 import es.upm.miw.dtos.input.TicketQueryInputDto;
 import es.upm.miw.dtos.output.TicketQueryOutputDto;
+import es.upm.miw.repositories.ArticleRepository;
+import es.upm.miw.repositories.OrderRepository;
 import es.upm.miw.repositories.TicketRepository;
 import es.upm.miw.repositories.UserRepository;
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +42,12 @@ class TicketResourceIT {
 
     @Autowired
     private TicketRepository ticketRepository;
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     private List<Ticket> initialTicketDB;
 
@@ -454,5 +465,46 @@ class TicketResourceIT {
         for(TicketQueryOutputDto result: results){
             LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
         }
+    }
+
+    @Test
+    void testAdvancedTicketQueryByOrderId() {
+        //Setup Order
+        String articleId = "8400000000017";
+        Article article = this.articleRepository.findById(articleId).orElse(null);
+        OrderLine orderLine = new OrderLine(article, 10);
+        OrderLine[] orderLines = {orderLine};
+        Order order = new Order("Test Order", null, orderLines);
+        this.orderRepository.save(order);
+        //Setup Ticket
+        this.ticketRepository.deleteAll();
+        String userMobile1 = "666666005";
+        ShoppingDto shoppingDto1 = new ShoppingDto("1", "", new BigDecimal("100.00"), 1,
+                BigDecimal.ZERO, new BigDecimal("100.00"), true);
+        ShoppingDto shoppingDto2 = new ShoppingDto(articleId, "", new BigDecimal("27.80"), 1,
+                BigDecimal.ZERO, new BigDecimal("27.80"), false);
+        TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
+                new BigDecimal("127.80"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto1, shoppingDto2),
+                "Nota del ticket...");
+        this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
+        ShoppingDto shoppingDto3 = new ShoppingDto(articleId, "", new BigDecimal("27.80"), 1,
+                BigDecimal.ZERO, new BigDecimal("27.80"), true);
+        ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
+                new BigDecimal("27.80"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto3),
+                "Nota del ticket...");
+        this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
+        //Setup Search
+        TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
+        searchTicketDto.setPending(true);
+        searchTicketDto.setOrderId(order.getId());
+        //Searching
+        TicketQueryOutputDto[] results = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
+                .path(TicketResource.TICKETS).path(TicketResource.QUERY).path(TicketResource.ORDER_ID)
+                .body(searchTicketDto).post().build();
+        assertEquals(1, results.length);
+
     }
 }
