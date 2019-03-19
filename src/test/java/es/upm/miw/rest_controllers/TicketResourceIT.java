@@ -8,6 +8,7 @@ import es.upm.miw.dtos.input.TicketQueryInputDto;
 import es.upm.miw.dtos.output.TicketQueryOutputDto;
 import es.upm.miw.repositories.TicketRepository;
 import es.upm.miw.repositories.UserRepository;
+import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -243,6 +244,9 @@ class TicketResourceIT {
                 .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(2, results.length);
+        for(TicketQueryOutputDto result: results){
+            LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
+        }
     }
 
     @Test
@@ -281,6 +285,9 @@ class TicketResourceIT {
                 .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(1, results.length);
+        for(TicketQueryOutputDto result: results){
+            LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
+        }
     }
 
     @Test
@@ -329,6 +336,9 @@ class TicketResourceIT {
                 .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(2, results.length);
+        for(TicketQueryOutputDto result: results){
+            LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
+        }
     }
 
     @Test
@@ -378,6 +388,9 @@ class TicketResourceIT {
                 .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(1, results.length);
+        for(TicketQueryOutputDto result: results){
+            LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
+        }
     }
 
     @Test
@@ -438,5 +451,8 @@ class TicketResourceIT {
                 .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(1, results.length);
+        for(TicketQueryOutputDto result: results){
+            LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
+        }
     }
 }

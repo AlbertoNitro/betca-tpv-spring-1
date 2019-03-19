@@ -1,9 +1,9 @@
 package es.upm.miw.business_controllers;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,10 +20,10 @@ public class StatisticController {
     @Autowired
     private TicketRepository ticketRepository;
 
-    private Date convertStringToDate(String date) {
+    private LocalDateTime convertStringToDate(String date) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, timeFormatter);
-        return Date.from(Instant.from(offsetDateTime));
+        return LocalDateTime.from(Instant.from(offsetDateTime));
     }
 
     public List<StatisticDtoOutput> getDataStatisticAverageDailyExpense(String dateFrom, String dateTo) {
