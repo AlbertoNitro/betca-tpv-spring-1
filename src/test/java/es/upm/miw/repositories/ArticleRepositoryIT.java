@@ -61,7 +61,7 @@ class ArticleRepositoryIT {
     }
 
     @Test
-    void testFindByStockGreaterThanNullSafe(){
+    void testFindByStockGreaterThanEqual(){
         List<ArticleSearchDto> articleList = articleRepository.findByStockGreaterThanEqual(1);
         assertEquals(5, articleList.size());
 
@@ -97,5 +97,13 @@ class ArticleRepositoryIT {
 
         List<ArticleSearchDto> articleList3 = articleRepository.findByRetailPriceLessThanEqual(BigDecimal.valueOf(20));
         assertEquals(4, articleList3.size());
+    }
+
+    @Test
+    void testFindByReferenceNullAndProviderNull(){
+        List<ArticleSearchDto> articleList = articleRepository.findByReferenceNullAndProviderNull();
+        assertEquals(2, articleList.size());
+        assertEquals("art1", articleList.get(0).getDescription());
+        assertEquals("Otro articulo", articleList.get(1).getDescription());
     }
 }

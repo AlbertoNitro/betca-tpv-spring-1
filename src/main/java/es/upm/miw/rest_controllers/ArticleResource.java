@@ -34,6 +34,8 @@ public class ArticleResource {
 
     public static final String QUERY4 = "/query4";
 
+    public static final String QUERY5 = "/query5";
+
     @Autowired
     private ArticleController articleController;
 
@@ -74,6 +76,11 @@ public class ArticleResource {
 
     @GetMapping(value = QUERY4)
     public List<ArticleSearchDto> readArticlesMaxPrice(@RequestBody BigDecimal maxPrice) {
-        return this.articleController.readArticlesMinPrice(maxPrice);
+        return this.articleController.readArticlesMaxPrice(maxPrice);
+    }
+
+    @GetMapping(value = QUERY5)
+    public List<ArticleSearchDto> readArticles(){
+        return this.articleController.readArticles();
     }
 }
