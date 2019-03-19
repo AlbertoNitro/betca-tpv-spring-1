@@ -17,6 +17,12 @@ public class FamilyCompositeDto {
     public FamilyCompositeDto() {
     }
 
+    public FamilyCompositeDto(@NotNull FamilyType familyType, String reference, @NotNull String description) {
+        this.familyType = familyType;
+        this.reference = reference;
+        this.description = description;
+    }
+
     public FamilyType getFamilyType() {
         return familyType;
     }
