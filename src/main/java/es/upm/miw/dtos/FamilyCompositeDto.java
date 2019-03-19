@@ -1,10 +1,10 @@
-package es.upm.miw.dtos.input;
+package es.upm.miw.dtos;
 
 import es.upm.miw.documents.FamilyType;
 
 import javax.validation.constraints.NotNull;
 
-public class FamilyCompositeInputDto {
+public class FamilyCompositeDto {
 
     @NotNull
     private FamilyType familyType;
@@ -14,7 +14,7 @@ public class FamilyCompositeInputDto {
     @NotNull
     private String description;
 
-    public FamilyCompositeInputDto() {
+    public FamilyCompositeDto() {
     }
 
     public FamilyType getFamilyType() {
@@ -43,7 +43,7 @@ public class FamilyCompositeInputDto {
 
     @Override
     public String toString() {
-        return "FamilyCompositeInputDto{" +
+        return "FamilyCompositeDto{" +
                 "familyType=" + familyType +
                 ", reference='" + reference + '\'' +
                 ", description='" + description + '\'' +
