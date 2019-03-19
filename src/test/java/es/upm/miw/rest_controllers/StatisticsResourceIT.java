@@ -22,7 +22,7 @@ class StatisticsResourceIT {
         LocalDateTime dateFrom = LocalDateTime.of(2019, 3, 1, 0, 0 ,0);
         LocalDateTime dateTo = LocalDateTime.of(2019, 3, 30, 23, 59, 59);
 
-        /* StatisticDtoOutput[] results = this.restService.loginAdmin()
+        StatisticDtoOutput[] results = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<StatisticDtoOutput[]>().clazz(StatisticDtoOutput[].class))
                 .path(StatisticResource.STATISTIC)
                 .path(StatisticResource.STATISTIC_NAME)
@@ -30,7 +30,7 @@ class StatisticsResourceIT {
                 .param("dateFrom", dateFrom.toString())
                 .param("dateTo", dateTo.toString()).get().build();
         assertEquals(1, results.length);
-        assertEquals(100.88, results[0].getValue()); */
+        assertEquals(100.88, results[0].getValue()); 
     }
 
     @Test
@@ -38,7 +38,7 @@ class StatisticsResourceIT {
         LocalDateTime dateFrom = LocalDateTime.of(2019, 3, 1, 0, 0 ,0);
         LocalDateTime dateTo = LocalDateTime.of(2019, 3, 30, 23, 59, 59);
 
-        /* StatisticDtoOutput[] results = this.restService.loginAdmin()
+        StatisticDtoOutput[] results = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<StatisticDtoOutput[]>().clazz(StatisticDtoOutput[].class))
                 .path(StatisticResource.STATISTIC)
                 .path(StatisticResource.STATISTIC_NAME)
@@ -46,7 +46,7 @@ class StatisticsResourceIT {
                 .param("dateFrom", dateFrom.toString())
                 .param("dateTo", dateTo.toString()).get().build();
         assertEquals(1, results.length);
-        assertEquals(33.626666666666665, results[0].getValue()); */
+        assertEquals(33.626666666666665, results[0].getValue());
     }
 
 }
