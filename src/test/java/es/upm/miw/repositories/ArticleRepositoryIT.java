@@ -47,6 +47,12 @@ class ArticleRepositoryIT {
     }
 
     @Test
+    void testFindByCode (){
+        assertNotNull(this.articleRepository.findByCode("1"));
+        assertEquals("art1",this.articleRepository.findByCode("1").getDescription());
+    }
+
+    @Test
     void testFindByDescriptionLikeIgnoreCaseNullSafe(){
         List<ArticleSearchDto> articleList = articleRepository.findByDescriptionLikeIgnoreCaseNullSafe("Art");
         assertEquals(2, articleList.size());
