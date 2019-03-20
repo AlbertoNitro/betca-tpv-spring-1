@@ -7,11 +7,9 @@ import es.upm.miw.dtos.ArticleSearchDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import sun.rmi.runtime.Log;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,13 +73,13 @@ class ArticleRepositoryIT {
         System.out.println(articleList5.size());
 
         List<ArticleSearchDto> articleList6 = articleRepository.findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
-                (null, new BigDecimal("10"));
-        System.out.println(new BigDecimal("10"));
+                (null, BigDecimal.valueOf(0));
+        System.out.println(BigDecimal.valueOf(0));
         System.out.println(articleList6.size());
 
         List<ArticleSearchDto> articleList7 = articleRepository.findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
                 (new BigDecimal(0), new BigDecimal(20.0));
-        System.out.println(new BigDecimal(0));
+        System.out.println(BigDecimal.valueOf(0));
         System.out.println(new BigDecimal("20.0"));
         System.out.println(articleList7.size());
     }
