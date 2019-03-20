@@ -68,11 +68,11 @@ class ArticleResorceIT {
 
     @Test
     void testCreateArticleWithoutCodeNextCodeEanNotImplemented() {
-        HttpServerErrorException.InternalServerError exception = assertThrows(HttpServerErrorException.InternalServerError.class, () ->
+        HttpClientErrorException.BadRequest exception = assertThrows(HttpClientErrorException.BadRequest.class, () ->
                 this.restService.loginAdmin().restBuilder()
                         .path(ArticleResource.ARTICLES)
                         .body(new ArticleDto(null, "new", "", BigDecimal.TEN, 10))
                         .post().build());
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 }
