@@ -205,11 +205,19 @@ public class TicketController {
         }
         User user = this.userRepository.findByMobile(userMobile)
                 .orElseThrow(() -> new NotFoundException("User mobile:" + userMobile));
-        return this.ticketRepository.findByUser(user.getId());
+        return this.getQueryOutputDtoList(this.ticketRepository.findByUser(user.getId()));
+    }
+
+    private List<TicketQueryOutputDto> getQueryOutputDtoList(List<Ticket> list) {
+        List<TicketQueryOutputDto> results = new ArrayList<>();
+        for(Ticket ticket: list) {
+            results.add(new TicketQueryOutputDto(ticket));
+        }
+        return results;
     }
 
     private List<TicketQueryOutputDto> findTicketsByDateRange(LocalDateTime dateFrom, LocalDateTime dateTo) {
-        return this.ticketRepository.findByDateRange(dateFrom, dateTo);
+        return this.getQueryOutputDtoList(this.ticketRepository.findByCreationDateBetween(dateFrom, dateTo));
     }
 
     private Boolean listContainsTicket(List<TicketQueryOutputDto> list1, String ticketId) {
@@ -231,4 +239,48 @@ public class TicketController {
         return results;
     }
 
+    public List<TicketQueryOutputDto> advancedTicketQueryByOrderId(TicketQueryInputDto ticketQueryDto) {
+        List<TicketQueryOutputDto> ticketResults = new ArrayList<>();
+        Boolean findByPending = ticketQueryDto.getPending();
+        if(ticketQueryDto.getOrderId()!=null) {
+            Order searchOrder = this.orderRepository.findById(ticketQueryDto.getOrderId())
+                    .orElseThrow(() -> new NotFoundException("Order ID not found"));
+            ticketResults = this.findTicketsWithArticlesFromOrder(searchOrder);
+        }
+        ticketResults = (findByPending) ?
+                this.getPendingTickets(this.getTicketsFromOutputDto(ticketResults)) : ticketResults;
+        return ticketResults;
+    }
+
+    private List<TicketQueryOutputDto> findTicketsWithArticlesFromOrder(Order searchOrder) {
+        List<TicketQueryOutputDto> results = new ArrayList<>();
+        List<Ticket> allTickets = this.ticketRepository.findAll();
+        List<Article> articlesFromOrder = this.getArticlesFromOrder(searchOrder);
+        for(Article orderItem: articlesFromOrder) {
+            for(Ticket ticketItem: allTickets) {
+                for(Article ticketArticle: this.getArticlesFromTicket(ticketItem)) {
+                    if(orderItem.getCode().equalsIgnoreCase(ticketArticle.getCode())) {
+                        results.add(new TicketQueryOutputDto(ticketItem));
+                    }
+                }
+            }
+        }
+        return results;
+    }
+
+    private List<Article> getArticlesFromOrder(Order searchOrder) {
+        List<Article> results = new ArrayList<>();
+        for(OrderLine orderLine: searchOrder.getOrderLines()) {
+            results.add(orderLine.getArticle());
+        }
+        return results;
+    }
+
+    private List<Article> getArticlesFromTicket(Ticket ticket) {
+        List<Article> results = new ArrayList<>();
+        for(Shopping shoppingList: ticket.getShoppingList()) {
+            results.add(shoppingList.getArticle());
+        }
+        return results;
+    }
 }

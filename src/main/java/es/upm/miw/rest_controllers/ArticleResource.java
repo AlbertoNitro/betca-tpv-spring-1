@@ -23,25 +23,23 @@ import java.util.List;
 public class ArticleResource {
 
     public static final String ARTICLES = "/articles";
-
     public static final String CODE_ID = "/{code}";
-
     public static final String FAMILY_SIZE = "/family-size";
-
     public static final String MINIMUM = "/minimum";
-
     public static final String QUERY = "/query";
-
     public static final String QUERY2 = "/query2";
-
     public static final String QUERY3 = "/query3";
-
     public static final String QUERY4 = "/query4";
-
+    public static final String QUERY5 = "/query5";
     static final String STOCK_PREDICTION = "/stock-prediction";
 
     @Autowired
     private ArticleController articleController;
+
+    @GetMapping
+    public List<ArticleSearchDto> readAll() {
+        return this.articleController.readAll();
+    }
 
     @GetMapping(value = CODE_ID)
     public ArticleDto readArticle(@PathVariable String code) {
@@ -80,7 +78,22 @@ public class ArticleResource {
 
     @GetMapping(value = QUERY4)
     public List<ArticleSearchDto> readArticlesMaxPrice(@RequestBody BigDecimal maxPrice) {
-        return this.articleController.readArticlesMinPrice(maxPrice);
+        return this.articleController.readArticlesMaxPrice(maxPrice);
+    }
+
+    @GetMapping(value = QUERY5)
+    public List<ArticleSearchDto> readArticles() {
+        return this.articleController.readArticles();
+    }
+
+    @PutMapping(value = CODE_ID)
+    public ArticleDto update(@PathVariable String code, @Valid @RequestBody ArticleDto articleDto) {
+        return this.articleController.update(code, articleDto);
+    }
+
+    @DeleteMapping(value = CODE_ID)
+    public void delete(@PathVariable String code) {
+        this.articleController.delete(code);
     }
 
     @GetMapping(value = CODE_ID + STOCK_PREDICTION)

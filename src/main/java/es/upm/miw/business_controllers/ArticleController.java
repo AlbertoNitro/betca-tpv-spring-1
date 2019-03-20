@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ArticleController {
@@ -36,6 +37,16 @@ public class ArticleController {
 
     @Autowired
     private FamilyCompositeRepository familyCompositeRepository;
+
+    public List<ArticleSearchDto> readAll() {
+        List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
+
+        for (Article article : this.articleRepository.findAll()) {
+            articleSearchDtoList.add(new ArticleSearchDto(article));
+        }
+
+        return articleSearchDtoList;
+    }
 
     public List<ArticleMinimumDto> readArticlesMinimum() {
         List<Article> articles = articleRepository.findAll();
@@ -67,11 +78,30 @@ public class ArticleController {
         return this.articleRepository.findByRetailPriceLessThanEqual(maxPrice);
     }
 
+    public List<ArticleSearchDto> readArticles() {
+        return this.articleRepository.findByReferenceNullAndProviderNull();
+    }
+
     public ArticleDto createArticle(ArticleDto articleDto) {
         String code = articleDto.getCode();
         if (code == null) {
             code = this.databaseSeederService.nextCodeEan();
         }
+
+        Article article = prepareArticle(articleDto, code);
+
+        this.articleRepository.save(article);
+        return new ArticleDto(article);
+    }
+
+    public ArticleDto update(String code, ArticleDto articleDto) {
+        Article article = prepareArticle(articleDto, code);
+
+        this.articleRepository.save(article);
+        return new ArticleDto(article);
+    }
+
+    private Article prepareArticle(ArticleDto articleDto, String code) {
         if (this.articleRepository.findById(code).isPresent()) {
             throw new ConflictException("Article code (" + code + ")");
         }
@@ -81,10 +111,18 @@ public class ArticleController {
             provider = this.providerRepository.findById(articleDto.getProvider())
                     .orElseThrow(() -> new NotFoundException("Provider (" + articleDto.getProvider() + ")"));
         }
-        Article article = Article.builder(code).description(articleDto.getDescription()).retailPrice(articleDto.getRetailPrice())
+
+        return Article.builder(code).description(articleDto.getDescription()).retailPrice(articleDto.getRetailPrice())
                 .reference(articleDto.getReference()).stock(stock).provider(provider).build();
-        this.articleRepository.save(article);
-        return new ArticleDto(article);
+    }
+
+    public void delete(String code) {
+        Optional<Article> article = this.articleRepository.findById(code);
+
+        if (article.isPresent()) {
+            this.articleRepository.delete(article.get());
+        }
+
     }
 
     public FamilySizeInputDto createFamilySize(FamilySizeInputDto familySizeInputDto) {

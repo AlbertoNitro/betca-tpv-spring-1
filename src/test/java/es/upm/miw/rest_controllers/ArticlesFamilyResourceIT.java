@@ -3,6 +3,7 @@ package es.upm.miw.rest_controllers;
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
+import es.upm.miw.dtos.FamilyCompositeDto;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,21 @@ public class ArticlesFamilyResourceIT {
         this.restService.loginOperator()
                 .restBuilder(new RestBuilder<ArticleFamilyMinimumDto>()).clazz(ArticleFamilyMinimumDto.class)
                 .path(ArticlesFamilyResource.ARTICLES_FAMILY)
-                .param("description","test").delete().build();
+                .param("description", "test").delete().build();
         assertNull(familyCompositeRepository.findByDescription("test"));
         familyCompositeRepository.save(new FamilyComposite(FamilyType.ARTICLES, "T", "test"));
+    }
+
+    @Test
+    void testCreateFamilyComposite() {
+        assertNull(familyCompositeRepository.findByDescription("create"));
+        assertNotNull(familyCompositeRepository.findByDescription("test"));
+        FamilyCompositeDto response = this.restService.loginOperator().restBuilder(new RestBuilder<FamilyCompositeDto>())
+                .clazz(FamilyCompositeDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY + ArticlesFamilyResource.COMPOSITE)
+                .param("description", "test").body(new FamilyCompositeDto(FamilyType.ARTICLES, "C", "create"))
+                .post().build();
+        assertEquals("create", response.getDescription());
+        assertNotNull(familyCompositeRepository.findByDescription("create"));
+        familyCompositeRepository.delete(familyCompositeRepository.findByDescription("create"));
     }
 }

@@ -19,4 +19,6 @@ public interface ArticleRepository extends MongoRepository<Article, String> {
 
     List<ArticleSearchDto> findByRetailPriceLessThanEqual(BigDecimal maxPrice);
 
+    List<ArticleSearchDto> findByReferenceNullAndProviderNull();
+
 }
