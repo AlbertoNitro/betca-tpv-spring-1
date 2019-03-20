@@ -27,9 +27,12 @@ public class ArticlesFamilyController {
     @Autowired
     private FamilyCompositeRepository familyCompositeRepository;
 
-    public ArticleMinimumDto createFamilyArticle (ArticleMinimumDto articleMinimumDto, String description){
+    public ArticleMinimumDto createFamilyArticle(ArticleMinimumDto articleMinimumDto, String description) {
         FamilyComposite familyToBeAttached = this.existFamily(description);
-        //FamilyArticle familyArticleCreated = this.familyArticleRepository.save(articleRepository.findById(articleMinimumDto.getCode()));
+        FamilyArticle familyArticleCreated = this.familyArticleRepository.save(new FamilyArticle(
+                articleRepository.findByCode(articleMinimumDto.getCode())));
+        familyToBeAttached.getFamilyCompositeList().add(familyArticleCreated);
+        familyCompositeRepository.save(familyToBeAttached);
         return articleMinimumDto;
     }
 
@@ -48,7 +51,7 @@ public class ArticlesFamilyController {
         familyCompositeRepository.delete(familyCompositeRepository.findByDescription(description));
     }
 
-    private FamilyComposite existFamily (String description){
+    private FamilyComposite existFamily(String description) {
         FamilyComposite familyToBeAttached = familyCompositeRepository.findByDescription(description);
         if (familyToBeAttached == null) {
             throw new BadRequestException("No valid description provided");
