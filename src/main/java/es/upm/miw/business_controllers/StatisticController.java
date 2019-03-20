@@ -1,13 +1,6 @@
 package es.upm.miw.business_controllers;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,6 +35,7 @@ public class StatisticController {
 
         Map<String, Double> listCollectors = tickets.stream().collect(
                 Collectors.groupingBy(ticket -> ticket.getCreationDate().toLocalDate().toString(), Collectors.summingDouble(ticket -> ticket.getTotal().doubleValue())));
+
 
         return new StatisticDtoOutput().createStatisticsDto(listCollectors);
     }
