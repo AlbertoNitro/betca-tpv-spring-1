@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface ArticleRepository extends MongoRepository<Article, String> {
 
+    Article findByCode(String code);
+
     @Query("?#{ [0] == null ? { $where : 'true'} : { description : {$regex:[0], $options: 'i'} } }")
     List<ArticleSearchDto> findByDescriptionLikeIgnoreCaseNullSafe(String description);
 
