@@ -26,14 +26,10 @@ public class ArticlesFamilyResource {
     @Autowired
     private ArticlesFamilyController articlesFamilyController;
 
-    @GetMapping
-    public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(@Valid @RequestParam FamilyType familyType) {
-        return articlesFamilyController.readAllFamilyCompositeByFamilyType(familyType);
-    }
-
-    @DeleteMapping
-    public void deleteFamilyCompositeItem(@Valid @RequestParam String description) {
-        articlesFamilyController.deleteFamilyCompositeItem(description);
+    @PostMapping(value = ARTICLE)
+    public ArticleMinimumDto createFamilyArticle(@Valid @RequestBody ArticleMinimumDto articleMinimumDto,
+                                                 @RequestBody String description) {
+        return articleMinimumDto;
     }
 
     @PostMapping(value = COMPOSITE)
@@ -42,9 +38,13 @@ public class ArticlesFamilyResource {
         return articlesFamilyController.createFamilyComposite(familyCompositeDto, description);
     }
 
-    @PostMapping(value = ARTICLE)
-    public ArticleMinimumDto createFamilyArticle(@Valid @RequestBody ArticleMinimumDto articleMinimumDto,
-                                                 @RequestBody String description) {
-        return articleMinimumDto;
+    @DeleteMapping
+    public void deleteFamilyCompositeItem(@Valid @RequestParam String description) {
+        articlesFamilyController.deleteFamilyCompositeItem(description);
+    }
+
+    @GetMapping
+    public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(@Valid @RequestParam FamilyType familyType) {
+        return articlesFamilyController.readAllFamilyCompositeByFamilyType(familyType);
     }
 }
