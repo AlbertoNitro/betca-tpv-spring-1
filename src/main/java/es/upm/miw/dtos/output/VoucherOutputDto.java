@@ -22,13 +22,14 @@ public class VoucherOutputDto {
     public VoucherOutputDto() {
         // empty  framework
     }
-    public VoucherOutputDto(Voucher voucher){
-        this.id=voucher.getId();
-        this.value=voucher.getValue();
-        this.creationDate=voucher.getCreationDate();
+
+    public VoucherOutputDto(Voucher voucher) {
+        this.id = voucher.getId();
+        this.value = voucher.getValue();
+        this.creationDate = voucher.getCreationDate();
     }
 
-    public VoucherOutputDto(@NotNull BigDecimal value,@NotNull LocalDateTime creationDate, LocalDateTime dateOfUse) {
+    public VoucherOutputDto(@NotNull BigDecimal value, @NotNull LocalDateTime creationDate, LocalDateTime dateOfUse) {
 
         this.value = value;
         this.creationDate = creationDate;
