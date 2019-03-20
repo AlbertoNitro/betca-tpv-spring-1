@@ -9,6 +9,7 @@ import es.upm.miw.dtos.stock_prediction.PeriodType;
 import es.upm.miw.dtos.stock_prediction.PeriodicityType;
 import es.upm.miw.dtos.stock_prediction.StockPredictionInputDto;
 import es.upm.miw.dtos.stock_prediction.StockPredictionOutputDto;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -62,23 +63,13 @@ public class ArticleResource {
     }
 
     @GetMapping(value = QUERY)
-    public List<ArticleSearchDto> readArticles(@RequestBody String description) {
-        return this.articleController.readArticles(description);
+    public List<ArticleSearchDto> readArticles(@RequestBody String description, @RequestBody Integer stock){
+        return this.articleController.readArticles(description, stock);
     }
 
     @GetMapping(value = QUERY2)
-    public List<ArticleSearchDto> readArticles(@RequestBody int stock) {
-        return this.articleController.readArticles(stock);
-    }
-
-    @GetMapping(value = QUERY3)
-    public List<ArticleSearchDto> readArticlesMinPrice(@RequestBody BigDecimal minPrice) {
-        return this.articleController.readArticlesMinPrice(minPrice);
-    }
-
-    @GetMapping(value = QUERY4)
-    public List<ArticleSearchDto> readArticlesMaxPrice(@RequestBody BigDecimal maxPrice) {
-        return this.articleController.readArticlesMaxPrice(maxPrice);
+    public List<ArticleSearchDto> readArticles(@RequestBody BigDecimal minPrice, @RequestBody BigDecimal maxPrice){
+        return this.articleController.readArticles(minPrice, maxPrice);
     }
 
     @GetMapping(value = QUERY5)

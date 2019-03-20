@@ -10,14 +10,19 @@ import java.util.List;
 
 public interface ArticleRepository extends MongoRepository<Article, String> {
 
-    @Query("?#{ [0] == null ? { $where : 'true'} : { description : {$regex:[0], $options: 'i'} } }")
-    List<ArticleSearchDto> findByDescriptionLikeIgnoreCaseNullSafe(String description);
+    @Query("{$and:["
+            + "?#{ [0] == null ? { $where : 'true'} : { description : {$regex :[0], $options : 'i'} } },"
+            + "?#{ [1] == null ? { $where : 'true'} : { stock : {$gte :[1]} } }"
+            + "] }" )
+    List<ArticleSearchDto> findByDescriptionLikeAndStockGreaterThanEqualNullSafe
+            (String description, Integer stock);
 
-    List<ArticleSearchDto> findByStockGreaterThanEqual(int stock);
-
-    List<ArticleSearchDto> findByRetailPriceGreaterThanEqual(BigDecimal minPrice);
-
-    List<ArticleSearchDto> findByRetailPriceLessThanEqual(BigDecimal maxPrice);
+    @Query("{$and:["
+            + "?#{ [0] == null ? { $where : 'true'} : { retailPrice : {$gte :[0]} } },"
+            + "?#{ [1] == null ? { $where : 'true'} : { retailPrice : {$lte :[1]} } }"
+            + "] }" )
+    List<ArticleSearchDto> findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
+            (BigDecimal minPrice, BigDecimal maxPrice);
 
     List<ArticleSearchDto> findByReferenceNullAndProviderNull();
 

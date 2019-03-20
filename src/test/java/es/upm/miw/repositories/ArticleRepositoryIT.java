@@ -7,9 +7,11 @@ import es.upm.miw.dtos.ArticleSearchDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import sun.rmi.runtime.Log;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,56 +49,41 @@ class ArticleRepositoryIT {
     }
 
     @Test
-    void testFindByDescriptionLikeIgnoreCaseNullSafe(){
-        List<ArticleSearchDto> articleList = articleRepository.findByDescriptionLikeIgnoreCaseNullSafe("Art");
+    void testFindByDescriptionLikeIgnoreCaseAndStockGreaterThanEqualNullSafe(){
+        List<ArticleSearchDto> articleList = articleRepository.findByDescriptionLikeAndStockGreaterThanEqualNullSafe
+                ("Art", null);
         assertEquals(2, articleList.size());
-        assertEquals("art1", articleList.get(0).getDescription());
-        assertEquals("Otro articulo", articleList.get(1).getDescription());
-    }
 
-    @Test
-    void testFindByDescriptionNull(){
-        List<ArticleSearchDto> articleList = articleRepository.findByDescriptionLikeIgnoreCaseNullSafe(null);
-        assertFalse(articleList.isEmpty());
-    }
-
-    @Test
-    void testFindByStockGreaterThanEqual(){
-        List<ArticleSearchDto> articleList = articleRepository.findByStockGreaterThanEqual(1);
-        assertEquals(5, articleList.size());
-
-        List<ArticleSearchDto> articleList2 = articleRepository.findByStockGreaterThanEqual(0);
+        List<ArticleSearchDto> articleList2 = articleRepository.findByDescriptionLikeAndStockGreaterThanEqualNullSafe
+                (null, null);
         assertEquals(7, articleList2.size());
 
-        List<ArticleSearchDto> articleList3 = articleRepository.findByStockGreaterThanEqual(10);
-        assertEquals(1, articleList3.size());
+        List<ArticleSearchDto> articleList3 = articleRepository.findByDescriptionLikeAndStockGreaterThanEqualNullSafe
+                (null, 1);
+        assertEquals(5, articleList3.size());
 
-        List<ArticleSearchDto> articleList4 = articleRepository.findByStockGreaterThanEqual(11);
-        assertEquals(0, articleList4.size());
+        List<ArticleSearchDto> articleList4 = articleRepository.findByDescriptionLikeAndStockGreaterThanEqualNullSafe
+                ("Art", 1);
+        assertEquals(1, articleList4.size());
     }
 
     @Test
-    void testFindByRetailPriceGreaterThanEqual(){
-        List<ArticleSearchDto> articleList = articleRepository.findByRetailPriceGreaterThanEqual(BigDecimal.valueOf(0.24));
-        assertEquals(6, articleList.size());
+    void testFindByDescriptionLikeAndStockGreaterThanEqualAndRetailPriceBetweenNullSafe(){
+        List<ArticleSearchDto> articleList5 = articleRepository.findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
+                (null, null);
+        //assertEquals(2, articleList5.size());
+        System.out.println(articleList5.size());
 
-        List<ArticleSearchDto> articleList2 = articleRepository.findByRetailPriceGreaterThanEqual(BigDecimal.valueOf(0));
-        assertEquals(7, articleList2.size());
+        List<ArticleSearchDto> articleList6 = articleRepository.findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
+                (null, new BigDecimal("10"));
+        System.out.println(new BigDecimal("10"));
+        System.out.println(articleList6.size());
 
-        List<ArticleSearchDto> articleList3 = articleRepository.findByRetailPriceGreaterThanEqual(BigDecimal.valueOf(20));
-        assertEquals(4, articleList3.size());
-    }
-
-    @Test
-    void testFindByRetailPriceLessThanEqual(){
-        List<ArticleSearchDto> articleList = articleRepository.findByRetailPriceLessThanEqual(BigDecimal.valueOf(0.24));
-        assertEquals(1, articleList.size());
-
-        List<ArticleSearchDto> articleList2 = articleRepository.findByRetailPriceLessThanEqual(BigDecimal.valueOf(0));
-        assertEquals(0, articleList2.size());
-
-        List<ArticleSearchDto> articleList3 = articleRepository.findByRetailPriceLessThanEqual(BigDecimal.valueOf(20));
-        assertEquals(4, articleList3.size());
+        List<ArticleSearchDto> articleList7 = articleRepository.findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
+                (new BigDecimal(0), new BigDecimal(20.0));
+        System.out.println(new BigDecimal(0));
+        System.out.println(new BigDecimal("20.0"));
+        System.out.println(articleList7.size());
     }
 
     @Test
