@@ -5,6 +5,10 @@ import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.dtos.ArticleSearchDto;
 import es.upm.miw.dtos.input.FamilySizeInputDto;
+import es.upm.miw.dtos.stock_prediction.PeriodType;
+import es.upm.miw.dtos.stock_prediction.PeriodicityType;
+import es.upm.miw.dtos.stock_prediction.StockPredictionInputDto;
+import es.upm.miw.dtos.stock_prediction.StockPredictionOutputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +38,8 @@ public class ArticleResource {
 
     public static final String QUERY4 = "/query4";
 
+    static final String STOCK_PREDICTION = "/stock-prediction";
+
     @Autowired
     private ArticleController articleController;
 
@@ -44,7 +50,7 @@ public class ArticleResource {
 
     @GetMapping(value = MINIMUM)
     public List<ArticleMinimumDto> readArticlesMinimum() {
-        return  this.articleController.readArticlesMinimum();
+        return this.articleController.readArticlesMinimum();
     }
 
     @PostMapping
@@ -76,4 +82,19 @@ public class ArticleResource {
     public List<ArticleSearchDto> readArticlesMaxPrice(@RequestBody BigDecimal maxPrice) {
         return this.articleController.readArticlesMinPrice(maxPrice);
     }
+
+    @GetMapping(value = CODE_ID + STOCK_PREDICTION)
+    public StockPredictionOutputDto[] calculateStockPrediction(@PathVariable String code, @RequestParam PeriodicityType periodicityType, @RequestParam int periodsNumber) {
+        StockPredictionInputDto input = new StockPredictionInputDto(code, periodicityType, periodsNumber);
+        input.validate();
+
+        return new StockPredictionOutputDto[]{
+                new StockPredictionOutputDto(PeriodType.WEEK, 1, 1028),
+                new StockPredictionOutputDto(PeriodType.WEEK, 2, 964),
+                new StockPredictionOutputDto(PeriodType.WEEK, 3, 900),
+                new StockPredictionOutputDto(PeriodType.WEEK, 4, 837)
+        };
+    }
+
+
 }
