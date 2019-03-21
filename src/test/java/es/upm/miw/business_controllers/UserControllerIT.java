@@ -29,6 +29,7 @@ public class UserControllerIT {
     @Autowired
     private UserRepository userRepository;
 
+
     @BeforeEach
     void seedDb() {
 
@@ -37,14 +38,12 @@ public class UserControllerIT {
         this.userRepository.save(user);
         this.userRepository.save(user2);
 
-
     }
 
     @Test
     void testReadAll() {
         List<UserMinimumDto> users = userController.readAll();
         System.out.println(users);
-
         assertTrue(users.size() > 1);
     }
 
@@ -72,6 +71,17 @@ public class UserControllerIT {
     void testUpdateNoMobile() {
         UserRolesDto userRolesDto = new UserRolesDto();
         assertThrows(BadRequestException.class, () -> this.userController.updateRoles(null, userRolesDto));
+    }
+
+    @Test
+    void testreadAllByUsernameDniAddressRoleCustomer() {
+        List<UserMinimumDto> users = userController.readAllByUsernameDniAddressRoles(this.user.getMobile(),this.user.getUsername(),this.user.getDni(),this.user.getAddress(),this.user.getRoles());
+        assertEquals(this.user.getUsername(), users.get(0).getUsername());
+    }
+    @Test
+    void testreadAllOnlyCustomer() {
+        List<UserMinimumDto> users = userController.readAllByUsernameDniAddressRoles("","","","",this.user.getRoles());
+        assertEquals(this.user.getUsername(), users.get(0).getUsername());
     }
 
     @AfterEach
