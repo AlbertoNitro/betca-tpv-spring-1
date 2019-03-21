@@ -55,7 +55,37 @@ userList:
     address: C/ TPV, 5, 1A, 28000 Madrid
     roles:
       - CUSTOMER
-
+  - &us6
+      mobile: 123456789
+      username: uprueba
+      password: pprueba
+      email: uprueba@gmail.com
+      dni: 111111
+      address: Cuenca, Ecuador
+      roles:
+        - OPERATOR
+        - CUSTOMER
+  - &us7
+      mobile: 1987654321
+      username: uprueba2
+      password: pprueba2
+      email: uprueba2@gmail.com
+      dni: 1111111
+      address: Cuenca,Ecuador
+      roles:
+        - ADMIN
+        - MANAGER
+        - OPERATOR
+  - &us8
+      mobile: 099738470
+      username: uprueba3
+      password: pprueba3
+      email: uprueba3@gmail.com
+      dni: 222222
+      address: Cuenca,Ecuador
+      roles:
+        - MANAGER
+        - OPERATOR
 #Vouchers
 voucherList:
   - id: 1234567890

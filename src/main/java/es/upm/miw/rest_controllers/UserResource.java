@@ -1,6 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.UserController;
+import es.upm.miw.dtos.UserRolesDto;
 import es.upm.miw.dtos.output.TokenOutputDto;
 import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,7 @@ public class UserResource {
     public static final String USERS = "/users";
 
     public static final String TOKEN = "/token";
+    public static final String ROLES = "/roles";
 
     public static final String MOBILE_ID = "/{mobile}";
 
@@ -47,5 +50,9 @@ public class UserResource {
         return this.userController.readAll();
     }
 
+    @PutMapping(value = ROLES+MOBILE_ID)
+    public UserRolesDto updateRoles(@PathVariable String mobile, @Valid @RequestBody UserRolesDto userRolesDto) {
+        return this.userController.updateRoles(mobile, userRolesDto);
+    }
 
 }
