@@ -28,8 +28,8 @@ public class ArticlesFamilyResource {
 
     @PostMapping(value = ARTICLE)
     public ArticleMinimumDto createFamilyArticle(@Valid @RequestBody ArticleMinimumDto articleMinimumDto,
-                                                 @RequestBody String description) {
-        return articleMinimumDto;
+                                                 @RequestParam String description) {
+        return articlesFamilyController.createFamilyArticle(articleMinimumDto, description);
     }
 
     @PostMapping(value = COMPOSITE)
