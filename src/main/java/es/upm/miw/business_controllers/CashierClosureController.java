@@ -6,6 +6,7 @@ import es.upm.miw.dtos.input.CashierClosureInputDto;
 import es.upm.miw.dtos.output.CashierLastOutputDto;
 import es.upm.miw.dtos.output.CashierStateOutputDto;
 import es.upm.miw.exceptions.BadRequestException;
+import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.repositories.CashierClosureRepository;
 import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,12 +63,24 @@ public class CashierClosureController {
 
     public void deposit(CashMovementInputDto cashMovementInputDto){
         CashierClosure lastCashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
+        if (lastCashierClosure.isClosed()) {
+            throw new BadRequestException("Cashier already closed: " + lastCashierClosure.getId());
+        }
         lastCashierClosure.deposit(cashMovementInputDto.getCash(), cashMovementInputDto.getComment());
         this.cashierClosureRepository.save(lastCashierClosure);
     }
 
     public void withdrawal(CashMovementInputDto cashMovementInputDto){
         CashierClosure lastCashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
+        if (lastCashierClosure.isClosed()) {
+            throw new BadRequestException("Cashier already closed: " + lastCashierClosure.getId());
+        }
+        BigDecimal finalCash = lastCashierClosure.getInitialCash()
+                .add(lastCashierClosure.getSalesCash())
+                .add(lastCashierClosure.getDeposit());
+        if(finalCash.compareTo(cashMovementInputDto.getCash()) == -1) {
+            throw new ConflictException("You cant withdrawal. There arent enougth cash: " + lastCashierClosure.getId());
+        }
         lastCashierClosure.withdrawal(cashMovementInputDto.getCash(), cashMovementInputDto.getComment());
         this.cashierClosureRepository.save(lastCashierClosure);
     }
