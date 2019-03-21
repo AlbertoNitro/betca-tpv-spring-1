@@ -85,4 +85,6 @@ class UserResourceIT {
         assertTrue(userMinimumDtoList.size() > 1);
     }
 
+
+
 }
