@@ -1,6 +1,7 @@
 package es.upm.miw.dtos.output;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +43,10 @@ public class StatisticDtoOutput {
     public List<StatisticDtoOutput> createStatisticsDto(Map<String, Double> ticketList) {
         List<StatisticDtoOutput> listStatisticsDTO = new ArrayList<>();
 
-        ticketList.forEach((date, value) -> listStatisticsDTO.add(new StatisticDtoOutput(date, value)));
+        ticketList.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey))
+            .forEach(e ->
+                    listStatisticsDTO.add(new StatisticDtoOutput(e.getKey(), e.getValue()))
+            );
 
         return listStatisticsDTO;
     }
