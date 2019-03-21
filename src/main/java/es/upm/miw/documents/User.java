@@ -1,5 +1,6 @@
 package es.upm.miw.documents;
 
+import es.upm.miw.dtos.UserRolesDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -54,6 +55,11 @@ public class User {
         this(mobile, username, password, null, null, null);
     }
 
+    public User(UserRolesDto userRolesDto) {
+        this.id=userRolesDto.getId();
+        this.mobile=userRolesDto.getMobile();
+        this.roles=userRolesDto.getRoles();
+    }
     public String getId() {
         return id;
     }

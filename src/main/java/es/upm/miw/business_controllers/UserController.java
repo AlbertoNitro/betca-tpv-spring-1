@@ -3,9 +3,12 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.business_services.JwtService;
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
+import es.upm.miw.dtos.UserRolesDto;
 import es.upm.miw.dtos.output.TokenOutputDto;
 import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
+import es.upm.miw.exceptions.BadRequestException;
+import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.ForbiddenException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.UserRepository;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -59,5 +63,23 @@ public class UserController {
         return this.userRepository.findAllUsers();
     }
 
+    public UserRolesDto updateRoles(String mobile, UserRolesDto userRolesDto) {
+
+        userRolesDto.setId(this.userRepository.findByMobile(mobile).get().getId());
+
+        if (mobile == null || !mobile.equals(userRolesDto.getMobile()))
+            throw new BadRequestException("User mobile (" + userRolesDto.getMobile() + ")");
+
+        if (!this.userRepository.findByMobile(mobile).isPresent())
+            throw new NotFoundException("User mobile (" + mobile + ")");
+
+        String id = userRolesDto.getId();
+        Optional<User> user = this.userRepository.findById(id);
+        if (user.isPresent() && !user.get().getMobile().equals(mobile))
+            throw new ConflictException("User id (" + id + ")");
+
+        User result = this.userRepository.save(new User(userRolesDto));
+        return new UserRolesDto(result);
+    }
 
 }
