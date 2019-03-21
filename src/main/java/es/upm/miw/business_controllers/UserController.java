@@ -65,14 +65,13 @@ public class UserController {
 
     public UserRolesDto updateRoles(String mobile, UserRolesDto userRolesDto) {
 
-        userRolesDto.setId(this.userRepository.findByMobile(mobile).get().getId());
 
         if (mobile == null || !mobile.equals(userRolesDto.getMobile()))
             throw new BadRequestException("User mobile (" + userRolesDto.getMobile() + ")");
 
         if (!this.userRepository.findByMobile(mobile).isPresent())
             throw new NotFoundException("User mobile (" + mobile + ")");
-
+        userRolesDto.setId(this.userRepository.findByMobile(mobile).get().getId());
         String id = userRolesDto.getId();
         Optional<User> user = this.userRepository.findById(id);
         if (user.isPresent() && !user.get().getMobile().equals(mobile))
