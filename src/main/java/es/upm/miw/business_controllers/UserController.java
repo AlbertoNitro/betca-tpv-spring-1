@@ -15,6 +15,7 @@ import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -80,5 +81,10 @@ public class UserController {
         User result = this.userRepository.save(new User(userRolesDto));
         return new UserRolesDto(result);
     }
+
+    public List<UserMinimumDto> readAllByUsernameDniAddressRoles(String mobile,String username,String dni, String address,  Role[] roles) {
+       return this.userRepository.findByMobileUsernameDniAddressLikeNullSafeandRoles(mobile,username,dni,address,roles);
+    }
+
 
 }
