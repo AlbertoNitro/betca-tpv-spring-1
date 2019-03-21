@@ -1,8 +1,11 @@
 package es.upm.miw.rest_controllers;
 
+import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
 import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
+import es.upm.miw.dtos.UserRolesDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,16 @@ class UserResourceIT {
     @Autowired
     private RestService restService;
 
+    private UserRolesDto existentUser;
+
+    @BeforeEach
+    void before() {
+        List<UserRolesDto> users = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<UserRolesDto[]>()).clazz(UserRolesDto[].class)
+                .path(UserResource.USERS)
+                .get().build());
+        this.existentUser = users.get(7);
+    }
     @Test
     void testLogin() {
         this.restService.loginAdmin();
@@ -85,6 +98,30 @@ class UserResourceIT {
         assertTrue(userMinimumDtoList.size() > 1);
     }
 
+    private RestBuilder<UserRolesDto> restUpdateRolesBuilder(String mobile, UserRolesDto userRolesDto) {
+        return this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<UserRolesDto>()).clazz(UserRolesDto.class)
+                .path(UserResource.USERS).path(UserResource.ROLES).path("/" + mobile)
+                .body(userRolesDto)
+                .put();
+    }
 
+    @Test
+    void testUpdateRoles() {
 
+        UserRolesDto userRolesDto = new UserRolesDto();
+        userRolesDto.setMobile(this.existentUser.getMobile());
+        Role[] rolesUpdate= new Role[]{Role.MANAGER};
+        userRolesDto.setRoles(rolesUpdate);
+        UserRolesDto result = restUpdateRolesBuilder(existentUser.getMobile(), userRolesDto).build();
+        assertEquals(rolesUpdate.length, result.getRoles().length);
+    }
+
+    @Test
+    void testUpdateNullMobile() {
+        UserRolesDto userRolesDto = new UserRolesDto();
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                restUpdateRolesBuilder(userRolesDto.getId(), userRolesDto).build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
 }
