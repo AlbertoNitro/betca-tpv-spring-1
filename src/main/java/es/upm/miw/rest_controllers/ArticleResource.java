@@ -27,11 +27,8 @@ public class ArticleResource {
     public static final String CODE_ID = "/{code}";
     public static final String FAMILY_SIZE = "/family-size";
     public static final String MINIMUM = "/minimum";
-    public static final String QUERY = "/query";
-    public static final String QUERY2 = "/query2";
-    public static final String QUERY3 = "/query3";
-    public static final String QUERY4 = "/query4";
-    public static final String QUERY5 = "/query5";
+    public static final String SEARCH = "/search";
+    public static final String PARTIALLY_DEFINED = "/partially-prefined";
     static final String STOCK_PREDICTION = "/stock-prediction";
 
     @Autowired
@@ -62,18 +59,14 @@ public class ArticleResource {
         return this.articleController.createFamilySize(familySizeInputDto);
     }
 
-    @GetMapping(value = QUERY)
-    public List<ArticleSearchDto> readArticles(@RequestBody String description, @RequestBody Integer stock){
-        return this.articleController.readArticles(description, stock);
+    @GetMapping(value = SEARCH)
+    public List<ArticleSearchDto> readArticles(@RequestBody String description, @RequestBody Integer stock,
+                                               @RequestBody BigDecimal minPrice, @RequestBody BigDecimal maxPrice){
+        return this.articleController.readArticles(description, stock, minPrice, maxPrice);
     }
 
-    @GetMapping(value = QUERY2)
-    public List<ArticleSearchDto> readArticles(@RequestBody BigDecimal minPrice, @RequestBody BigDecimal maxPrice){
-        return this.articleController.readArticles(minPrice, maxPrice);
-    }
-
-    @GetMapping(value = QUERY5)
-    public List<ArticleSearchDto> readArticles() {
+    @GetMapping(value = SEARCH + PARTIALLY_DEFINED)
+    public List<ArticleSearchDto> readArticles(){
         return this.articleController.readArticles();
     }
 
