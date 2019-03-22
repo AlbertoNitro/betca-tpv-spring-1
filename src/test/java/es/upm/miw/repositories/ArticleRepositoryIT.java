@@ -91,4 +91,37 @@ class ArticleRepositoryIT {
         assertEquals("art1", articleList.get(0).getDescription());
         assertEquals("Otro articulo", articleList.get(1).getDescription());
     }
+
+    @Test
+    void testFindByAllNullSafe(){
+        List<ArticleSearchDto> articleList = articleRepository.findByAllNullSafe(null, null, null, null);
+        assertFalse(articleList.isEmpty());
+
+        List<ArticleSearchDto> articleList2 = articleRepository.findByAllNullSafe("Art", null, null, null);
+        assertEquals(2, articleList2.size());
+
+        List<ArticleSearchDto> articleList3 = articleRepository.findByAllNullSafe(null, 2, null, null);
+        assertEquals(4, articleList3.size());
+
+        List<ArticleSearchDto> articleList4 = articleRepository.findByAllNullSafe(null, null, "22.6", null);
+        assertEquals(3, articleList4.size());
+
+        List<ArticleSearchDto> articleList5 = articleRepository.findByAllNullSafe("Art", 2, null, null);
+        assertEquals(1, articleList5.size());
+
+        List<ArticleSearchDto> articleList6 = articleRepository.findByAllNullSafe("Art", null, null, "23");
+        assertEquals(1, articleList6.size());
+
+        List<ArticleSearchDto> articleList7 = articleRepository.findByAllNullSafe(null, 2, "20", null);
+        assertEquals(3, articleList7.size());
+
+        List<ArticleSearchDto> articleList8 = articleRepository.findByAllNullSafe(null, null, "20", "27");
+        assertEquals(3, articleList8.size());
+
+        List<ArticleSearchDto> articleList9 = articleRepository.findByAllNullSafe("Art", null, "20", "23");
+        assertEquals(1, articleList9.size());
+
+        List<ArticleSearchDto> articleList10 = articleRepository.findByAllNullSafe("zaR", 7, "2", "21");
+        assertEquals(1, articleList10.size());
+    }
 }
