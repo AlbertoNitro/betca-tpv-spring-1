@@ -1,7 +1,7 @@
 package es.upm.miw.repositories;
 
 import es.upm.miw.documents.Article;
-import es.upm.miw.dtos.ArticleSearchDto;
+import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
@@ -14,11 +14,11 @@ public interface ArticleRepository extends MongoRepository<Article, String> {
             + "?#{ [2] == null ? { $where : 'true'} : { retailPrice : {$gte :[2]} } },"
             + "?#{ [3] == null ? { $where : 'true'} : { retailPrice : {$lte :[3]} } }"
             + "] }" )
-    List<ArticleSearchDto> findByDescriptionAndStockAndRetailPriceNullSafe
+    List<ArticleSearchOutputDto> findByDescriptionAndStockAndRetailPriceNullSafe
             (String description, Integer stock, String minPrice, String maxPrice);
 
     Article findByCode(String code);
 
-    List<ArticleSearchDto> findByReferenceNullAndProviderNull();
+    List<ArticleSearchOutputDto> findByReferenceNullAndProviderNull();
 
 }
