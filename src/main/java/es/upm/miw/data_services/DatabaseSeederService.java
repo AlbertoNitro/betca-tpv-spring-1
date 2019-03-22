@@ -62,6 +62,8 @@ public class DatabaseSeederService {
     private OrderRepository orderRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private TimeClockRepository timeClockRepository;
 
     @PostConstruct
     public void constructor() {
@@ -107,6 +109,7 @@ public class DatabaseSeederService {
         this.orderRepository.deleteAll();
         this.tagRepository.deleteAll();
         this.ticketRepository.deleteAll();
+        this.timeClockRepository.deleteAll();
         this.articleRepository.deleteAll();
 
         this.cashierClosureRepository.deleteAll();
@@ -136,12 +139,12 @@ public class DatabaseSeederService {
         }
     }
 
-    private void seedDatabaseWithArticlesFamilyForView(){
+    private void seedDatabaseWithArticlesFamilyForView() {
         LogManager.getLogger(this.getClass()).warn("------- Create Article Family Root -----------");
         ArticlesFamily root = new FamilyComposite(FamilyType.ARTICLES, "root", "root");
 
         ArticlesFamily c1 = new FamilyArticle(this.articleRepository.findById("8400000000031").get());
-        ArticlesFamily c2 =  new FamilyArticle(this.articleRepository.findById("8400000000048").get());
+        ArticlesFamily c2 = new FamilyArticle(this.articleRepository.findById("8400000000048").get());
         this.articlesFamilyRepository.save(c1);
         this.articlesFamilyRepository.save(c2);
 
@@ -166,6 +169,7 @@ public class DatabaseSeederService {
         this.orderRepository.saveAll(tpvGraph.getOrderList());
         this.tagRepository.saveAll(tpvGraph.getTagList());
         this.ticketRepository.saveAll(tpvGraph.getTicketList());
+        this.timeClockRepository.saveAll(tpvGraph.getTimeClockList());
 
         this.familyCompositeRepository.saveAll(tpvGraph.getFamilyCompositeList());
         this.invoiceRepository.saveAll(tpvGraph.getInvoiceList());
