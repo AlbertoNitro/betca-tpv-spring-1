@@ -1,11 +1,11 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.ArticleController;
+import es.upm.miw.business_controllers.StockPredictionController;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.dtos.ArticleSearchDto;
 import es.upm.miw.dtos.input.FamilySizeInputDto;
-import es.upm.miw.dtos.stock_prediction.PeriodType;
 import es.upm.miw.dtos.stock_prediction.PeriodicityType;
 import es.upm.miw.dtos.stock_prediction.StockPredictionInputDto;
 import es.upm.miw.dtos.stock_prediction.StockPredictionOutputDto;
@@ -33,6 +33,8 @@ public class ArticleResource {
 
     @Autowired
     private ArticleController articleController;
+    @Autowired
+    private StockPredictionController stockPredictionController;
 
     @GetMapping
     public List<ArticleSearchDto> readAll() {
@@ -84,13 +86,7 @@ public class ArticleResource {
     public StockPredictionOutputDto[] calculateStockPrediction(@PathVariable String code, @RequestParam PeriodicityType periodicityType, @RequestParam int periodsNumber) {
         StockPredictionInputDto input = new StockPredictionInputDto(code, periodicityType, periodsNumber);
         input.validate();
-
-        return new StockPredictionOutputDto[]{
-                new StockPredictionOutputDto(PeriodType.WEEK, 1, 1028),
-                new StockPredictionOutputDto(PeriodType.WEEK, 2, 964),
-                new StockPredictionOutputDto(PeriodType.WEEK, 3, 900),
-                new StockPredictionOutputDto(PeriodType.WEEK, 4, 837)
-        };
+        return this.stockPredictionController.calculateStockPrediction(input);
     }
 
 

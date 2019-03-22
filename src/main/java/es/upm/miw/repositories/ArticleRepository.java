@@ -17,6 +17,8 @@ public interface ArticleRepository extends MongoRepository<Article, String> {
     List<ArticleSearchDto> findByDescriptionAndStockAndRetailPriceNullSafe
             (String description, Integer stock, String minPrice, String maxPrice);
 
+    Article findByCode(String code);
+
     List<ArticleSearchDto> findByReferenceNullAndProviderNull();
 
 }

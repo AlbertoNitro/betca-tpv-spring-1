@@ -2,7 +2,6 @@ package es.upm.miw.repositories;
 
 import es.upm.miw.TestConfig;
 import es.upm.miw.documents.Article;
-import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleSearchDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ class ArticleRepositoryIT {
 
     private Article article;
     private Article article2;
-    private Article article3;
 
     @BeforeEach
     void seedDb() {
@@ -47,7 +45,7 @@ class ArticleRepositoryIT {
     }
 
     @Test
-    void testFindByReferenceNullAndProviderNull(){
+    void testFindByReferenceNullAndProviderNull() {
         List<ArticleSearchDto> articleList = articleRepository.findByReferenceNullAndProviderNull();
         assertEquals(2, articleList.size());
         assertEquals("art1", articleList.get(0).getDescription());
@@ -55,7 +53,13 @@ class ArticleRepositoryIT {
     }
 
     @Test
-    void testFindByDescriptionAndStockAndRetailPriceNullSafe(){
+    void testFindByCode () {
+        assertNotNull(this.articleRepository.findByCode("1"));
+        assertEquals("art1", this.articleRepository.findByCode("1").getDescription());
+    }
+
+    @Test
+    void testFindByDescriptionAndStockAndRetailPriceNullSafe () {
         List<ArticleSearchDto> articleList = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
                 (null, null, null, null);
         assertFalse(articleList.isEmpty());
