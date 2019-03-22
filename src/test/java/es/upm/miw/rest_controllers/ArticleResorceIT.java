@@ -1,5 +1,6 @@
 package es.upm.miw.rest_controllers;
 
+import es.upm.miw.documents.Article;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,6 @@ class ArticleResorceIT {
                         .post().build());
         assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
     }
-
 
     @Test
     void testCreateArticleNegativePrice() {

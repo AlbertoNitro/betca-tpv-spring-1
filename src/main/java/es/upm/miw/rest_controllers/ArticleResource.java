@@ -4,18 +4,17 @@ import es.upm.miw.business_controllers.ArticleController;
 import es.upm.miw.business_controllers.StockPredictionController;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
-import es.upm.miw.dtos.ArticleSearchDto;
+import es.upm.miw.dtos.input.ArticleSearchInputDto;
 import es.upm.miw.dtos.input.FamilySizeInputDto;
+import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import es.upm.miw.dtos.stock_prediction.PeriodicityType;
 import es.upm.miw.dtos.stock_prediction.StockPredictionInputDto;
 import es.upm.miw.dtos.stock_prediction.StockPredictionOutputDto;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.util.List;
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('OPERATOR')")
@@ -28,7 +27,7 @@ public class ArticleResource {
     public static final String FAMILY_SIZE = "/family-size";
     public static final String MINIMUM = "/minimum";
     public static final String SEARCH = "/search";
-    public static final String PARTIALLY_DEFINED = "/partially-prefined";
+    public static final String PARTIALLY_DEFINED = "/partially-defined";
     static final String STOCK_PREDICTION = "/stock-prediction";
 
     @Autowired
@@ -37,7 +36,7 @@ public class ArticleResource {
     private StockPredictionController stockPredictionController;
 
     @GetMapping
-    public List<ArticleSearchDto> readAll() {
+    public List<ArticleSearchOutputDto> readAll() {
         return this.articleController.readAll();
     }
 
@@ -62,13 +61,13 @@ public class ArticleResource {
     }
 
     @GetMapping(value = SEARCH)
-    public List<ArticleSearchDto> readArticles(@RequestBody String description, @RequestBody Integer stock,
-                                               @RequestBody BigDecimal minPrice, @RequestBody BigDecimal maxPrice){
-        return this.articleController.readArticles(description, stock, minPrice, maxPrice);
+    public List<ArticleSearchOutputDto> readArticles(@RequestBody ArticleSearchInputDto article){
+        return this.articleController.readArticles(article.getDescription(), article.getStock(),
+                                                    article.getMinPrice(), article.getMaxPrice());
     }
 
     @GetMapping(value = SEARCH + PARTIALLY_DEFINED)
-    public List<ArticleSearchDto> readArticles(){
+    public List<ArticleSearchOutputDto> readArticles(){
         return this.articleController.readArticles();
     }
 
