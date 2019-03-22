@@ -4,22 +4,20 @@ import es.upm.miw.documents.Article;
 import es.upm.miw.dtos.ArticleSearchDto;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface ArticleRepository extends MongoRepository<Article, String> {
 
+    @Query("{$and:["
+            + "?#{ [0] == null ? { $where : 'true'} : { description : {$regex :[0], $options : 'i'} } },"
+            + "?#{ [1] == null ? { $where : 'true'} : { stock : {$gte :[1]} } },"
+            + "?#{ [2] == null ? { $where : 'true'} : { retailPrice : {$gte :[2]} } },"
+            + "?#{ [3] == null ? { $where : 'true'} : { retailPrice : {$lte :[3]} } }"
+            + "] }" )
+    List<ArticleSearchDto> findByDescriptionAndStockAndRetailPriceNullSafe
+            (String description, Integer stock, String minPrice, String maxPrice);
+
     Article findByCode(String code);
-
-    @Query("?#{ [0] == null ? { $where : 'true'} : { description : {$regex:[0], $options: 'i'} } }")
-    List<ArticleSearchDto> findByDescriptionLikeIgnoreCaseNullSafe(String description);
-
-    List<ArticleSearchDto> findByStockGreaterThanEqual(int stock);
-
-    List<ArticleSearchDto> findByRetailPriceGreaterThanEqual(BigDecimal minPrice);
-
-    List<ArticleSearchDto> findByRetailPriceLessThanEqual(BigDecimal maxPrice);
 
     List<ArticleSearchDto> findByReferenceNullAndProviderNull();
 
