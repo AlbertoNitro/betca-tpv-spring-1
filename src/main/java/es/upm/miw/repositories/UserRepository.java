@@ -21,7 +21,7 @@ public interface UserRepository extends MongoRepository<User, String> {
             + "?#{ [1] == null ? { $where : 'true'} : { username : {$regex:[1], $options: 'i'} } },"
             + "?#{ [2] == null ? { $where : 'true'} : { dni : {$regex:[2], $options: 'i'} } },"
             + "?#{ [3] == null ? { $where : 'true'} : { address : {$regex:[3], $options: 'i'} } },"
-            + "{'roles':?4}"
+            + "{'roles':{$in:?4}}"
             + "] }")
     List<UserMinimumDto> findByMobileUsernameDniAddressLikeNullSafeandRoles(String mobile, String username, String dni, String address, Role[]roles);
 
