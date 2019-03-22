@@ -68,8 +68,8 @@ public class ArticleController {
     }
 
     public List<ArticleSearchDto> readArticles(BigDecimal minPrice, BigDecimal maxPrice){
-        return this.articleRepository.findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
-                (minPrice, maxPrice);
+        return this.articleRepository.findByRetailPriceBetweenNullSafe
+                (minPrice.toString(), maxPrice.toString());
     }
 
     public List<ArticleSearchDto> readArticles() {

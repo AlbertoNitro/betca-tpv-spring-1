@@ -66,22 +66,22 @@ class ArticleRepositoryIT {
     }
 
     @Test
-    void testFindByDescriptionLikeAndStockGreaterThanEqualAndRetailPriceBetweenNullSafe(){
-        List<ArticleSearchDto> articleList5 = articleRepository.findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
+    void testFindByRetailPriceBetweenNullSafe(){
+        List<ArticleSearchDto> articleList1 = articleRepository.findByRetailPriceBetweenNullSafe
                 (null, null);
-        //assertEquals(2, articleList5.size());
-        System.out.println(articleList5.size());
+        assertFalse(articleList1.isEmpty());
 
-        List<ArticleSearchDto> articleList6 = articleRepository.findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
-                (null, BigDecimal.valueOf(0));
-        System.out.println(BigDecimal.valueOf(0));
-        System.out.println(articleList6.size());
+        List<ArticleSearchDto> articleList2 = articleRepository.findByRetailPriceBetweenNullSafe
+                ("22.6", null);
+        assertEquals(3, articleList2.size());
 
-        List<ArticleSearchDto> articleList7 = articleRepository.findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
-                (new BigDecimal(0), new BigDecimal(20.0));
-        System.out.println(BigDecimal.valueOf(0));
-        System.out.println(new BigDecimal("20.0"));
-        System.out.println(articleList7.size());
+        List<ArticleSearchDto> articleList3 = articleRepository.findByRetailPriceBetweenNullSafe
+                (null, "27");
+        assertEquals(6, articleList3.size());
+
+        List<ArticleSearchDto> articleList4 = articleRepository.findByRetailPriceBetweenNullSafe
+                ("22.6", "27");
+        assertEquals(2, articleList4.size());
     }
 
     @Test

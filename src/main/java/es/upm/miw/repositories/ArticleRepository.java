@@ -21,8 +21,8 @@ public interface ArticleRepository extends MongoRepository<Article, String> {
             + "?#{ [0] == null ? { $where : 'true'} : { retailPrice : {$gte :[0]} } },"
             + "?#{ [1] == null ? { $where : 'true'} : { retailPrice : {$lte :[1]} } }"
             + "] }" )
-    List<ArticleSearchDto> findByRetailPriceGreaterThanEqualAndRetailPriceLessThanEqualNullSafe
-            (BigDecimal minPrice, BigDecimal maxPrice);
+    List<ArticleSearchDto> findByRetailPriceBetweenNullSafe
+            (String minPrice, String maxPrice);
 
     List<ArticleSearchDto> findByReferenceNullAndProviderNull();
 
