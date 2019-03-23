@@ -24,7 +24,7 @@ public class ArticleSearchOutputDto {
         this.retailPrice = retailPrice;
     }
 
-    public ArticleSearchOutputDto(Article article){
+    public ArticleSearchOutputDto(Article article) {
         this.code = article.getCode();
         this.description = article.getDescription();
         this.stock = article.getStock();

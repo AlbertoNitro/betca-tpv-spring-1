@@ -60,14 +60,14 @@ public class ArticleResource {
         return this.articleController.createFamilySize(familySizeInputDto);
     }
 
-    @GetMapping(value = SEARCH)
-    public List<ArticleSearchOutputDto> readArticles(@RequestBody ArticleSearchInputDto article){
+    @PostMapping(value = SEARCH)
+    public List<ArticleSearchOutputDto> readArticles(@RequestBody ArticleSearchInputDto article) {
         return this.articleController.readArticles(article.getDescription(), article.getStock(),
-                                                    article.getMinPrice(), article.getMaxPrice());
+                article.getMinPrice(), article.getMaxPrice());
     }
 
-    @GetMapping(value = SEARCH + PARTIALLY_DEFINED)
-    public List<ArticleSearchOutputDto> readArticles(){
+    @PostMapping(value = SEARCH + PARTIALLY_DEFINED)
+    public List<ArticleSearchOutputDto> readArticles() {
         return this.articleController.readArticles();
     }
 

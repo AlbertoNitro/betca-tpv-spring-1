@@ -53,13 +53,13 @@ class ArticleRepositoryIT {
     }
 
     @Test
-    void testFindByCode () {
+    void testFindByCode() {
         assertNotNull(this.articleRepository.findByCode("1"));
         assertEquals("art1", this.articleRepository.findByCode("1").getDescription());
     }
 
     @Test
-    void testFindByDescriptionAndStockAndRetailPriceNullSafe () {
+    void testFindByDescriptionAndStockAndRetailPriceNullSafe() {
         List<ArticleSearchOutputDto> articleList = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
                 (null, null, null, null);
         assertFalse(articleList.isEmpty());
