@@ -51,18 +51,23 @@ public class ArticlesFamilyResourceIT {
     }
 
     @Test
+    void testDeleteComponentFromFamily() {
+        assertDoesNotThrow(() -> this.restService.loginOperator().restBuilder()
+                .path(ArticlesFamilyResource.ARTICLES_FAMILY).path(ArticlesFamilyResource.DESCRIPTION)
+                .expand("root").param("childDescription","cards").delete().build());
+    }
+
+    @Test
     void testDeleteFamilyCompositeItem() {
         assertNotNull(familyCompositeRepository.findByDescription("test"));
-        this.restService.loginOperator()
-                .restBuilder(new RestBuilder<ArticleFamilyMinimumDto>()).clazz(ArticleFamilyMinimumDto.class)
-                .path(ArticlesFamilyResource.ARTICLES_FAMILY)
+        this.restService.loginOperator().restBuilder().path(ArticlesFamilyResource.ARTICLES_FAMILY)
                 .param("description", "test").delete().build();
         assertNull(familyCompositeRepository.findByDescription("test"));
         familyCompositeRepository.save(new FamilyComposite(FamilyType.ARTICLES, "T", "test"));
     }
 
     @Test
-    void testReadAllComponentsInAFamily (){
+    void testReadAllComponentsInAFamily() {
         List<ArticleFamilyDto> dtos = Arrays.asList(this.restService.loginOperator()
                 .restBuilder(new RestBuilder<ArticleFamilyDto[]>()).clazz(ArticleFamilyDto[].class)
                 .path(ArticlesFamilyResource.ARTICLES_FAMILY)

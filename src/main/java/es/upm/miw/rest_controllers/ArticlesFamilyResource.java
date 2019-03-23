@@ -40,6 +40,11 @@ public class ArticlesFamilyResource {
         return articlesFamilyController.createFamilyComposite(articleFamilyDto, description);
     }
 
+    @DeleteMapping(value = DESCRIPTION)
+    public void deleteComponentFromFamily(@PathVariable String description, @RequestParam String childDescription) {
+        articlesFamilyController.deleteComponentFromFamily(description, childDescription);
+    }
+
     @DeleteMapping
     public void deleteFamilyCompositeItem(@Valid @RequestParam String description) {
         articlesFamilyController.deleteFamilyCompositeItem(description);

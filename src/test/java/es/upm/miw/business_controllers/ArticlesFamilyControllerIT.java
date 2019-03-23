@@ -1,6 +1,7 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
+import es.upm.miw.documents.ArticlesFamily;
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
@@ -9,6 +10,8 @@ import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,9 +53,15 @@ public class ArticlesFamilyControllerIT {
     }
 
     @Test
-    void testReadAllComponentsInAFamily(){
-        assertNotNull(familyCompositeRepository.findByDescription("root"));
-        assertNotNull(articlesFamilyController.readAllComponentsInAFamily("root"));
+    void testDeleteComponentFromFamily() {
+        List<ArticlesFamily> components = familyCompositeRepository.findByDescription("root").getArticlesFamilyList();
+        assertNotNull(components);
+        articlesFamilyController.deleteComponentFromFamily("root", "cards");
+        assertEquals(components.size()-1,familyCompositeRepository.findByDescription("root").getArticlesFamilyList().size());
+        assertNotNull(familyCompositeRepository.findByDescription("cards"));
+        articlesFamilyController.deleteFamilyCompositeItem("cards");
+        articlesFamilyController.createFamilyComposite(
+                new ArticleFamilyDto(FamilyType.ARTICLES,"c","cards"),"root");
     }
 
     @Test
@@ -61,6 +70,12 @@ public class ArticlesFamilyControllerIT {
         articlesFamilyController.deleteFamilyCompositeItem("test");
         assertNull(familyCompositeRepository.findByDescription("test"));
         familyCompositeRepository.save(new FamilyComposite(FamilyType.ARTICLES, "T", "test"));
+    }
+
+    @Test
+    void testReadAllComponentsInAFamily() {
+        assertNotNull(familyCompositeRepository.findByDescription("root"));
+        assertNotNull(articlesFamilyController.readAllComponentsInAFamily("root"));
     }
 
 }
