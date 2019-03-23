@@ -56,54 +56,54 @@ userList:
     roles:
       - CUSTOMER
   - &us6
-      mobile: 123456789
-      username: uprueba
-      password: pprueba
-      email: uprueba@gmail.com
-      dni: 111111
-      address: Cuenca, Ecuador
-      roles:
-        - OPERATOR
-        - CUSTOMER
+    mobile: 123456789
+    username: uprueba
+    password: pprueba
+    email: uprueba@gmail.com
+    dni: 111111
+    address: Cuenca, Ecuador
+    roles:
+      - OPERATOR
+      - CUSTOMER
   - &us7
-      mobile: 1987654321
-      username: uprueba2
-      password: pprueba2
-      email: uprueba2@gmail.com
-      dni: 1111111
-      address: Cuenca,Ecuador
-      roles:
-        - ADMIN
-        - MANAGER
-        - OPERATOR
+    mobile: 1987654321
+    username: uprueba2
+    password: pprueba2
+    email: uprueba2@gmail.com
+    dni: 1111111
+    address: Cuenca,Ecuador
+    roles:
+      - ADMIN
+      - MANAGER
+      - OPERATOR
   - &us8
-      mobile: 099738470
-      username: uprueba3
-      password: pprueba3
-      email: uprueba3@gmail.com
-      dni: 222222
-      address: Cuenca,Ecuador
-      roles:
-        - MANAGER
-        - OPERATOR
+    mobile: 099738470
+    username: uprueba3
+    password: pprueba3
+    email: uprueba3@gmail.com
+    dni: 222222
+    address: Cuenca,Ecuador
+    roles:
+      - MANAGER
+      - OPERATOR
   - &us9
-      mobile: 666666110
-      username: uprueba4
-      password: pprueba4
-      email: uprueba4@gmail.com
-      dni: 2222224
-      address: Cuenca,Ecuador
-      roles:
+    mobile: 666666110
+    username: uprueba4
+    password: pprueba4
+    email: uprueba4@gmail.com
+    dni: 2222224
+    address: Cuenca,Ecuador
+    roles:
       - OPERATOR
       - CUSTOMER
   - &us10
-      mobile: 666666120
-      username: uprueba5
-      password: pprueba5
-      email: uprueba5@gmail.com
-      dni: 2222224
-      address: Cuenca,Ecuador
-      roles:
+    mobile: 666666120
+    username: uprueba5
+    password: pprueba5
+    email: uprueba5@gmail.com
+    dni: 2222224
+    address: Cuenca,Ecuador
+    roles:
       - OPERATOR
   - &us11
     mobile: 666666122
@@ -113,7 +113,7 @@ userList:
     dni: 2222224
     address: Cuenca,Ecuador
     roles:
-    - MANAGER
+      - MANAGER
 #Vouchers
 voucherList:
   - id: 1234567890
@@ -287,18 +287,24 @@ ticketList:
 # Budget
 budgetList:
   - shoppingList:
-    - *shb1
-    - *shb2
-    - *shb3
+      - *shb1
+      - *shb2
+      - *shb3
 
 # FamilyComposite
 familyCompositeList:
-  - familyType: ARTICLES
+  - &fc1
+    familyType: ARTICLES
     reference: "B"
     description: "Books"
-  - familyType: ARTICLES
-    reference: "Gm"
-    description: "Games"
-  - familyType: ARTICLES
+  - &fct
+    familyType: ARTICLES
     reference: "T"
     description: "test"
+  - &fc2
+    familyType: SIZES
+    description: "X"
+  - &fc10
+    familyType: ARTICLES
+    reference: "Gm"
+    description: "Games"
