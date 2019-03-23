@@ -1,11 +1,12 @@
 package es.upm.miw.business_controllers;
 
+import es.upm.miw.documents.ArticlesFamily;
 import es.upm.miw.documents.FamilyArticle;
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
+import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
-import es.upm.miw.dtos.FamilyCompositeDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.FamilyArticleRepository;
@@ -13,6 +14,7 @@ import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -36,15 +38,15 @@ public class ArticlesFamilyController {
         return articleMinimumDto;
     }
 
-    public FamilyCompositeDto createFamilyComposite(FamilyCompositeDto familyCompositeDto, String description) {
+    public ArticleFamilyDto createFamilyComposite(ArticleFamilyDto articleFamilyDto, String description) {
         FamilyComposite familyToBeAttached = this.existFamily(description);
         FamilyComposite compositeCreated = familyCompositeRepository.save(new FamilyComposite(
-                familyCompositeDto.getFamilyType(),
-                familyCompositeDto.getReference(),
-                familyCompositeDto.getDescription()));
+                articleFamilyDto.getFamilyType(),
+                articleFamilyDto.getReference(),
+                articleFamilyDto.getDescription()));
         familyToBeAttached.getFamilyCompositeList().add(compositeCreated);
         familyCompositeRepository.save(familyToBeAttached);
-        return familyCompositeDto;
+        return articleFamilyDto;
     }
 
     public void deleteFamilyCompositeItem(String description) {
@@ -57,6 +59,15 @@ public class ArticlesFamilyController {
             throw new BadRequestException("No valid description provided");
         }
         return familyToBeAttached;
+    }
+
+    public List<ArticleFamilyDto> readAllComponentsInAFamily(String description) {
+        FamilyComposite family = familyCompositeRepository.findByDescription(description);
+        List<ArticleFamilyDto> dtos = new ArrayList<>();
+        for (ArticlesFamily articlesFamily : family.getFamilyCompositeList()) {
+            dtos.add(new ArticleFamilyDto(articlesFamily));
+        }
+        return dtos;
     }
 
     public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(FamilyType familyType) {
