@@ -14,6 +14,7 @@ import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,17 @@ public class ArticlesFamilyController {
         familyToBeAttached.getFamilyCompositeList().add(compositeCreated);
         familyCompositeRepository.save(familyToBeAttached);
         return articleFamilyDto;
+    }
+
+    public void deleteComponentFromFamily(String parentDescription, String description) {
+        FamilyComposite family = familyCompositeRepository.findByDescription(parentDescription);
+        Iterator iterator = family.getArticlesFamilyList().iterator();
+        while (iterator.hasNext()){
+            ArticlesFamily component = (ArticlesFamily) iterator.next();
+            if (component.getDescription().equals(description))
+                iterator.remove();
+        }
+        familyCompositeRepository.save(family);
     }
 
     public void deleteFamilyCompositeItem(String description) {

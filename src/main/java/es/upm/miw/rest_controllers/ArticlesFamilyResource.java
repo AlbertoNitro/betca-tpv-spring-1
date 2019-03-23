@@ -40,7 +40,7 @@ public class ArticlesFamilyResource {
         return articlesFamilyController.createFamilyComposite(articleFamilyDto, description);
     }
 
-    @DeleteMapping
+    @DeleteMapping(value = DESCRIPTION)
     public void deleteComponentFromFamily (@Valid @PathVariable String parentDescription, @RequestParam String description){
 
     }
