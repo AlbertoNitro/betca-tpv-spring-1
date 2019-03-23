@@ -41,6 +41,11 @@ public class ArticlesFamilyResource {
     }
 
     @DeleteMapping
+    public void deleteComponentFromFamily (@Valid @PathVariable String parentDescription, @RequestParam String description){
+
+    }
+
+    @DeleteMapping
     public void deleteFamilyCompositeItem(@Valid @RequestParam String description) {
         articlesFamilyController.deleteFamilyCompositeItem(description);
     }
