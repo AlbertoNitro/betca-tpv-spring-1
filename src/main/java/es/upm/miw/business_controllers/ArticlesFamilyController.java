@@ -50,12 +50,12 @@ public class ArticlesFamilyController {
         return articleFamilyDto;
     }
 
-    public void deleteComponentFromFamily(String parentDescription, String description) {
-        FamilyComposite family = familyCompositeRepository.findByDescription(parentDescription);
+    public void deleteComponentFromFamily(String description, String childDescription) {
+        FamilyComposite family = familyCompositeRepository.findByDescription(description);
         Iterator iterator = family.getArticlesFamilyList().iterator();
         while (iterator.hasNext()){
             ArticlesFamily component = (ArticlesFamily) iterator.next();
-            if (component.getDescription().equals(description))
+            if (component.getDescription().equals(childDescription))
                 iterator.remove();
         }
         familyCompositeRepository.save(family);

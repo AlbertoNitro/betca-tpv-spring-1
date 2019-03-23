@@ -41,8 +41,8 @@ public class ArticlesFamilyResource {
     }
 
     @DeleteMapping(value = DESCRIPTION)
-    public void deleteComponentFromFamily (@Valid @PathVariable String parentDescription, @RequestParam String description){
-
+    public void deleteComponentFromFamily(@PathVariable String description, @RequestParam String childDescription) {
+        articlesFamilyController.deleteComponentFromFamily(description, childDescription);
     }
 
     @DeleteMapping
