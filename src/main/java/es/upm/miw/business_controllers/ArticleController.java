@@ -62,9 +62,13 @@ public class ArticleController {
                 .orElseThrow(() -> new NotFoundException("Article code (" + code + ")")));
     }
 
-    public List<ArticleSearchOutputDto> readArticles(String description, Integer stock, BigDecimal minPrice, BigDecimal maxPrice){
+    public List<ArticleSearchOutputDto> readArticles(String description, Integer stock, BigDecimal minPrice, BigDecimal maxPrice) {
+        String minPriceStr, maxPriceStr;
+        minPriceStr = minPrice == null ? null : minPrice.toString();
+        maxPriceStr = maxPrice == null ? null : maxPrice.toString();
+
         return this.articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                (description, stock, minPrice.toString(), maxPrice.toString());
+                (description, stock, minPriceStr, maxPriceStr);
     }
 
     public List<ArticleSearchOutputDto> readArticles() {

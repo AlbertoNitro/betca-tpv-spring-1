@@ -1,13 +1,13 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.documents.Article;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
+import es.upm.miw.dtos.input.ArticleSearchInputDto;
+import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -44,6 +44,33 @@ class ArticleResorceIT {
                 .clazz(ArticleMinimumDto[].class).path(ArticleResource.ARTICLES).path(ArticleResource.MINIMUM)
                 .get().build());
         assertTrue(dtos.size() > 1);
+    }
+
+    @Test
+    void testReallAll(){
+        List<ArticleSearchOutputDto> articles = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<ArticleSearchOutputDto[]>()).clazz(ArticleSearchOutputDto[].class)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.SEARCH).body(new ArticleSearchInputDto(null, null, null, null))
+                .post().build());
+        assertTrue(articles.size() > 0);
+    }
+
+    @Test
+    void testReallArticlesBy1Field(){
+        List<ArticleSearchOutputDto> articles = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<ArticleSearchOutputDto[]>()).clazz(ArticleSearchOutputDto[].class)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.SEARCH).body(new ArticleSearchInputDto("a", null, null, null))
+                .post().build());
+        assertTrue(articles.size() > 0);
+    }
+
+    @Test
+    void testReallPartiallyDefined(){
+        List<ArticleSearchOutputDto> articles = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<ArticleSearchOutputDto[]>()).clazz(ArticleSearchOutputDto[].class)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.SEARCH).path(ArticleResource.PARTIALLY_DEFINED)
+                .post().build());
+        assertTrue(articles.size() == 0);
     }
 
     @Test
