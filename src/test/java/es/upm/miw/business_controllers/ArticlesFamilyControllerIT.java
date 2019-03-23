@@ -3,8 +3,8 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.TestConfig;
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
+import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
-import es.upm.miw.dtos.FamilyCompositeDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.junit.jupiter.api.Test;
@@ -37,16 +37,22 @@ public class ArticlesFamilyControllerIT {
     void testCreateFamilyComposite() {
         assertNull(familyCompositeRepository.findByDescription("create"));
         articlesFamilyController.createFamilyComposite(
-                new FamilyCompositeDto(FamilyType.ARTICLES, "C", "create"), "test");
+                new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"), "test");
         assertNotNull(familyCompositeRepository.findByDescription("create"));
         articlesFamilyController.createFamilyComposite(
-                new FamilyCompositeDto(FamilyType.SIZES, null, "tS"), "test");
+                new ArticleFamilyDto(FamilyType.SIZES, null, "tS"), "test");
         assertNotNull(familyCompositeRepository.findByDescription("tS"));
         articlesFamilyController.deleteFamilyCompositeItem("create");
         articlesFamilyController.deleteFamilyCompositeItem("tS");
         assertNull(familyCompositeRepository.findByDescription("create"));
         assertThrows(BadRequestException.class, () -> articlesFamilyController.createFamilyComposite(
-                new FamilyCompositeDto(FamilyType.ARTICLES, "C", "create"), "t"));
+                new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"), "t"));
+    }
+
+    @Test
+    void testReadAllComponentsInAFamily(){
+        assertNotNull(familyCompositeRepository.findByDescription("root"));
+        assertNotNull(articlesFamilyController.readAllComponentsInAFamily("root"));
     }
 
     @Test

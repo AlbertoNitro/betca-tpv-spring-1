@@ -2,9 +2,9 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
+import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
-import es.upm.miw.dtos.FamilyCompositeDto;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +41,9 @@ public class ArticlesFamilyResourceIT {
     void testCreateFamilyComposite() {
         assertNull(familyCompositeRepository.findByDescription("create"));
         assertNotNull(familyCompositeRepository.findByDescription("test"));
-        FamilyCompositeDto response = this.restService.loginOperator().restBuilder(new RestBuilder<FamilyCompositeDto>())
-                .clazz(FamilyCompositeDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY + ArticlesFamilyResource.COMPOSITE)
-                .param("description", "test").body(new FamilyCompositeDto(FamilyType.ARTICLES, "C", "create"))
+        ArticleFamilyDto response = this.restService.loginOperator().restBuilder(new RestBuilder<ArticleFamilyDto>())
+                .clazz(ArticleFamilyDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY + ArticlesFamilyResource.COMPOSITE)
+                .param("description", "test").body(new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"))
                 .post().build();
         assertEquals("create", response.getDescription());
         assertNotNull(familyCompositeRepository.findByDescription("create"));
@@ -59,6 +59,15 @@ public class ArticlesFamilyResourceIT {
                 .param("description", "test").delete().build();
         assertNull(familyCompositeRepository.findByDescription("test"));
         familyCompositeRepository.save(new FamilyComposite(FamilyType.ARTICLES, "T", "test"));
+    }
+
+    @Test
+    void testReadAllComponentsInAFamily (){
+        List<ArticleFamilyDto> dtos = Arrays.asList(this.restService.loginOperator()
+                .restBuilder(new RestBuilder<ArticleFamilyDto[]>()).clazz(ArticleFamilyDto[].class)
+                .path(ArticlesFamilyResource.ARTICLES_FAMILY)
+                .path(ArticlesFamilyResource.DESCRIPTION).expand("root").get().build());
+        assertNotNull(dtos);
     }
 
     @Test

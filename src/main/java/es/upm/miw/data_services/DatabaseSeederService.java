@@ -147,9 +147,15 @@ public class DatabaseSeederService {
         ArticlesFamily c2 = new FamilyArticle(this.articleRepository.findById("8400000000048").get());
         this.articlesFamilyRepository.save(c1);
         this.articlesFamilyRepository.save(c2);
+        ArticlesFamily c3 = new FamilyComposite(FamilyType.ARTICLES, "c", "cards");
+        ArticlesFamily c4 = new FamilyComposite(FamilyType.SIZES, null, "X");
+        this.articlesFamilyRepository.save(c3);
+        this.articlesFamilyRepository.save(c4);
 
         root.add(c1);
         root.add(c2);
+        root.add(c3);
+        root.add(c4);
         this.articlesFamilyRepository.save(root);
     }
 
