@@ -86,6 +86,34 @@ userList:
       roles:
         - MANAGER
         - OPERATOR
+  - &us9
+      mobile: 666666110
+      username: uprueba4
+      password: pprueba4
+      email: uprueba4@gmail.com
+      dni: 2222224
+      address: Cuenca,Ecuador
+      roles:
+      - OPERATOR
+      - CUSTOMER
+  - &us10
+      mobile: 666666120
+      username: uprueba5
+      password: pprueba5
+      email: uprueba5@gmail.com
+      dni: 2222224
+      address: Cuenca,Ecuador
+      roles:
+      - OPERATOR
+  - &us11
+    mobile: 666666122
+    username: uprueba6
+    password: pprueba6
+    email: uprueba6@gmail.com
+    dni: 2222224
+    address: Cuenca,Ecuador
+    roles:
+    - MANAGER
 #Vouchers
 voucherList:
   - id: 1234567890

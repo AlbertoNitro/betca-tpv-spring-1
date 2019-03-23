@@ -1,10 +1,10 @@
-package es.upm.miw.dtos;
+package es.upm.miw.dtos.output;
 
 import es.upm.miw.documents.Article;
 
 import java.math.BigDecimal;
 
-public class ArticleSearchDto {
+public class ArticleSearchOutputDto {
 
     private String code;
 
@@ -14,21 +14,21 @@ public class ArticleSearchDto {
 
     private BigDecimal retailPrice;
 
-    public ArticleSearchDto() {
+    public ArticleSearchOutputDto() {
     }
 
-    public ArticleSearchDto(String code, String description, Integer stock, BigDecimal retailPrice) {
+    public ArticleSearchOutputDto(String code, String description, Integer stock, BigDecimal retailPrice) {
         this.code = code;
         this.description = description;
-        this.retailPrice = retailPrice;
         this.stock = stock;
+        this.retailPrice = retailPrice;
     }
 
-    public ArticleSearchDto(Article article) {
+    public ArticleSearchOutputDto(Article article) {
         this.code = article.getCode();
         this.description = article.getDescription();
-        this.retailPrice = article.getRetailPrice();
         this.stock = article.getStock();
+        this.retailPrice = article.getRetailPrice();
     }
 
     public String getCode() {
@@ -65,7 +65,7 @@ public class ArticleSearchDto {
 
     @Override
     public String toString() {
-        return "ArticleSearchDto{" +
+        return "ArticleSearchOutputDto{" +
                 "code='" + code + '\'' +
                 ", description='" + description + '\'' +
                 ", stock=" + stock +

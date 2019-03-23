@@ -4,8 +4,8 @@ import es.upm.miw.data_services.DatabaseSeederService;
 import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
-import es.upm.miw.dtos.ArticleSearchDto;
 import es.upm.miw.dtos.input.FamilySizeInputDto;
+import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
@@ -38,11 +38,11 @@ public class ArticleController {
     @Autowired
     private FamilyCompositeRepository familyCompositeRepository;
 
-    public List<ArticleSearchDto> readAll() {
-        List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
+    public List<ArticleSearchOutputDto> readAll() {
+        List<ArticleSearchOutputDto> articleSearchDtoList = new ArrayList<>();
 
         for (Article article : this.articleRepository.findAll()) {
-            articleSearchDtoList.add(new ArticleSearchDto(article));
+            articleSearchDtoList.add(new ArticleSearchOutputDto(article));
         }
 
         return articleSearchDtoList;
@@ -62,23 +62,16 @@ public class ArticleController {
                 .orElseThrow(() -> new NotFoundException("Article code (" + code + ")")));
     }
 
-    public List<ArticleSearchDto> readArticles(String description) {
-        return this.articleRepository.findByDescriptionLikeIgnoreCaseNullSafe(description);
+    public List<ArticleSearchOutputDto> readArticles(String description, Integer stock, BigDecimal minPrice, BigDecimal maxPrice) {
+        String minPriceStr, maxPriceStr;
+        minPriceStr = minPrice == null ? null : minPrice.toString();
+        maxPriceStr = maxPrice == null ? null : maxPrice.toString();
+
+        return this.articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
+                (description, stock, minPriceStr, maxPriceStr);
     }
 
-    public List<ArticleSearchDto> readArticles(int stock) {
-        return this.articleRepository.findByStockGreaterThanEqual(stock);
-    }
-
-    public List<ArticleSearchDto> readArticlesMinPrice(BigDecimal minPrice) {
-        return this.articleRepository.findByRetailPriceGreaterThanEqual(minPrice);
-    }
-
-    public List<ArticleSearchDto> readArticlesMaxPrice(BigDecimal maxPrice) {
-        return this.articleRepository.findByRetailPriceLessThanEqual(maxPrice);
-    }
-
-    public List<ArticleSearchDto> readArticles() {
+    public List<ArticleSearchOutputDto> readArticles() {
         return this.articleRepository.findByReferenceNullAndProviderNull();
     }
 
