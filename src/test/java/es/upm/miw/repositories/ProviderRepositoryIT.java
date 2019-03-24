@@ -28,7 +28,14 @@ class ProviderRepositoryIT {
 
     @BeforeEach
     void seedDb() {
-        this.active = new Provider("active-company");
+        this.active = new Provider(
+                "active-company",
+                "_nif_",
+                "_address_",
+                "_phone_",
+                "_email_",
+                "_note_",
+                true);
         this.inactive = new Provider("inactive-company");
         this.inactive.setActive(false);
         this.providerRepository.save(inactive);
@@ -64,6 +71,26 @@ class ProviderRepositoryIT {
         List<ProviderMinimunDto> providers = providerRepository.findByActiveTrue();
         assertTrue(containsCompany(providers, "active-company"));
         assertFalse(containsCompany(providers, "inactive-company"));
+    }
+
+    @Test
+    void testFindByAttributesLike() {
+        List<ProviderMinimunDto> providers =
+                providerRepository.findByAttributesLike(
+                        "company",
+                        "nif",
+                        "email",
+                        "phone",
+                        true);
+        assertTrue(containsCompany(providers, "active-company"));
+    }
+
+    @Test
+    void testFindByAttributesLikeNull() {
+        List<ProviderMinimunDto> activesProviders = providerRepository.findByActiveTrue();
+        List<ProviderMinimunDto> nullSearchActiveProviders =
+                providerRepository.findByAttributesLike(null, null, null, null, true);
+        assertTrue(activesProviders.size() == nullSearchActiveProviders.size());
     }
 
     @AfterEach
