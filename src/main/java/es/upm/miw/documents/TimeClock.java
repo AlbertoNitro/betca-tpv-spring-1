@@ -27,8 +27,10 @@ public class TimeClock {
         this.id = new ObjectId().toHexString();
     }
 
-    public TimeClock(LocalDateTime clockinDate, User user) {
-        this.clockinDate = clockinDate;
+    public TimeClock(User user) {
+        this();
+        clockin();
+        clockout();
         this.user = user;
     }
 
@@ -57,7 +59,7 @@ public class TimeClock {
     }
 
     public Long getTotalHours() {
-        return totalHours = Duration.between(this.clockoutDate, this.clockoutDate).toHours();
+        return totalHours = Duration.between(this.clockoutDate, this.clockinDate).toHours();
     }
 
     public void setTotalHours(Long totalHours) {
@@ -82,8 +84,12 @@ public class TimeClock {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o){
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         TimeClock timeClock = (TimeClock) o;
         return Objects.equals(id, timeClock.id);
     }
