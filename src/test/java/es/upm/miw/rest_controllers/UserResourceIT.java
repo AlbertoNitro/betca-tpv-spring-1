@@ -262,4 +262,21 @@ class UserResourceIT {
         System.out.println(userMinimumDtoList);
         assertEquals(2,userMinimumDtoList.size());
     }
+
+    @Test
+    void testCreateUser() {
+        UserMinimumDto userInputMinimumDto = new UserMinimumDto("111111111", "alberto");
+        UserMinimumDto userOutputMinimumDto = this.restService.loginAdmin().restBuilder(new RestBuilder<UserMinimumDto>())
+                .clazz(UserMinimumDto.class).path(UserResource.USERS).body(userInputMinimumDto).post().build();
+        assertEquals(userOutputMinimumDto.getMobile(), userInputMinimumDto.getMobile());
+    }
+
+    @Test
+    void testCreateUserBadRequest() {
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder(new RestBuilder<UserMinimumDto>())
+                        .clazz(UserMinimumDto.class).path(UserResource.USERS).body(new UserMinimumDto(null, "alberto"))
+                        .post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
 }

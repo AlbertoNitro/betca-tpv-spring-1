@@ -64,6 +64,15 @@ public class UserController {
         return this.userRepository.findAllUsers();
     }
 
+    public UserMinimumDto create(UserMinimumDto userMinimum) {
+        if(this.userRepository.findByMobile(userMinimum.getMobile()).isPresent()) {
+            throw new BadRequestException("User mobile (" + userMinimum.getMobile() + ") already exist.");
+        }
+
+        User saved = this.userRepository.save(new User(userMinimum));
+        return new UserMinimumDto(saved.getMobile(), saved.getUsername());
+    }
+
     public UserRolesDto updateRoles(String mobile, UserRolesDto userRolesDto) {
 
 
