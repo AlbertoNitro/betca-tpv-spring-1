@@ -1,5 +1,6 @@
 package es.upm.miw.data_services;
 
+import es.upm.miw.business_services.Barcode;
 import es.upm.miw.documents.*;
 import es.upm.miw.repositories.*;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,13 @@ public class DatabaseSeederService {
     private static final String VARIOUS_CODE = "1";
 
     private static final String VARIOUS_NAME = "Varios";
+
+    private static final String PREFIX_CODE_ARTICLE = "84";
+
+    private static final Long FIRST_CODE_ARTICLE = 840000000000L;
+
+    private static final Long LAST_CODE_ARTICLE = 840000099999L;
+
     @Autowired
     public TicketRepository ticketRepository;
     @Autowired
@@ -31,6 +39,9 @@ public class DatabaseSeederService {
     public CashierClosureRepository cashierClosureRepository;
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private Barcode barcode;
 
     @Value("${miw.admin.mobile}")
     private String mobile;
@@ -188,7 +199,22 @@ public class DatabaseSeederService {
     }
 
     public String nextCodeEan() {
-        throw new RuntimeException("Method nextCodeEan not implemented");
+        Article article = this.articleRepository.findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(PREFIX_CODE_ARTICLE);
+
+        Long nextCodeWithoutRedundancy = FIRST_CODE_ARTICLE;
+
+        if (article != null) {
+            String code = article.getCode();
+            String codeWithoutRedundancy = code.substring(0, code.length() - 1);
+
+            nextCodeWithoutRedundancy = Long.parseLong(codeWithoutRedundancy) + 1L;
+        }
+
+        if (nextCodeWithoutRedundancy > LAST_CODE_ARTICLE) {
+            throw new RuntimeException("There is not next code EAN");
+        }
+
+        return this.barcode.generateEan13code(nextCodeWithoutRedundancy);
     }
 
 }

@@ -77,8 +77,12 @@ public class ArticleController {
 
     public ArticleDto createArticle(ArticleDto articleDto) {
         String code = articleDto.getCode();
-        if (code == null) {
+        if (code == null || code.equals("")) {
             code = this.databaseSeederService.nextCodeEan();
+        }
+
+        if (this.articleRepository.findById(code).isPresent()) {
+            throw new ConflictException("Article code (" + code + ")");
         }
 
         Article article = prepareArticle(articleDto, code);
@@ -95,9 +99,7 @@ public class ArticleController {
     }
 
     private Article prepareArticle(ArticleDto articleDto, String code) {
-        if (this.articleRepository.findById(code).isPresent()) {
-            throw new ConflictException("Article code (" + code + ")");
-        }
+
         int stock = (articleDto.getStock() == null) ? 10 : articleDto.getStock();
         Provider provider = null;
         if (articleDto.getProvider() != null) {

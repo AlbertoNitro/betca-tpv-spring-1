@@ -1,5 +1,8 @@
 package es.upm.miw.business_services;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class Barcode {
 
     public String ean13ControlCodeCalculator(String code) {
