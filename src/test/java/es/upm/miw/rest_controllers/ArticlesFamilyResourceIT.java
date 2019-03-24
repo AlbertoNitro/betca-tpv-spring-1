@@ -1,5 +1,6 @@
 package es.upm.miw.rest_controllers;
 
+import es.upm.miw.documents.ArticlesFamily;
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
@@ -23,6 +24,16 @@ public class ArticlesFamilyResourceIT {
 
     @Autowired
     private FamilyCompositeRepository familyCompositeRepository;
+
+    @Test
+    void testAttachToFamily (){
+        assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
+        ArticleFamilyDto response = this.restService.loginOperator().restBuilder(new RestBuilder<ArticleFamilyDto>())
+                .clazz(ArticleFamilyDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY).path(ArticlesFamilyResource.DESCRIPTION)
+                .expand("test").body(new ArticleFamilyDto(FamilyType.ARTICLES,"B","Books")).post().build();
+        assertNotNull(response);
+        assertEquals("Books",response.getDescription());
+    }
 
     @Test
     void testCreateFamilyArticle() {

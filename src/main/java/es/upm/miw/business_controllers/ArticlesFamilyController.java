@@ -14,8 +14,8 @@ import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -29,6 +29,23 @@ public class ArticlesFamilyController {
 
     @Autowired
     private FamilyCompositeRepository familyCompositeRepository;
+
+    public ArticleFamilyDto attachToFamily(ArticleFamilyDto articleFamilyDto, String description) {
+        this.existFamily(description);
+        FamilyComposite familyToBeAttached = this.existFamily(description);
+        if (articleFamilyDto.getFamilyType() == FamilyType.ARTICLE) {
+            FamilyArticle familyArticleCreated = this.familyArticleRepository.save(new FamilyArticle(
+                    articleRepository.findByCode(articleFamilyDto.getReference())));
+            familyToBeAttached.getFamilyCompositeList().add(familyArticleCreated);
+            familyCompositeRepository.save(familyToBeAttached);
+        } else if (articleFamilyDto.getFamilyType() == FamilyType.ARTICLES || articleFamilyDto.getFamilyType() == FamilyType.SIZES) {
+            this.existFamily(articleFamilyDto.getDescription());
+            familyToBeAttached.getFamilyCompositeList().add(
+                    familyCompositeRepository.findFirstByDescription(articleFamilyDto.getDescription()));
+            familyCompositeRepository.save(familyToBeAttached);
+        }
+        return articleFamilyDto;
+    }
 
     public ArticleMinimumDto createFamilyArticle(ArticleMinimumDto articleMinimumDto, String description) {
         FamilyComposite familyToBeAttached = this.existFamily(description);
@@ -53,7 +70,7 @@ public class ArticlesFamilyController {
     public void deleteComponentFromFamily(String description, String childDescription) {
         FamilyComposite family = familyCompositeRepository.findFirstByDescription(description);
         Iterator iterator = family.getArticlesFamilyList().iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             ArticlesFamily component = (ArticlesFamily) iterator.next();
             if (component.getDescription().equals(childDescription))
                 iterator.remove();

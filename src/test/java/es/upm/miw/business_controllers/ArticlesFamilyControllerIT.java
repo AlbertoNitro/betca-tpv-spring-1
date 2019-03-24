@@ -25,6 +25,30 @@ public class ArticlesFamilyControllerIT {
     private FamilyCompositeRepository familyCompositeRepository;
 
     @Test
+    void testAttachToFamilyArticle (){
+        assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
+        articlesFamilyController.attachToFamily(
+                new ArticleFamilyDto(FamilyType.ARTICLE,"8400000000017", "Zarzuela - Falda T2"), "test");
+        assertEquals(1, familyCompositeRepository.findFirstByDescription("test").getArticlesFamilyList().size());
+        FamilyComposite familyComposite = familyCompositeRepository.findFirstByDescription("test");
+        familyComposite.getFamilyCompositeList().clear();
+        familyCompositeRepository.save(familyComposite);
+        assertEquals(0, familyCompositeRepository.findFirstByDescription("test").getArticlesFamilyList().size());
+    }
+
+    @Test
+    void testAttachToFamilyFamilyComposite (){
+        assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
+        articlesFamilyController.attachToFamily(
+                new ArticleFamilyDto(FamilyType.ARTICLES,"B", "Books"), "test");
+        assertEquals(1, familyCompositeRepository.findFirstByDescription("test").getArticlesFamilyList().size());
+        FamilyComposite familyComposite = familyCompositeRepository.findFirstByDescription("test");
+        familyComposite.getFamilyCompositeList().clear();
+        familyCompositeRepository.save(familyComposite);
+        assertEquals(0, familyCompositeRepository.findFirstByDescription("test").getArticlesFamilyList().size());
+    }
+
+    @Test
     void testCreateFamilyArticle() {
         assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
         articlesFamilyController.createFamilyArticle(
@@ -48,8 +72,6 @@ public class ArticlesFamilyControllerIT {
         articlesFamilyController.deleteFamilyCompositeItem("create");
         articlesFamilyController.deleteFamilyCompositeItem("tS");
         assertNull(familyCompositeRepository.findFirstByDescription("create"));
-        assertThrows(BadRequestException.class, () -> articlesFamilyController.createFamilyComposite(
-                new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"), "t"));
     }
 
     @Test
@@ -70,6 +92,12 @@ public class ArticlesFamilyControllerIT {
         articlesFamilyController.deleteFamilyCompositeItem("test");
         assertNull(familyCompositeRepository.findFirstByDescription("test"));
         familyCompositeRepository.save(new FamilyComposite(FamilyType.ARTICLES, "T", "test"));
+    }
+
+    @Test
+    void testExistFamily(){
+        assertThrows(BadRequestException.class, () -> articlesFamilyController.createFamilyComposite(
+                new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"), "t"));
     }
 
     @Test
