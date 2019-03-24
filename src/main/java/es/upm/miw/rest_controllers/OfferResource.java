@@ -42,8 +42,8 @@ public class OfferResource {
     }
 
     @PostMapping
-    public OfferOutputDto createOffer(@Valid @RequestBody OfferInputDto offerInputDto) {
-        return this.offerController.createOffer(offerInputDto);
+    public OfferOutputDto create(@Valid @RequestBody OfferInputDto offerInputDto) {
+        return this.offerController.create(offerInputDto);
     }
 
     @DeleteMapping(value = OFFER_ID)

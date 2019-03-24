@@ -17,18 +17,17 @@ public class OfferController {
     private OfferRepository offerRepository;
 
     /*public List<OfferOutputDto> readAll() {
-        // return this.offerRepository.findAll();
+        return this.offerRepository.findAll();
     }*/
 
-    public OfferOutputDto createOffer(OfferInputDto offerInputDto) {
-        Offer offer = new Offer(offerInputDto.getOffername() , offerInputDto.getEndDate(), offerInputDto.getArticleLine());
+    public OfferOutputDto create(OfferInputDto offerInputDto) {
+        Offer offer = new Offer(Integer.toString(offerInputDto.hashCode()), offerInputDto.getOffername() , offerInputDto.getEndDate(), offerInputDto.getArticleLine());
         this.offerRepository.save(offer);
         return new OfferOutputDto(offer.getId(), offer.getOffername(), offer.getEndDate(), offer.getArticleLine());
     }
 
     public void delete(String offerId) {
         Optional<Offer> offer = this.offerRepository.findById(offerId);
-
         if (offer.isPresent()) {
             this.offerRepository.delete(offer.get());
         }

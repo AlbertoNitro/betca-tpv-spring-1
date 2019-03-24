@@ -25,12 +25,6 @@ public class Offer {
         this.articleLine = articleLine;
     }
 
-    public Offer(String offername, LocalDateTime endDate, ArticleLine[] articleLine) {
-        this.offername = offername;
-        this.endDate = endDate;
-        this.articleLine = articleLine;
-    }
-
     public String getId() {
         return id;
     }
