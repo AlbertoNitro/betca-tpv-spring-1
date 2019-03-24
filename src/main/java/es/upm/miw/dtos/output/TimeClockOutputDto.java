@@ -63,7 +63,7 @@ public class TimeClockOutputDto {
 
     private Long getDateMs(LocalDateTime dateTime) {
         ZoneId zoneId = ZoneId.systemDefault();
-        return dateTime.toLocalDate().atStartOfDay(zoneId).toEpochSecond();
+        return dateTime.toLocalDate().atStartOfDay(zoneId).toInstant().toEpochMilli();
     }
 
     public String getId() {
