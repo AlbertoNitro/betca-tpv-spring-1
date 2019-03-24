@@ -41,6 +41,20 @@ public class UserControllerIT {
     }
 
     @Test
+    void testCreateUser() {
+        UserMinimumDto userInputDto = new UserMinimumDto("111222333", "aa");
+        UserMinimumDto userMinimumDto = userController.create(new UserMinimumDto(userInputDto.getMobile(), userInputDto.getUsername()));
+        assertEquals(userMinimumDto.getMobile(), userInputDto.getMobile());
+    }
+
+    @Test
+    void testCreateUserAlreadyExists() {
+        BadRequestException thrown = assertThrows(BadRequestException.class, () ->
+                userController.create(new UserMinimumDto(this.user.getMobile(), this.user.getUsername())));
+        assertTrue(thrown.getMessage().contains("Bad Request Exception (400)"));
+    }
+
+    @Test
     void testReadAll() {
         List<UserMinimumDto> users = userController.readAll();
         System.out.println(users);

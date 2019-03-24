@@ -172,6 +172,11 @@ public class Article {
             return this;
         }
 
+        public Builder tax(Tax tax) {
+            this.article.tax = tax;
+            return this;
+        }
+
         public Article build() {
             return this.article;
         }
