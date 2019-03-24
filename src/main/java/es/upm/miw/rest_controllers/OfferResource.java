@@ -1,8 +1,10 @@
 package es.upm.miw.rest_controllers;
 
+import es.upm.miw.business_controllers.OfferController;
 import es.upm.miw.documents.ArticleLine;
 import es.upm.miw.dtos.input.OfferInputDto;
 import es.upm.miw.dtos.output.OfferOutputDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,9 @@ public class OfferResource {
     public static final String OFFERS = "/offers";
     public static final String OFFER_ID = "/{idOffer}";
 
+    @Autowired
+    private OfferController offerController;
+
     @GetMapping
     public List<OfferOutputDto> readAll() {
         // TODO REFACTOR in OfferController
@@ -33,6 +38,7 @@ public class OfferResource {
         offerOutputDtos.add(offerOutputDto_2);
         offerOutputDtos.add(offerOutputDto_3);
         return offerOutputDtos;
+        //return this.offerController.readAll();
     }
 
     @PostMapping
@@ -42,9 +48,10 @@ public class OfferResource {
     }
 
     @DeleteMapping(value = OFFER_ID)
-    public String delete(@PathVariable String idOffer) {
+    public void delete(@PathVariable String idOffer) {
         // TODO REFACTOR in OfferController. return void
-        return idOffer;
+        // return idOffer;
+        this.offerController.delete(idOffer);
     }
 
 }
