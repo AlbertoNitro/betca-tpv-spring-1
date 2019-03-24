@@ -2,6 +2,7 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
+import es.upm.miw.dtos.ProviderSearchInputDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +57,16 @@ public class ProviderResourceIT {
         assertTrue(providers.size() > 1);
     }
 
-    @Test
-    void testRealAllActives() {
-        List<ProviderMinimunDto> actives = Arrays.asList(this.restService.loginAdmin()
+    private RestBuilder<ProviderMinimunDto[]> restActiveService() {
+        return this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<ProviderMinimunDto[]>()).clazz(ProviderMinimunDto[].class)
                 .path(ProviderResource.PROVIDERS).path(ProviderResource.ACTIVES)
-                .get().build());
+                .get();
+    }
+
+    @Test
+    void testRealAllActives() {
+        List<ProviderMinimunDto> actives = Arrays.asList(restActiveService().build());
         assertTrue(actives.size() > 1);
     }
 
@@ -117,5 +122,17 @@ public class ProviderResourceIT {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 restUpdateBuilder(existentProvider.getId(), providerDto).build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
+    void testFindByAttributesLike() {
+        ProviderSearchInputDto providerSearchInputDto = new ProviderSearchInputDto(true);
+        List<ProviderMinimunDto> actives = Arrays.asList(restActiveService().build());
+        List<ProviderMinimunDto> activesSearch = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<ProviderMinimunDto[]>()).clazz(ProviderMinimunDto[].class)
+                .path(ProviderResource.PROVIDERS).path(ProviderResource.SEARCH).body(providerSearchInputDto)
+                .post().build());
+        assertTrue(actives.size() == activesSearch.size());
+
     }
 }
