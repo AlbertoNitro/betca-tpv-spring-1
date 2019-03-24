@@ -3,6 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.business_services.PdfService;
 import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ShoppingDto;
+import es.upm.miw.dtos.TicketModificationStateOrAmountDto;
 import es.upm.miw.dtos.input.TicketCreationInputDto;
 import es.upm.miw.dtos.input.TicketQueryInputDto;
 import es.upm.miw.dtos.output.TicketQueryOutputDto;
@@ -282,5 +283,10 @@ public class TicketController {
             results.add(shoppingList.getArticle());
         }
         return results;
+    }
+
+    public TicketModificationStateOrAmountDto readTicketById(String id) {
+        return new TicketModificationStateOrAmountDto(this.ticketRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ticket id (" + id + ")")));
     }
 }
