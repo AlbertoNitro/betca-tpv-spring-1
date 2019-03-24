@@ -51,7 +51,7 @@ public class ArticlesFamilyController {
     }
 
     public void deleteComponentFromFamily(String description, String childDescription) {
-        FamilyComposite family = familyCompositeRepository.findByDescription(description);
+        FamilyComposite family = familyCompositeRepository.findFirstByDescription(description);
         Iterator iterator = family.getArticlesFamilyList().iterator();
         while (iterator.hasNext()){
             ArticlesFamily component = (ArticlesFamily) iterator.next();
@@ -62,11 +62,11 @@ public class ArticlesFamilyController {
     }
 
     public void deleteFamilyCompositeItem(String description) {
-        familyCompositeRepository.delete(familyCompositeRepository.findByDescription(description));
+        familyCompositeRepository.delete(familyCompositeRepository.findFirstByDescription(description));
     }
 
     private FamilyComposite existFamily(String description) {
-        FamilyComposite familyToBeAttached = familyCompositeRepository.findByDescription(description);
+        FamilyComposite familyToBeAttached = familyCompositeRepository.findFirstByDescription(description);
         if (familyToBeAttached == null) {
             throw new BadRequestException("No valid description provided");
         }
@@ -74,7 +74,7 @@ public class ArticlesFamilyController {
     }
 
     public List<ArticleFamilyDto> readAllComponentsInAFamily(String description) {
-        FamilyComposite family = familyCompositeRepository.findByDescription(description);
+        FamilyComposite family = familyCompositeRepository.findFirstByDescription(description);
         List<ArticleFamilyDto> dtos = new ArrayList<>();
         for (ArticlesFamily articlesFamily : family.getFamilyCompositeList()) {
             dtos.add(new ArticleFamilyDto(articlesFamily));

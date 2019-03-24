@@ -10,5 +10,5 @@ import java.util.List;
 public interface FamilyCompositeRepository extends MongoRepository<FamilyComposite, String> {
     List<ArticleFamilyMinimumDto> findAllFamilyCompositeByFamilyType(FamilyType familyType);
 
-    FamilyComposite findByDescription(String description);
+    FamilyComposite findFirstByDescription(String description);
 }
