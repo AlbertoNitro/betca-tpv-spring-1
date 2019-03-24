@@ -35,6 +35,16 @@ public class Provider {
         this.active = true;
     }
 
+    public Provider( String company, String nif, String address, String phone, String email, String note, Boolean active) {
+        this.company = company;
+        this.nif = nif;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.note = note;
+        this.active = active;
+    }
+
     public Provider(ProviderDto providerDto) {
         this.id = providerDto.getId();
         this.company = providerDto.getCompany();

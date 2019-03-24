@@ -3,6 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.TestConfig;
 import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
+import es.upm.miw.dtos.ProviderSearchInputDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
@@ -81,6 +82,15 @@ public class ProviderControllerIT {
         providerDto.setId("different-id");
         ProviderDto finalProviderDto = providerDto;
         assertThrows(BadRequestException.class, () -> this.providerController.update(id, finalProviderDto));
+    }
+
+    @Test
+    void testFindByAttributesLike() {
+        ProviderSearchInputDto providerSearchInputDto = new ProviderSearchInputDto(true);
+        List<ProviderMinimunDto> activesProviders = providerController.readAllActives();
+        List<ProviderMinimunDto> nullSearchActiveProviders = providerController.findByAttributesLike(providerSearchInputDto);
+        assertTrue(activesProviders.size()==nullSearchActiveProviders.size());
+
     }
 
 }

@@ -3,6 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.documents.Provider;
 import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
+import es.upm.miw.dtos.ProviderSearchInputDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
@@ -52,6 +53,16 @@ public class ProviderController {
             throw new ConflictException("Provider company (" + company + ")");
         Provider result = this.providerRepository.save(new Provider(providerDto));
         return new ProviderDto(result);
+    }
+
+    public List<ProviderMinimunDto> findByAttributesLike(ProviderSearchInputDto providerSearchInputDto){
+        return providerRepository.findByAttributesLike(
+                providerSearchInputDto.getCompany(),
+                providerSearchInputDto.getNif(),
+                providerSearchInputDto.getEmail(),
+                providerSearchInputDto.getPhone(),
+                providerSearchInputDto.isActive()
+        );
     }
 
 }
