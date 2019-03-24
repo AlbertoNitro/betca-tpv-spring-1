@@ -22,4 +22,9 @@ public interface ArticleRepository extends MongoRepository<Article, String> {
 
     List<ArticleSearchOutputDto> findByReferenceNullAndProviderNull();
 
+    //findFirstByOrderByRegistrationDateDescCodeDesc
+    //findByCodeStartingWithOrderByRegistrationDateDescCodeDesc
+    //findFirstByOrderByRegistrationDateDescCodeDescStartingWith
+    Article findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(String prefix);
+
 }

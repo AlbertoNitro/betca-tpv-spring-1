@@ -2,6 +2,7 @@ package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
 import es.upm.miw.documents.Article;
+import es.upm.miw.documents.Tax;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import es.upm.miw.exceptions.ConflictException;
@@ -30,7 +31,7 @@ class ArticleControllerIT {
 
     @BeforeEach
     void seed() {
-        this.articleDto = new ArticleDto("non exist", "descrip", "ref", BigDecimal.TEN, null);
+        this.articleDto = new ArticleDto("non exist", "descrip", "ref", BigDecimal.TEN, null, Tax.SUPER_REDUCED);
         this.article = new Article();
         this.article.setCode("99999999");
         this.articleRepository.save(this.article);
