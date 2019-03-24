@@ -49,8 +49,6 @@ public class OfferResource {
 
     @DeleteMapping(value = OFFER_ID)
     public void delete(@PathVariable String idOffer) {
-        // TODO REFACTOR in OfferController. return void
-        // return idOffer;
         this.offerController.delete(idOffer);
     }
 
