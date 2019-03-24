@@ -3,6 +3,7 @@ package es.upm.miw.rest_controllers;
 import es.upm.miw.business_controllers.ProviderController;
 import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
+import es.upm.miw.dtos.ProviderSearchInputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class ProviderResource {
     public static final String PROVIDERS = "/providers";
     public static final String ACTIVES = "/actives";
     public static final String ID = "/{id}";
+    public static final String SEARCH = "/search";
 
     @Autowired
     private ProviderController providerController;
@@ -45,5 +47,10 @@ public class ProviderResource {
     @PutMapping(value = ID)
     public ProviderDto update(@PathVariable String id, @Valid @RequestBody ProviderDto providerDto) {
         return this.providerController.update(id, providerDto);
+    }
+
+    @PostMapping(value = SEARCH)
+    public List<ProviderMinimunDto> findByAttributesLike(@Valid @RequestBody ProviderSearchInputDto providerSearchInputDto) {
+        return this.providerController.findByAttributesLike(providerSearchInputDto);
     }
 }

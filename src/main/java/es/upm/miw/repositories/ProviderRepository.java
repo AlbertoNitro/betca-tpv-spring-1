@@ -19,4 +19,13 @@ public interface ProviderRepository extends MongoRepository<Provider, String> {
 
     List<ProviderMinimunDto> findByActiveTrue();
 
+    @Query(value = "{$and:[" +
+            "?#{ [0] == null ? { $where : 'true'} : { company : {$regex:[0]} } }," +
+            "?#{ [1] == null ? { $where : 'true'} : { nif : {$regex:[1]} } }," +
+            "?#{ [2] == null ? { $where : 'true'} : { email : {$regex:[2]} } }," +
+            "?#{ [3] == null ? { $where : 'true'} : { phone : {$regex:[3]} } }," +
+            "?#{ [4] == null ? { $where : 'true'} : { active : [4]} }" +
+            "]}",
+            fields = "{ 'company' : 1, 'nif' : 1}")
+    List<ProviderMinimunDto> findByAttributesLike(String company, String nif, String email, String phone, boolean active);
 }
