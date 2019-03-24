@@ -55,7 +55,7 @@ public class ProviderController {
         return new ProviderDto(result);
     }
 
-    public List<ProviderMinimunDto> findByAttributesLike(ProviderSearchInputDto providerSearchInputDto){
+    public List<ProviderMinimunDto> findByAttributesLike(ProviderSearchInputDto providerSearchInputDto) {
         return providerRepository.findByAttributesLike(
                 providerSearchInputDto.getCompany(),
                 providerSearchInputDto.getNif(),

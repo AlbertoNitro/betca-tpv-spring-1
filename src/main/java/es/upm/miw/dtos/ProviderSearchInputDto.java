@@ -15,7 +15,7 @@ public class ProviderSearchInputDto {
     @NotNull
     private boolean active;
 
-    public ProviderSearchInputDto( boolean active){
+    public ProviderSearchInputDto(boolean active) {
         this.active = active;
     }
 

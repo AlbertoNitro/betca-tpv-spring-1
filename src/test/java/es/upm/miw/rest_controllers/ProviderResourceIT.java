@@ -125,14 +125,14 @@ public class ProviderResourceIT {
     }
 
     @Test
-    void testFindByAttributesLike(){
+    void testFindByAttributesLike() {
         ProviderSearchInputDto providerSearchInputDto = new ProviderSearchInputDto(true);
         List<ProviderMinimunDto> actives = Arrays.asList(restActiveService().build());
         List<ProviderMinimunDto> activesSearch = Arrays.asList(this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<ProviderMinimunDto[]>()).clazz(ProviderMinimunDto[].class)
                 .path(ProviderResource.PROVIDERS).path(ProviderResource.SEARCH).body(providerSearchInputDto)
                 .post().build());
-        assertTrue(actives.size()==activesSearch.size());
+        assertTrue(actives.size() == activesSearch.size());
 
     }
 }

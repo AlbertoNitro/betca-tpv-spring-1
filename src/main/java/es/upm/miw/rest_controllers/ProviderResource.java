@@ -50,7 +50,7 @@ public class ProviderResource {
     }
 
     @PostMapping(value = SEARCH)
-    public List<ProviderMinimunDto> findByAttributesLike(@Valid @RequestBody ProviderSearchInputDto providerSearchInputDto){
+    public List<ProviderMinimunDto> findByAttributesLike(@Valid @RequestBody ProviderSearchInputDto providerSearchInputDto) {
         return this.providerController.findByAttributesLike(providerSearchInputDto);
     }
 }

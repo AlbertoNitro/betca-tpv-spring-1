@@ -2,7 +2,6 @@ package es.upm.miw.repositories;
 
 import es.upm.miw.TestConfig;
 import es.upm.miw.documents.Provider;
-import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.dtos.ProviderMinimunDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -87,11 +86,11 @@ class ProviderRepositoryIT {
     }
 
     @Test
-    void testFindByAttributesLikeNull(){
+    void testFindByAttributesLikeNull() {
         List<ProviderMinimunDto> activesProviders = providerRepository.findByActiveTrue();
         List<ProviderMinimunDto> nullSearchActiveProviders =
                 providerRepository.findByAttributesLike(null, null, null, null, true);
-        assertTrue(activesProviders.size()==nullSearchActiveProviders.size());
+        assertTrue(activesProviders.size() == nullSearchActiveProviders.size());
     }
 
     @AfterEach

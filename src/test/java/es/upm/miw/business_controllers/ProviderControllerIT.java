@@ -89,7 +89,7 @@ public class ProviderControllerIT {
         ProviderSearchInputDto providerSearchInputDto = new ProviderSearchInputDto(true);
         List<ProviderMinimunDto> activesProviders = providerController.readAllActives();
         List<ProviderMinimunDto> nullSearchActiveProviders = providerController.findByAttributesLike(providerSearchInputDto);
-        assertTrue(activesProviders.size()==nullSearchActiveProviders.size());
+        assertTrue(activesProviders.size() == nullSearchActiveProviders.size());
 
     }
 
