@@ -12,6 +12,7 @@ import javax.validation.Valid;
 public class OfferResource {
 
     public static final String OFFERS = "/offers";
+    public static final String OFFER_ID = "/{idOffer}";
 
     @GetMapping
     public String readAll() {
@@ -23,5 +24,10 @@ public class OfferResource {
         return offerInputDto;
     }
 
+    // TODO return void
+    @DeleteMapping(value = OFFER_ID)
+    public String delete(@PathVariable String idOffer) {
+        return idOffer;
+    }
 
 }
