@@ -63,7 +63,7 @@ class ArticlesFamilyRepositoryIT {
 
     @Test
     void testFindFamilyCompositeByDescription() {
-        assertEquals("test", familyCompositeRepository.findByDescription("test").getDescription());
+        assertEquals("test", familyCompositeRepository.findFirstByDescription("test").getDescription());
     }
 
     @Test
