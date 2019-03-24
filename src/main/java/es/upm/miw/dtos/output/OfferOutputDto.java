@@ -16,6 +16,7 @@ public class OfferOutputDto {
     private ArticleLine[] articleLine;
 
     public OfferOutputDto(String id, String offername, LocalDateTime endDate, ArticleLine[] articleLine) {
+        this.id = id;
         this.offername = offername;
         this.endDate = endDate;
         this.articleLine = articleLine;
