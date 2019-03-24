@@ -42,9 +42,8 @@ public class OfferResource {
     }
 
     @PostMapping
-    public OfferInputDto createOffer(@Valid @RequestBody OfferInputDto offerInputDto) {
-        // TODO REFACTOR in OfferController
-        return offerInputDto;
+    public OfferOutputDto createOffer(@Valid @RequestBody OfferInputDto offerInputDto) {
+        return this.offerController.createOffer(offerInputDto);
     }
 
     @DeleteMapping(value = OFFER_ID)

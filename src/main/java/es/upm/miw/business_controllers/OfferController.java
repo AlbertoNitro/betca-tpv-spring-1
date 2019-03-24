@@ -1,6 +1,7 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.documents.Offer;
+import es.upm.miw.dtos.input.OfferInputDto;
 import es.upm.miw.dtos.output.OfferOutputDto;
 import es.upm.miw.repositories.OfferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,12 @@ public class OfferController {
     /*public List<OfferOutputDto> readAll() {
         // return this.offerRepository.findAll();
     }*/
+
+    public OfferOutputDto createOffer(OfferInputDto offerInputDto) {
+        Offer offer = new Offer(offerInputDto.getOffername() , offerInputDto.getEndDate(), offerInputDto.getArticleLine());
+        this.offerRepository.save(offer);
+        return new OfferOutputDto(offer.getId(), offer.getOffername(), offer.getEndDate(), offer.getArticleLine());
+    }
 
     public void delete(String offerId) {
         Optional<Offer> offer = this.offerRepository.findById(offerId);
