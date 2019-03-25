@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.upm.miw.business_controllers.StatisticController;
 import es.upm.miw.dtos.output.StatisticDtoOutput;
+import es.upm.miw.exceptions.BadRequestException;
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 @RestController
@@ -30,10 +31,12 @@ public class StatisticResource {
     @GetMapping(value = STATISTIC_NAME)
     public List<StatisticDtoOutput> read(@PathVariable String statisticName, @RequestParam String dateFrom, @RequestParam String dateTo) {
         List<StatisticDtoOutput> dataReturn = new ArrayList<>();
-        if (statisticName.equalsIgnoreCase("totalSalesPerDay")) {
+        if (statisticName.equalsIgnoreCase("total-sales-per-day")) {
             dataReturn = this.statisticController.getDataStatisticTotalSalesPerDay(dateFrom, dateTo);
-        } else if (statisticName.equalsIgnoreCase("averageDailyExpense")) {
+        } else if (statisticName.equalsIgnoreCase("average-daily-expense")) {
             dataReturn = this.statisticController.getDataStatisticAverageDailyExpense(dateFrom, dateTo);
+        } else {
+            throw new BadRequestException("Not allowed value: " + statisticName);
         }
         return dataReturn;
     }

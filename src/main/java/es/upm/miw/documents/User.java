@@ -1,5 +1,7 @@
 package es.upm.miw.documents;
 
+import es.upm.miw.dtos.UserMinimumDto;
+import es.upm.miw.dtos.UserRolesDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -52,6 +54,17 @@ public class User {
 
     public User(String mobile, String username, String password) {
         this(mobile, username, password, null, null, null);
+    }
+
+    public User(UserRolesDto userRolesDto) {
+        this.id=userRolesDto.getId();
+        this.mobile=userRolesDto.getMobile();
+        this.roles=userRolesDto.getRoles();
+    }
+
+    public User(UserMinimumDto userMinimum) {
+        this.mobile = userMinimum.getMobile();
+        this.username = userMinimum.getUsername();
     }
 
     public String getId() {

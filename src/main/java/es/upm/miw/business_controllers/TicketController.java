@@ -3,6 +3,8 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.business_services.PdfService;
 import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ShoppingDto;
+import es.upm.miw.dtos.ShoppingModificationStateOrAmountDto;
+import es.upm.miw.dtos.TicketModificationStateOrAmountDto;
 import es.upm.miw.dtos.input.TicketCreationInputDto;
 import es.upm.miw.dtos.input.TicketQueryInputDto;
 import es.upm.miw.dtos.output.TicketQueryOutputDto;
@@ -283,4 +285,33 @@ public class TicketController {
         }
         return results;
     }
+
+    public TicketModificationStateOrAmountDto readTicketById(String id) {
+        return new TicketModificationStateOrAmountDto(this.ticketRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ticket id (" + id + ")")));
+    }
+
+    private Ticket createModifiedTicket(TicketModificationStateOrAmountDto ticketModificationDto) {
+        ShoppingModificationStateOrAmountDto[] modifiedShoppings;
+        modifiedShoppings = ticketModificationDto.getShoppingList();
+        Shopping[] shoppings = new Shopping[modifiedShoppings.length];
+        for(int i = 0; i < modifiedShoppings.length; i++) {
+            shoppings[i] = modifiedShoppings[i].transformModifiedShoppingToShopping();
+        }
+        Ticket ticket = new Ticket(
+                this.nextId(),
+                ticketModificationDto.getVoucher(),
+                ticketModificationDto.getCard(),
+                ticketModificationDto.getCash(),
+                shoppings,
+                ticketModificationDto.getUser());
+        ticket.setNote(ticketModificationDto.getNote());
+        this.ticketRepository.save(ticket);
+        return ticket;
+    }
+
+    public byte[] createModifiedTicketAndPdf(TicketModificationStateOrAmountDto modifiedTicket) {
+        return pdfService.generateTicket(this.createModifiedTicket(modifiedTicket));
+    }
+
 }

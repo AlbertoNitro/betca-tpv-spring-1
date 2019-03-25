@@ -1,10 +1,12 @@
 package es.upm.miw.dtos;
 
+import es.upm.miw.documents.ArticlesFamily;
+import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 
 import javax.validation.constraints.NotNull;
 
-public class FamilyCompositeDto {
+public class ArticleFamilyDto {
 
     @NotNull
     private FamilyType familyType;
@@ -14,13 +16,19 @@ public class FamilyCompositeDto {
     @NotNull
     private String description;
 
-    public FamilyCompositeDto() {
+    public ArticleFamilyDto() {
     }
 
-    public FamilyCompositeDto(@NotNull FamilyType familyType, String reference, @NotNull String description) {
+    public ArticleFamilyDto(@NotNull FamilyType familyType, String reference, @NotNull String description) {
         this.familyType = familyType;
         this.reference = reference;
         this.description = description;
+    }
+
+    public ArticleFamilyDto(ArticlesFamily articlesFamily) {
+        this.familyType = articlesFamily.getFamilyType();
+        this.reference = articlesFamily.getReference();
+        this.description = articlesFamily.getDescription();
     }
 
     public FamilyType getFamilyType() {
@@ -49,7 +57,7 @@ public class FamilyCompositeDto {
 
     @Override
     public String toString() {
-        return "FamilyCompositeDto{" +
+        return "ArticleFamilyDto{" +
                 "familyType=" + familyType +
                 ", reference='" + reference + '\'' +
                 ", description='" + description + '\'' +

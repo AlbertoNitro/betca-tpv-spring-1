@@ -1,11 +1,12 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.ArticleController;
+import es.upm.miw.business_controllers.StockPredictionController;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
-import es.upm.miw.dtos.ArticleSearchDto;
+import es.upm.miw.dtos.input.ArticleSearchInputDto;
 import es.upm.miw.dtos.input.FamilySizeInputDto;
-import es.upm.miw.dtos.stock_prediction.PeriodType;
+import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import es.upm.miw.dtos.stock_prediction.PeriodicityType;
 import es.upm.miw.dtos.stock_prediction.StockPredictionInputDto;
 import es.upm.miw.dtos.stock_prediction.StockPredictionOutputDto;
@@ -14,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.util.List;
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('OPERATOR')")
@@ -26,18 +26,17 @@ public class ArticleResource {
     public static final String CODE_ID = "/{code}";
     public static final String FAMILY_SIZE = "/family-size";
     public static final String MINIMUM = "/minimum";
-    public static final String QUERY = "/query";
-    public static final String QUERY2 = "/query2";
-    public static final String QUERY3 = "/query3";
-    public static final String QUERY4 = "/query4";
-    public static final String QUERY5 = "/query5";
+    public static final String SEARCH = "/search";
+    public static final String PARTIALLY_DEFINED = "/partially-defined";
     static final String STOCK_PREDICTION = "/stock-prediction";
 
     @Autowired
     private ArticleController articleController;
+    @Autowired
+    private StockPredictionController stockPredictionController;
 
     @GetMapping
-    public List<ArticleSearchDto> readAll() {
+    public List<ArticleSearchOutputDto> readAll() {
         return this.articleController.readAll();
     }
 
@@ -61,28 +60,14 @@ public class ArticleResource {
         return this.articleController.createFamilySize(familySizeInputDto);
     }
 
-    @GetMapping(value = QUERY)
-    public List<ArticleSearchDto> readArticles(@RequestBody String description) {
-        return this.articleController.readArticles(description);
+    @PostMapping(value = SEARCH)
+    public List<ArticleSearchOutputDto> readArticles(@RequestBody ArticleSearchInputDto article) {
+        return this.articleController.readArticles(article.getDescription(), article.getStock(),
+                article.getMinPrice(), article.getMaxPrice());
     }
 
-    @GetMapping(value = QUERY2)
-    public List<ArticleSearchDto> readArticles(@RequestBody int stock) {
-        return this.articleController.readArticles(stock);
-    }
-
-    @GetMapping(value = QUERY3)
-    public List<ArticleSearchDto> readArticlesMinPrice(@RequestBody BigDecimal minPrice) {
-        return this.articleController.readArticlesMinPrice(minPrice);
-    }
-
-    @GetMapping(value = QUERY4)
-    public List<ArticleSearchDto> readArticlesMaxPrice(@RequestBody BigDecimal maxPrice) {
-        return this.articleController.readArticlesMaxPrice(maxPrice);
-    }
-
-    @GetMapping(value = QUERY5)
-    public List<ArticleSearchDto> readArticles() {
+    @PostMapping(value = SEARCH + PARTIALLY_DEFINED)
+    public List<ArticleSearchOutputDto> readArticles() {
         return this.articleController.readArticles();
     }
 
@@ -100,13 +85,7 @@ public class ArticleResource {
     public StockPredictionOutputDto[] calculateStockPrediction(@PathVariable String code, @RequestParam PeriodicityType periodicityType, @RequestParam int periodsNumber) {
         StockPredictionInputDto input = new StockPredictionInputDto(code, periodicityType, periodsNumber);
         input.validate();
-
-        return new StockPredictionOutputDto[]{
-                new StockPredictionOutputDto(PeriodType.WEEK, 1, 1028),
-                new StockPredictionOutputDto(PeriodType.WEEK, 2, 964),
-                new StockPredictionOutputDto(PeriodType.WEEK, 3, 900),
-                new StockPredictionOutputDto(PeriodType.WEEK, 4, 837)
-        };
+        return this.stockPredictionController.calculateStockPrediction(input);
     }
 
 

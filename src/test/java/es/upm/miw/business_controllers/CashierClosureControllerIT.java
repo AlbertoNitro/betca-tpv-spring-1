@@ -36,7 +36,7 @@ class CashierClosureControllerIT {
         cashierLastOutputDto = cashierClosureController.readCashierClosureLast();
         assertNotNull(cashierLastOutputDto);
         assertFalse(cashierLastOutputDto.isClosed());
-        CashMovementInputDto cashMovementInputDto = new CashMovementInputDto(new BigDecimal(100), "deposit 100e");
+        CashMovementInputDto cashMovementInputDto = new CashMovementInputDto(BigDecimal.TEN, "deposit 10e");
         cashierClosureController.deposit(cashMovementInputDto);
     }
 
@@ -45,7 +45,7 @@ class CashierClosureControllerIT {
         CashierLastOutputDto cashierLastOutputDto = cashierClosureController.readCashierClosureLast();
         assertNotNull(cashierLastOutputDto);
         assertFalse(cashierLastOutputDto.isClosed());
-        CashMovementInputDto cashMovementInputDto = new CashMovementInputDto(new BigDecimal(100), "withdrawal 200e");
+        CashMovementInputDto cashMovementInputDto = new CashMovementInputDto(BigDecimal.TEN, "withdrawal 10e");
         cashierClosureController.withdrawal(cashMovementInputDto);
     }
 

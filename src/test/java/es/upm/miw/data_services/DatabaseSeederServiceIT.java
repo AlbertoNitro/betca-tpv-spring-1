@@ -39,7 +39,7 @@ class DatabaseSeederServiceIT {
         this.databaseSeederService.deleteAllAndInitialize();
         assertTrue(familyCompositeRepository.findAll().isEmpty());
         this.databaseSeederService.seedDatabase();
-        FamilyComposite articleFamily = this.familyCompositeRepository.findByDescription("root");
+        FamilyComposite articleFamily = this.familyCompositeRepository.findFirstByDescription("root");
         assertEquals("root", articleFamily.getDescription());
     }
 

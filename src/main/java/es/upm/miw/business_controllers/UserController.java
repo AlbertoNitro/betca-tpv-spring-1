@@ -3,17 +3,22 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.business_services.JwtService;
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
+import es.upm.miw.dtos.UserRolesDto;
 import es.upm.miw.dtos.output.TokenOutputDto;
 import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
+import es.upm.miw.exceptions.BadRequestException;
+import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.ForbiddenException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -57,6 +62,37 @@ public class UserController {
 
     public List<UserMinimumDto> readAll() {
         return this.userRepository.findAllUsers();
+    }
+
+    public UserMinimumDto create(UserMinimumDto userMinimum) {
+        if(this.userRepository.findByMobile(userMinimum.getMobile()).isPresent()) {
+            throw new BadRequestException("User mobile (" + userMinimum.getMobile() + ") already exist.");
+        }
+
+        User saved = this.userRepository.save(new User(userMinimum));
+        return new UserMinimumDto(saved.getMobile(), saved.getUsername());
+    }
+
+    public UserRolesDto updateRoles(String mobile, UserRolesDto userRolesDto) {
+
+
+        if (mobile == null || !mobile.equals(userRolesDto.getMobile()))
+            throw new BadRequestException("User mobile (" + userRolesDto.getMobile() + ")");
+
+        if (!this.userRepository.findByMobile(mobile).isPresent())
+            throw new NotFoundException("User mobile (" + mobile + ")");
+        userRolesDto.setId(this.userRepository.findByMobile(mobile).get().getId());
+        String id = userRolesDto.getId();
+        Optional<User> user = this.userRepository.findById(id);
+        if (user.isPresent() && !user.get().getMobile().equals(mobile))
+            throw new ConflictException("User id (" + id + ")");
+
+        User result = this.userRepository.save(new User(userRolesDto));
+        return new UserRolesDto(result);
+    }
+
+    public List<UserMinimumDto> readAllByUsernameDniAddressRoles(String mobile,String username,String dni, String address,  Role[] roles) {
+       return this.userRepository.findByMobileUsernameDniAddressLikeNullSafeandRoles(mobile,username,dni,address,roles);
     }
 
 

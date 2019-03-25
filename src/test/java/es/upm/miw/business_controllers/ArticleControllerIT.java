@@ -1,7 +1,10 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
+import es.upm.miw.documents.Article;
+import es.upm.miw.documents.Tax;
 import es.upm.miw.dtos.ArticleDto;
+import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
@@ -10,9 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestConfig
 class ArticleControllerIT {
@@ -24,10 +27,29 @@ class ArticleControllerIT {
     private ArticleRepository articleRepository;
 
     private ArticleDto articleDto;
+    private Article article;
 
     @BeforeEach
     void seed() {
-        this.articleDto = new ArticleDto("non exist", "descrip", "ref", BigDecimal.TEN, null);
+        this.articleDto = new ArticleDto("non exist", "descrip", "ref", BigDecimal.TEN, null, Tax.SUPER_REDUCED);
+        this.article = new Article();
+        this.article.setCode("99999999");
+        this.articleRepository.save(this.article);
+    }
+
+    @Test
+    void testReadArticles() {
+        List<ArticleSearchOutputDto> articles = articleController.readArticles("d", null, null, null);
+        assertTrue(articles.size() > 0);
+
+        List<ArticleSearchOutputDto> articles2 = articleController.readArticles(null, null, BigDecimal.ZERO, BigDecimal.TEN);
+        assertTrue(articles2.size() > 0);
+    }
+
+    @Test
+    void testReadArticlesPartiallyDefined() {
+        List<ArticleSearchOutputDto> articles = articleController.readArticles();
+        assertTrue(articles.size() > 0);
     }
 
     @Test

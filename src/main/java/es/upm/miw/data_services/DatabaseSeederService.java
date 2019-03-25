@@ -1,5 +1,6 @@
 package es.upm.miw.data_services;
 
+import es.upm.miw.business_services.Barcode;
 import es.upm.miw.documents.*;
 import es.upm.miw.repositories.*;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,13 @@ public class DatabaseSeederService {
     private static final String VARIOUS_CODE = "1";
 
     private static final String VARIOUS_NAME = "Varios";
+
+    private static final String PREFIX_CODE_ARTICLE = "84";
+
+    private static final Long FIRST_CODE_ARTICLE = 840000000000L;
+
+    private static final Long LAST_CODE_ARTICLE = 840000099999L;
+
     @Autowired
     public TicketRepository ticketRepository;
     @Autowired
@@ -31,6 +39,9 @@ public class DatabaseSeederService {
     public CashierClosureRepository cashierClosureRepository;
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private Barcode barcode;
 
     @Value("${miw.admin.mobile}")
     private String mobile;
@@ -62,6 +73,8 @@ public class DatabaseSeederService {
     private OrderRepository orderRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private TimeClockRepository timeClockRepository;
 
     @PostConstruct
     public void constructor() {
@@ -107,6 +120,7 @@ public class DatabaseSeederService {
         this.orderRepository.deleteAll();
         this.tagRepository.deleteAll();
         this.ticketRepository.deleteAll();
+        this.timeClockRepository.deleteAll();
         this.articleRepository.deleteAll();
 
         this.cashierClosureRepository.deleteAll();
@@ -136,17 +150,23 @@ public class DatabaseSeederService {
         }
     }
 
-    private void seedDatabaseWithArticlesFamilyForView(){
+    private void seedDatabaseWithArticlesFamilyForView() {
         LogManager.getLogger(this.getClass()).warn("------- Create Article Family Root -----------");
         ArticlesFamily root = new FamilyComposite(FamilyType.ARTICLES, "root", "root");
 
         ArticlesFamily c1 = new FamilyArticle(this.articleRepository.findById("8400000000031").get());
-        ArticlesFamily c2 =  new FamilyArticle(this.articleRepository.findById("8400000000048").get());
+        ArticlesFamily c2 = new FamilyArticle(this.articleRepository.findById("8400000000048").get());
         this.articlesFamilyRepository.save(c1);
         this.articlesFamilyRepository.save(c2);
+        ArticlesFamily c3 = new FamilyComposite(FamilyType.ARTICLES, "c", "cards");
+        ArticlesFamily c4 = new FamilyComposite(FamilyType.SIZES, null, "X");
+        this.articlesFamilyRepository.save(c3);
+        this.articlesFamilyRepository.save(c4);
 
         root.add(c1);
         root.add(c2);
+        root.add(c3);
+        root.add(c4);
         this.articlesFamilyRepository.save(root);
     }
 
@@ -166,6 +186,7 @@ public class DatabaseSeederService {
         this.orderRepository.saveAll(tpvGraph.getOrderList());
         this.tagRepository.saveAll(tpvGraph.getTagList());
         this.ticketRepository.saveAll(tpvGraph.getTicketList());
+        this.timeClockRepository.saveAll(tpvGraph.getTimeClockList());
 
         this.familyCompositeRepository.saveAll(tpvGraph.getFamilyCompositeList());
         this.invoiceRepository.saveAll(tpvGraph.getInvoiceList());
@@ -178,7 +199,22 @@ public class DatabaseSeederService {
     }
 
     public String nextCodeEan() {
-        throw new RuntimeException("Method nextCodeEan not implemented");
+        Article article = this.articleRepository.findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(PREFIX_CODE_ARTICLE);
+
+        Long nextCodeWithoutRedundancy = FIRST_CODE_ARTICLE;
+
+        if (article != null) {
+            String code = article.getCode();
+            String codeWithoutRedundancy = code.substring(0, code.length() - 1);
+
+            nextCodeWithoutRedundancy = Long.parseLong(codeWithoutRedundancy) + 1L;
+        }
+
+        if (nextCodeWithoutRedundancy > LAST_CODE_ARTICLE) {
+            throw new RuntimeException("There is not next code EAN");
+        }
+
+        return this.barcode.generateEan13code(nextCodeWithoutRedundancy);
     }
 
 }
