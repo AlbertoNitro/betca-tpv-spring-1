@@ -6,7 +6,6 @@ import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
-import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.FamilyArticleRepository;
@@ -47,15 +46,16 @@ public class ArticlesFamilyController {
         return articleFamilyDto;
     }
 
-    public ArticleFamilyDto createFamilyComposite(ArticleFamilyDto articleFamilyDto, String description) {
-        FamilyComposite familyToBeAttached = this.existFamily(description);
-        FamilyComposite compositeCreated = familyCompositeRepository.save(new FamilyComposite(
-                articleFamilyDto.getFamilyType(),
-                articleFamilyDto.getReference(),
-                articleFamilyDto.getDescription()));
-        familyToBeAttached.getFamilyCompositeList().add(compositeCreated);
-        familyCompositeRepository.save(familyToBeAttached);
-        return articleFamilyDto;
+    public ArticleFamilyDto createArticleFamily(ArticleFamilyDto articleFamilyDto, String description) {
+        this.existFamily(description);
+        if (articleFamilyDto.getFamilyType() == FamilyType.ARTICLES || articleFamilyDto.getFamilyType() == FamilyType.SIZES) {
+            FamilyComposite compositeCreated = familyCompositeRepository.save(new FamilyComposite(
+                    articleFamilyDto.getFamilyType(),
+                    articleFamilyDto.getReference(),
+                    articleFamilyDto.getDescription()));
+            familyCompositeRepository.save(compositeCreated);
+        }
+        return this.attachToFamily(articleFamilyDto, description);
     }
 
     public void deleteComponentFromFamily(String description, String childDescription) {

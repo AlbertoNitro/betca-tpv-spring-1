@@ -63,10 +63,10 @@ public class ArticlesFamilyControllerIT {
     @Test
     void testCreateFamilyComposite() {
         assertNull(familyCompositeRepository.findFirstByDescription("create"));
-        articlesFamilyController.createFamilyComposite(
+        articlesFamilyController.createArticleFamily(
                 new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"), "test");
         assertNotNull(familyCompositeRepository.findFirstByDescription("create"));
-        articlesFamilyController.createFamilyComposite(
+        articlesFamilyController.createArticleFamily(
                 new ArticleFamilyDto(FamilyType.SIZES, null, "tS"), "test");
         assertNotNull(familyCompositeRepository.findFirstByDescription("tS"));
         articlesFamilyController.deleteFamilyCompositeItem("create");
@@ -82,7 +82,7 @@ public class ArticlesFamilyControllerIT {
         assertEquals(components.size()-1,familyCompositeRepository.findFirstByDescription("root").getArticlesFamilyList().size());
         assertNotNull(familyCompositeRepository.findFirstByDescription("cards"));
         articlesFamilyController.deleteFamilyCompositeItem("cards");
-        articlesFamilyController.createFamilyComposite(
+        articlesFamilyController.createArticleFamily(
                 new ArticleFamilyDto(FamilyType.ARTICLES,"c","cards"),"root");
     }
 
@@ -96,7 +96,7 @@ public class ArticlesFamilyControllerIT {
 
     @Test
     void testExistFamily(){
-        assertThrows(BadRequestException.class, () -> articlesFamilyController.createFamilyComposite(
+        assertThrows(BadRequestException.class, () -> articlesFamilyController.createArticleFamily(
                 new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"), "t"));
     }
 

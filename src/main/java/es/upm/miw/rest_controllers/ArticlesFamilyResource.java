@@ -43,7 +43,7 @@ public class ArticlesFamilyResource {
     @PostMapping(value = COMPOSITE)
     public ArticleFamilyDto createFamilyComposite(@Valid @RequestBody ArticleFamilyDto articleFamilyDto,
                                                   @RequestParam String description) {
-        return articlesFamilyController.createFamilyComposite(articleFamilyDto, description);
+        return articlesFamilyController.createArticleFamily(articleFamilyDto, description);
     }
 
     @DeleteMapping(value = DESCRIPTION)
