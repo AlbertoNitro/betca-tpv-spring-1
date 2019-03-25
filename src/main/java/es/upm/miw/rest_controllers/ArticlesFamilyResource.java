@@ -28,6 +28,12 @@ public class ArticlesFamilyResource {
     @Autowired
     private ArticlesFamilyController articlesFamilyController;
 
+    @PostMapping(value = DESCRIPTION)
+    public ArticleFamilyDto attachToFamily (@Valid @RequestBody ArticleFamilyDto articleFamilyDto,
+                                            @PathVariable String description){
+        return articlesFamilyController.attachToFamily(articleFamilyDto,description);
+    }
+
     @PostMapping(value = ARTICLE)
     public ArticleMinimumDto createFamilyArticle(@Valid @RequestBody ArticleMinimumDto articleMinimumDto,
                                                  @RequestParam String description) {
@@ -38,6 +44,11 @@ public class ArticlesFamilyResource {
     public ArticleFamilyDto createFamilyComposite(@Valid @RequestBody ArticleFamilyDto articleFamilyDto,
                                                   @RequestParam String description) {
         return articlesFamilyController.createFamilyComposite(articleFamilyDto, description);
+    }
+
+    @DeleteMapping(value = DESCRIPTION)
+    public void deleteComponentFromFamily(@PathVariable String description, @RequestParam String childDescription) {
+        articlesFamilyController.deleteComponentFromFamily(description, childDescription);
     }
 
     @DeleteMapping

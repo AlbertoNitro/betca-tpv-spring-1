@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -28,6 +29,23 @@ public class ArticlesFamilyController {
 
     @Autowired
     private FamilyCompositeRepository familyCompositeRepository;
+
+    public ArticleFamilyDto attachToFamily(ArticleFamilyDto articleFamilyDto, String description) {
+        this.existFamily(description);
+        FamilyComposite familyToBeAttached = this.existFamily(description);
+        if (articleFamilyDto.getFamilyType() == FamilyType.ARTICLE) {
+            FamilyArticle familyArticleCreated = this.familyArticleRepository.save(new FamilyArticle(
+                    articleRepository.findByCode(articleFamilyDto.getReference())));
+            familyToBeAttached.getFamilyCompositeList().add(familyArticleCreated);
+            familyCompositeRepository.save(familyToBeAttached);
+        } else if (articleFamilyDto.getFamilyType() == FamilyType.ARTICLES || articleFamilyDto.getFamilyType() == FamilyType.SIZES) {
+            this.existFamily(articleFamilyDto.getDescription());
+            familyToBeAttached.getFamilyCompositeList().add(
+                    familyCompositeRepository.findFirstByDescription(articleFamilyDto.getDescription()));
+            familyCompositeRepository.save(familyToBeAttached);
+        }
+        return articleFamilyDto;
+    }
 
     public ArticleMinimumDto createFamilyArticle(ArticleMinimumDto articleMinimumDto, String description) {
         FamilyComposite familyToBeAttached = this.existFamily(description);
@@ -49,12 +67,23 @@ public class ArticlesFamilyController {
         return articleFamilyDto;
     }
 
+    public void deleteComponentFromFamily(String description, String childDescription) {
+        FamilyComposite family = familyCompositeRepository.findFirstByDescription(description);
+        Iterator iterator = family.getArticlesFamilyList().iterator();
+        while (iterator.hasNext()) {
+            ArticlesFamily component = (ArticlesFamily) iterator.next();
+            if (component.getDescription().equals(childDescription))
+                iterator.remove();
+        }
+        familyCompositeRepository.save(family);
+    }
+
     public void deleteFamilyCompositeItem(String description) {
-        familyCompositeRepository.delete(familyCompositeRepository.findByDescription(description));
+        familyCompositeRepository.delete(familyCompositeRepository.findFirstByDescription(description));
     }
 
     private FamilyComposite existFamily(String description) {
-        FamilyComposite familyToBeAttached = familyCompositeRepository.findByDescription(description);
+        FamilyComposite familyToBeAttached = familyCompositeRepository.findFirstByDescription(description);
         if (familyToBeAttached == null) {
             throw new BadRequestException("No valid description provided");
         }
@@ -62,7 +91,7 @@ public class ArticlesFamilyController {
     }
 
     public List<ArticleFamilyDto> readAllComponentsInAFamily(String description) {
-        FamilyComposite family = familyCompositeRepository.findByDescription(description);
+        FamilyComposite family = familyCompositeRepository.findFirstByDescription(description);
         List<ArticleFamilyDto> dtos = new ArrayList<>();
         for (ArticlesFamily articlesFamily : family.getFamilyCompositeList()) {
             dtos.add(new ArticleFamilyDto(articlesFamily));
