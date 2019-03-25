@@ -13,5 +13,5 @@ public interface TicketRepository extends MongoRepository<Ticket, String> {
     List<Ticket> findByUser(String userId);
 
     List<Ticket> findByCreationDateBetween(LocalDateTime dateFrom, LocalDateTime dateTo);
-
+    
 }
