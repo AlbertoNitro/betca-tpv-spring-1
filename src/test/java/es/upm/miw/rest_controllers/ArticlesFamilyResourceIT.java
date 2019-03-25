@@ -4,7 +4,6 @@ import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
-import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +24,13 @@ public class ArticlesFamilyResourceIT {
     private FamilyCompositeRepository familyCompositeRepository;
 
     @Test
-    void testAttachToFamily (){
+    void testAttachToFamily() {
         assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
         ArticleFamilyDto response = this.restService.loginOperator().restBuilder(new RestBuilder<ArticleFamilyDto>())
                 .clazz(ArticleFamilyDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY).path(ArticlesFamilyResource.DESCRIPTION)
-                .expand("test").body(new ArticleFamilyDto(FamilyType.ARTICLES,"B","Books")).post().build();
+                .expand("test").body(new ArticleFamilyDto(FamilyType.ARTICLES, "B", "Books")).post().build();
         assertNotNull(response);
-        assertEquals("Books",response.getDescription());
+        assertEquals("Books", response.getDescription());
     }
 
     @Test
@@ -51,7 +50,7 @@ public class ArticlesFamilyResourceIT {
     void testDeleteComponentFromFamily() {
         assertDoesNotThrow(() -> this.restService.loginOperator().restBuilder()
                 .path(ArticlesFamilyResource.ARTICLES_FAMILY).path(ArticlesFamilyResource.DESCRIPTION)
-                .expand("root").param("childDescription","cards").delete().build());
+                .expand("root").param("childDescription", "cards").delete().build());
     }
 
     @Test

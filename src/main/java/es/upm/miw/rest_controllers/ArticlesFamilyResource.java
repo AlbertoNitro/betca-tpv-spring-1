@@ -26,9 +26,9 @@ public class ArticlesFamilyResource {
     private ArticlesFamilyController articlesFamilyController;
 
     @PostMapping(value = DESCRIPTION)
-    public ArticleFamilyDto attachToFamily (@Valid @RequestBody ArticleFamilyDto articleFamilyDto,
-                                            @PathVariable String description){
-        return articlesFamilyController.attachToFamily(articleFamilyDto,description);
+    public ArticleFamilyDto attachToFamily(@Valid @RequestBody ArticleFamilyDto articleFamilyDto,
+                                           @PathVariable String description) {
+        return articlesFamilyController.attachToFamily(articleFamilyDto, description);
     }
 
     @PostMapping(value = CREATE)
