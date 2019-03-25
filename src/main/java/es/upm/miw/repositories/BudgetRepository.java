@@ -12,4 +12,9 @@ public interface BudgetRepository extends MongoRepository<Budget, String> {
     @Query(value = "{}", fields = "{ '_id' : 1, 'creationDate' : 1, 'shoppingList' : 1}")
     List<BudgetDto> findAllBudgets();
 
+    @Query("{$and:["
+            + "?#{ [0] == null ? { $where : 'true'} : { _id : {$regex:[0]} },"
+            + "] }")
+    List<BudgetDto> findAllBudgetsById(String id);
+
 }
