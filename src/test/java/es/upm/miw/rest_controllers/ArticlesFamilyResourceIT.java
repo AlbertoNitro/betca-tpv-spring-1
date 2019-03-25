@@ -1,6 +1,5 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.documents.ArticlesFamily;
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
@@ -53,7 +52,7 @@ public class ArticlesFamilyResourceIT {
         assertNull(familyCompositeRepository.findFirstByDescription("create"));
         assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
         ArticleFamilyDto response = this.restService.loginOperator().restBuilder(new RestBuilder<ArticleFamilyDto>())
-                .clazz(ArticleFamilyDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY + ArticlesFamilyResource.COMPOSITE)
+                .clazz(ArticleFamilyDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY + ArticlesFamilyResource.CREATE)
                 .param("description", "test").body(new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"))
                 .post().build();
         assertEquals("create", response.getDescription());

@@ -49,19 +49,7 @@ public class ArticlesFamilyControllerIT {
     }
 
     @Test
-    void testCreateFamilyArticle() {
-        assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
-        articlesFamilyController.createFamilyArticle(
-                new ArticleMinimumDto("8400000000017", "Zarzuela - Falda T2"), "test");
-        assertEquals(1, familyCompositeRepository.findFirstByDescription("test").getArticlesFamilyList().size());
-        FamilyComposite familyComposite = familyCompositeRepository.findFirstByDescription("test");
-        familyComposite.getFamilyCompositeList().clear();
-        familyCompositeRepository.save(familyComposite);
-        assertEquals(0, familyCompositeRepository.findFirstByDescription("test").getArticlesFamilyList().size());
-    }
-
-    @Test
-    void testCreateFamilyComposite() {
+    void testCreateArticleFamily() {
         assertNull(familyCompositeRepository.findFirstByDescription("create"));
         articlesFamilyController.createArticleFamily(
                 new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"), "test");
