@@ -47,15 +47,6 @@ public class ArticlesFamilyController {
         return articleFamilyDto;
     }
 
-    public ArticleMinimumDto createFamilyArticle(ArticleMinimumDto articleMinimumDto, String description) {
-        FamilyComposite familyToBeAttached = this.existFamily(description);
-        FamilyArticle familyArticleCreated = this.familyArticleRepository.save(new FamilyArticle(
-                articleRepository.findByCode(articleMinimumDto.getCode())));
-        familyToBeAttached.getFamilyCompositeList().add(familyArticleCreated);
-        familyCompositeRepository.save(familyToBeAttached);
-        return articleMinimumDto;
-    }
-
     public ArticleFamilyDto createFamilyComposite(ArticleFamilyDto articleFamilyDto, String description) {
         FamilyComposite familyToBeAttached = this.existFamily(description);
         FamilyComposite compositeCreated = familyCompositeRepository.save(new FamilyComposite(
