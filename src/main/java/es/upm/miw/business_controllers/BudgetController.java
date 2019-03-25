@@ -14,7 +14,7 @@ public class BudgetController {
     private BudgetRepository budgetRepository;
 
     public List<BudgetDto> readAll() {
-        return this.budgetRepository.findAllUsers();
+        return this.budgetRepository.findAllBudgets();
     }
 
 }

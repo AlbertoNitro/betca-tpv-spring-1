@@ -10,6 +10,6 @@ import java.util.List;
 public interface BudgetRepository extends MongoRepository<Budget, String> {
 
     @Query(value = "{}", fields = "{ '_id' : 1, 'creationDate' : 1, 'shoppingList' : 1}")
-    List<BudgetDto> findAllUsers();
+    List<BudgetDto> findAllBudgets();
 
 }
