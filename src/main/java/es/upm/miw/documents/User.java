@@ -66,9 +66,10 @@ public class User {
     public User(UserMinimumDto userMinimum) {
         this.mobile = userMinimum.getMobile();
         this.username = userMinimum.getUsername();
+        this.roles = new Role[]{Role.CUSTOMER};
     }
 
-    public User(String id, String password, UserDto userDto) {
+    public User(String id, String password, Role[] roles, UserDto userDto) {
         this.id = id;
         this.mobile = userDto.getMobile();
         this.username = userDto.getUsername();
@@ -76,7 +77,7 @@ public class User {
         this.address = userDto.getAddress();
         this.email = userDto.getEmail();
         this.setPassword(password);
-        this.roles = userDto.getRoles();
+        this.setRoles(roles);
     }
 
     public String getId() {
