@@ -4,7 +4,6 @@ import es.upm.miw.business_controllers.ArticlesFamilyController;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
-import es.upm.miw.dtos.ArticleMinimumDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +16,9 @@ import java.util.List;
 @RequestMapping(ArticlesFamilyResource.ARTICLES_FAMILY)
 public class ArticlesFamilyResource {
 
-    public static final String ARTICLE = "/article";
-
     public static final String ARTICLES_FAMILY = "/articles-family";
 
-    public static final String COMPOSITE = "/composite";
+    public static final String CREATE = "/create";
 
     public static final String DESCRIPTION = "/{description}";
 
@@ -29,21 +26,15 @@ public class ArticlesFamilyResource {
     private ArticlesFamilyController articlesFamilyController;
 
     @PostMapping(value = DESCRIPTION)
-    public ArticleFamilyDto attachToFamily (@Valid @RequestBody ArticleFamilyDto articleFamilyDto,
-                                            @PathVariable String description){
-        return articlesFamilyController.attachToFamily(articleFamilyDto,description);
+    public ArticleFamilyDto attachToFamily(@Valid @RequestBody ArticleFamilyDto articleFamilyDto,
+                                           @PathVariable String description) {
+        return articlesFamilyController.attachToFamily(articleFamilyDto, description);
     }
 
-    @PostMapping(value = ARTICLE)
-    public ArticleMinimumDto createFamilyArticle(@Valid @RequestBody ArticleMinimumDto articleMinimumDto,
-                                                 @RequestParam String description) {
-        return articlesFamilyController.createFamilyArticle(articleMinimumDto, description);
-    }
-
-    @PostMapping(value = COMPOSITE)
-    public ArticleFamilyDto createFamilyComposite(@Valid @RequestBody ArticleFamilyDto articleFamilyDto,
-                                                  @RequestParam String description) {
-        return articlesFamilyController.createFamilyComposite(articleFamilyDto, description);
+    @PostMapping(value = CREATE)
+    public ArticleFamilyDto createArticleFamily(@Valid @RequestBody ArticleFamilyDto articleFamilyDto,
+                                                @RequestParam String description) {
+        return articlesFamilyController.createArticleFamily(articleFamilyDto, description);
     }
 
     @DeleteMapping(value = DESCRIPTION)

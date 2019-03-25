@@ -1,11 +1,9 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.documents.ArticlesFamily;
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
-import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,26 +24,13 @@ public class ArticlesFamilyResourceIT {
     private FamilyCompositeRepository familyCompositeRepository;
 
     @Test
-    void testAttachToFamily (){
+    void testAttachToFamily() {
         assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
         ArticleFamilyDto response = this.restService.loginOperator().restBuilder(new RestBuilder<ArticleFamilyDto>())
                 .clazz(ArticleFamilyDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY).path(ArticlesFamilyResource.DESCRIPTION)
-                .expand("test").body(new ArticleFamilyDto(FamilyType.ARTICLES,"B","Books")).post().build();
+                .expand("test").body(new ArticleFamilyDto(FamilyType.ARTICLES, "B", "Books")).post().build();
         assertNotNull(response);
-        assertEquals("Books",response.getDescription());
-    }
-
-    @Test
-    void testCreateFamilyArticle() {
-        assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
-        ArticleMinimumDto response = this.restService.loginOperator().restBuilder(new RestBuilder<ArticleMinimumDto>())
-                .clazz(ArticleMinimumDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY + ArticlesFamilyResource.ARTICLE)
-                .param("description", "test").body(new ArticleMinimumDto("8400000000017", "Zarzuela - Falda T2"))
-                .post().build();
-        assertEquals("Zarzuela - Falda T2", response.getDescription());
-        FamilyComposite familyComposite = familyCompositeRepository.findFirstByDescription("test");
-        familyComposite.getFamilyCompositeList().clear();
-        familyCompositeRepository.save(familyComposite);
+        assertEquals("Books", response.getDescription());
     }
 
     @Test
@@ -53,7 +38,7 @@ public class ArticlesFamilyResourceIT {
         assertNull(familyCompositeRepository.findFirstByDescription("create"));
         assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
         ArticleFamilyDto response = this.restService.loginOperator().restBuilder(new RestBuilder<ArticleFamilyDto>())
-                .clazz(ArticleFamilyDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY + ArticlesFamilyResource.COMPOSITE)
+                .clazz(ArticleFamilyDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY + ArticlesFamilyResource.CREATE)
                 .param("description", "test").body(new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"))
                 .post().build();
         assertEquals("create", response.getDescription());
@@ -65,7 +50,7 @@ public class ArticlesFamilyResourceIT {
     void testDeleteComponentFromFamily() {
         assertDoesNotThrow(() -> this.restService.loginOperator().restBuilder()
                 .path(ArticlesFamilyResource.ARTICLES_FAMILY).path(ArticlesFamilyResource.DESCRIPTION)
-                .expand("root").param("childDescription","cards").delete().build());
+                .expand("root").param("childDescription", "cards").delete().build());
     }
 
     @Test

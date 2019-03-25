@@ -5,7 +5,6 @@ import es.upm.miw.documents.ArticlesFamily;
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
-import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.junit.jupiter.api.Test;
@@ -25,10 +24,10 @@ public class ArticlesFamilyControllerIT {
     private FamilyCompositeRepository familyCompositeRepository;
 
     @Test
-    void testAttachToFamilyArticle (){
+    void testAttachToFamilyArticle() {
         assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
         articlesFamilyController.attachToFamily(
-                new ArticleFamilyDto(FamilyType.ARTICLE,"8400000000017", "Zarzuela - Falda T2"), "test");
+                new ArticleFamilyDto(FamilyType.ARTICLE, "8400000000017", "Zarzuela - Falda T2"), "test");
         assertEquals(1, familyCompositeRepository.findFirstByDescription("test").getArticlesFamilyList().size());
         FamilyComposite familyComposite = familyCompositeRepository.findFirstByDescription("test");
         familyComposite.getFamilyCompositeList().clear();
@@ -37,10 +36,10 @@ public class ArticlesFamilyControllerIT {
     }
 
     @Test
-    void testAttachToFamilyFamilyComposite (){
+    void testAttachToFamilyFamilyComposite() {
         assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
         articlesFamilyController.attachToFamily(
-                new ArticleFamilyDto(FamilyType.ARTICLES,"B", "Books"), "test");
+                new ArticleFamilyDto(FamilyType.ARTICLES, "B", "Books"), "test");
         assertEquals(1, familyCompositeRepository.findFirstByDescription("test").getArticlesFamilyList().size());
         FamilyComposite familyComposite = familyCompositeRepository.findFirstByDescription("test");
         familyComposite.getFamilyCompositeList().clear();
@@ -49,24 +48,12 @@ public class ArticlesFamilyControllerIT {
     }
 
     @Test
-    void testCreateFamilyArticle() {
-        assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
-        articlesFamilyController.createFamilyArticle(
-                new ArticleMinimumDto("8400000000017", "Zarzuela - Falda T2"), "test");
-        assertEquals(1, familyCompositeRepository.findFirstByDescription("test").getArticlesFamilyList().size());
-        FamilyComposite familyComposite = familyCompositeRepository.findFirstByDescription("test");
-        familyComposite.getFamilyCompositeList().clear();
-        familyCompositeRepository.save(familyComposite);
-        assertEquals(0, familyCompositeRepository.findFirstByDescription("test").getArticlesFamilyList().size());
-    }
-
-    @Test
-    void testCreateFamilyComposite() {
+    void testCreateArticleFamily() {
         assertNull(familyCompositeRepository.findFirstByDescription("create"));
-        articlesFamilyController.createFamilyComposite(
+        articlesFamilyController.createArticleFamily(
                 new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"), "test");
         assertNotNull(familyCompositeRepository.findFirstByDescription("create"));
-        articlesFamilyController.createFamilyComposite(
+        articlesFamilyController.createArticleFamily(
                 new ArticleFamilyDto(FamilyType.SIZES, null, "tS"), "test");
         assertNotNull(familyCompositeRepository.findFirstByDescription("tS"));
         articlesFamilyController.deleteFamilyCompositeItem("create");
@@ -79,11 +66,11 @@ public class ArticlesFamilyControllerIT {
         List<ArticlesFamily> components = familyCompositeRepository.findFirstByDescription("root").getArticlesFamilyList();
         assertNotNull(components);
         articlesFamilyController.deleteComponentFromFamily("root", "cards");
-        assertEquals(components.size()-1,familyCompositeRepository.findFirstByDescription("root").getArticlesFamilyList().size());
+        assertEquals(components.size() - 1, familyCompositeRepository.findFirstByDescription("root").getArticlesFamilyList().size());
         assertNotNull(familyCompositeRepository.findFirstByDescription("cards"));
         articlesFamilyController.deleteFamilyCompositeItem("cards");
-        articlesFamilyController.createFamilyComposite(
-                new ArticleFamilyDto(FamilyType.ARTICLES,"c","cards"),"root");
+        articlesFamilyController.createArticleFamily(
+                new ArticleFamilyDto(FamilyType.ARTICLES, "c", "cards"), "root");
     }
 
     @Test
@@ -95,8 +82,8 @@ public class ArticlesFamilyControllerIT {
     }
 
     @Test
-    void testExistFamily(){
-        assertThrows(BadRequestException.class, () -> articlesFamilyController.createFamilyComposite(
+    void testExistFamily() {
+        assertThrows(BadRequestException.class, () -> articlesFamilyController.createArticleFamily(
                 new ArticleFamilyDto(FamilyType.ARTICLES, "C", "create"), "t"));
     }
 
