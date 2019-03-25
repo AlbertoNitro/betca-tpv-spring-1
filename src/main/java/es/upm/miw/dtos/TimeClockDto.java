@@ -1,27 +1,26 @@
 package es.upm.miw.dtos;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import es.upm.miw.documents.TimeClock;
-import es.upm.miw.documents.User;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class TimeClockDto {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotNull
     private String id;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotNull
     private LocalDateTime clockinDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotNull
     private LocalDateTime clockoutDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotNull
     private Long totalHours;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private User user;
+    @NotNull
+    private UserMinimumDto user;
 
     public TimeClockDto() {
         // Empty for framework
@@ -32,7 +31,7 @@ public class TimeClockDto {
         this.clockinDate = timeClock.getClockinDate();
         this.clockoutDate = timeClock.getClockoutDate();
         this.totalHours = timeClock.getTotalHours();
-        this.user = timeClock.getUser();
+        this.user = new UserMinimumDto(timeClock.getUser().getMobile(), timeClock.getUser().getUsername());
     }
 
     public String getId() {
@@ -67,11 +66,11 @@ public class TimeClockDto {
         this.totalHours = totalHours;
     }
 
-    public User getUser() {
+    public UserMinimumDto getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserMinimumDto user) {
         this.user = user;
     }
 
@@ -85,5 +84,4 @@ public class TimeClockDto {
                 ", user=" + user +
                 '}';
     }
-
 }
