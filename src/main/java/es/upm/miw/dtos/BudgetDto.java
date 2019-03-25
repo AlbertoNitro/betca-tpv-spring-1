@@ -4,6 +4,7 @@ import es.upm.miw.documents.Budget;
 import es.upm.miw.documents.Shopping;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 public class BudgetDto {
 
@@ -45,5 +46,15 @@ public class BudgetDto {
 
     public void setShoppingList(Shopping[] shoppingList) {
         this.shoppingList = shoppingList;
+    }
+
+
+    @Override
+    public String toString() {
+        return "BudgetDto{" +
+                "id='" + id + '\'' +
+                ", creationDate=" + creationDate +
+                ", shoppingList=" + Arrays.toString(shoppingList) +
+                '}';
     }
 }
