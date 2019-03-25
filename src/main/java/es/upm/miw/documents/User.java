@@ -1,5 +1,6 @@
 package es.upm.miw.documents;
 
+import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
 import es.upm.miw.dtos.UserRolesDto;
 import org.springframework.data.annotation.Id;
@@ -65,6 +66,17 @@ public class User {
     public User(UserMinimumDto userMinimum) {
         this.mobile = userMinimum.getMobile();
         this.username = userMinimum.getUsername();
+    }
+
+    public User(String id, String password, UserDto userDto) {
+        this.id = id;
+        this.mobile = userDto.getMobile();
+        this.username = userDto.getUsername();
+        this.dni = userDto.getDni();
+        this.address = userDto.getAddress();
+        this.email = userDto.getEmail();
+        this.setPassword(password);
+        this.roles = userDto.getRoles();
     }
 
     public String getId() {

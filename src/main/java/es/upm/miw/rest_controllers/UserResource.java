@@ -57,6 +57,11 @@ public class UserResource {
         return this.userController.create(userMinimum);
     }
 
+    @PutMapping(value = MOBILE_ID)
+    public UserDto update(@PathVariable String mobile, @Valid @RequestBody UserDto user) {
+        return this.userController.update(mobile, user);
+    }
+
     @PutMapping(value = ROLES+MOBILE_ID)
     public UserRolesDto updateRoles(@PathVariable String mobile, @Valid @RequestBody UserRolesDto userRolesDto) {
         return this.userController.updateRoles(mobile, userRolesDto);
