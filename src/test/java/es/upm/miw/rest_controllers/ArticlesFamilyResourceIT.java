@@ -35,19 +35,6 @@ public class ArticlesFamilyResourceIT {
     }
 
     @Test
-    void testCreateFamilyArticle() {
-        assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
-        ArticleMinimumDto response = this.restService.loginOperator().restBuilder(new RestBuilder<ArticleMinimumDto>())
-                .clazz(ArticleMinimumDto.class).path(ArticlesFamilyResource.ARTICLES_FAMILY + ArticlesFamilyResource.ARTICLE)
-                .param("description", "test").body(new ArticleMinimumDto("8400000000017", "Zarzuela - Falda T2"))
-                .post().build();
-        assertEquals("Zarzuela - Falda T2", response.getDescription());
-        FamilyComposite familyComposite = familyCompositeRepository.findFirstByDescription("test");
-        familyComposite.getFamilyCompositeList().clear();
-        familyCompositeRepository.save(familyComposite);
-    }
-
-    @Test
     void testCreateFamilyComposite() {
         assertNull(familyCompositeRepository.findFirstByDescription("create"));
         assertNotNull(familyCompositeRepository.findFirstByDescription("test"));
