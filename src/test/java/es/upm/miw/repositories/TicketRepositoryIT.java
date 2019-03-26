@@ -17,4 +17,8 @@ class TicketRepositoryIT {
         assertTrue(this.ticketRepository.findAll().size() > 0);
     }
 
+    @Test
+    void findByShoppingListArticle() {
+        System.out.print(ticketRepository.findByShoppingListArticle("8400000000017"));
+    }
 }

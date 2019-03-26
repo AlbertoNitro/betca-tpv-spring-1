@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Service
@@ -148,6 +149,51 @@ public class DatabaseSeederService {
         } else {
             LogManager.getLogger(this.getClass()).error("File db.yml doesn't configured");
         }
+
+        this.seedDatabaseWithArticlesFamilyForView();
+        this.seedDatabaseWithRandomTickets();
+    }
+
+    public void seedDatabase(InputStream input) {
+        Yaml yamlParser = new Yaml(new Constructor(DatabaseGraph.class));
+        DatabaseGraph tpvGraph = yamlParser.load(input);
+
+        this.providerRepository.saveAll(tpvGraph.getProviderList());
+        this.userRepository.saveAll(tpvGraph.getUserList());
+        this.voucherRepository.saveAll(tpvGraph.getVoucherList());
+
+        this.articleRepository.saveAll(tpvGraph.getArticleList());
+
+        this.budgetRepository.saveAll(tpvGraph.getBudgetList());
+        this.familyArticleRepository.saveAll(tpvGraph.getFamilyArticleList());
+        this.orderRepository.saveAll(tpvGraph.getOrderList());
+        this.tagRepository.saveAll(tpvGraph.getTagList());
+        this.ticketRepository.saveAll(tpvGraph.getTicketList());
+        this.timeClockRepository.saveAll(tpvGraph.getTimeClockList());
+
+        this.familyCompositeRepository.saveAll(tpvGraph.getFamilyCompositeList());
+        this.invoiceRepository.saveAll(tpvGraph.getInvoiceList());
+
+        LogManager.getLogger(this.getClass()).warn("------- Seed...   " + "-----------");
+    }
+
+    public String nextCodeEan() {
+        Article article = this.articleRepository.findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(PREFIX_CODE_ARTICLE);
+
+        Long nextCodeWithoutRedundancy = FIRST_CODE_ARTICLE;
+
+        if (article != null) {
+            String code = article.getCode();
+            String codeWithoutRedundancy = code.substring(0, code.length() - 1);
+
+            nextCodeWithoutRedundancy = Long.parseLong(codeWithoutRedundancy) + 1L;
+        }
+
+        if (nextCodeWithoutRedundancy > LAST_CODE_ARTICLE) {
+            throw new RuntimeException("There is not next code EAN");
+        }
+
+        return this.barcode.generateEan13code(nextCodeWithoutRedundancy);
     }
 
     private void seedDatabaseWithArticlesFamilyForView() {
@@ -170,51 +216,14 @@ public class DatabaseSeederService {
         this.articlesFamilyRepository.save(root);
     }
 
-    public void seedDatabase(InputStream input) {
-        Yaml yamlParser = new Yaml(new Constructor(DatabaseGraph.class));
-        DatabaseGraph tpvGraph = yamlParser.load(input);
-
-        // Save Repositories -----------------------------------------------------
-        this.providerRepository.saveAll(tpvGraph.getProviderList());
-        this.userRepository.saveAll(tpvGraph.getUserList());
-        this.voucherRepository.saveAll(tpvGraph.getVoucherList());
-
-        this.articleRepository.saveAll(tpvGraph.getArticleList());
-
-        this.budgetRepository.saveAll(tpvGraph.getBudgetList());
-        this.familyArticleRepository.saveAll(tpvGraph.getFamilyArticleList());
-        this.orderRepository.saveAll(tpvGraph.getOrderList());
-        this.tagRepository.saveAll(tpvGraph.getTagList());
-        this.ticketRepository.saveAll(tpvGraph.getTicketList());
-        this.timeClockRepository.saveAll(tpvGraph.getTimeClockList());
-
-        this.familyCompositeRepository.saveAll(tpvGraph.getFamilyCompositeList());
-        this.invoiceRepository.saveAll(tpvGraph.getInvoiceList());
-        // -----------------------------------------------------------------------
-
-        // Seed ArticlesFamilyRepository  ----------------------------------------
-        this.seedDatabaseWithArticlesFamilyForView();
-
-        LogManager.getLogger(this.getClass()).warn("------- Seed...   " + "-----------");
-    }
-
-    public String nextCodeEan() {
-        Article article = this.articleRepository.findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(PREFIX_CODE_ARTICLE);
-
-        Long nextCodeWithoutRedundancy = FIRST_CODE_ARTICLE;
-
-        if (article != null) {
-            String code = article.getCode();
-            String codeWithoutRedundancy = code.substring(0, code.length() - 1);
-
-            nextCodeWithoutRedundancy = Long.parseLong(codeWithoutRedundancy) + 1L;
-        }
-
-        if (nextCodeWithoutRedundancy > LAST_CODE_ARTICLE) {
-            throw new RuntimeException("There is not next code EAN");
-        }
-
-        return this.barcode.generateEan13code(nextCodeWithoutRedundancy);
+    private void seedDatabaseWithRandomTickets() {
+        LogManager.getLogger(this.getClass()).warn("------- Create Random Tickets -----------");
+        this.ticketRepository.saveAll(
+                new RandomTicketsBuilder().
+                        fromDate(LocalDateTime.now().minusMonths(3))
+                        .addArticle(this.articleRepository.findById("8400000000017").orElse(null))
+                        .addArticle(this.articleRepository.findById("8400000000024").orElse(null))
+                        .build());
     }
 
 }
