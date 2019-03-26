@@ -2,12 +2,14 @@ package es.upm.miw.dtos;
 
 import es.upm.miw.documents.Budget;
 import es.upm.miw.documents.Shopping;
+import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class BudgetDto {
 
+    @Id
     private String id;
 
     private LocalDateTime creationDate;

@@ -84,9 +84,7 @@ public class UserControllerIT {
         System.out.println(userRolesDto);
         Role[] rolesUpdate= new Role[]{Role.OPERATOR, Role.MANAGER};
         userRolesDto.setRoles(rolesUpdate);
-
-        UserRolesDto result = this.userController.updateRoles(userRolesDto.getMobile(), userRolesDto);
-        System.out.println("resultado"+ result);
+        UserDto result = this.userController.updateRoles(userRolesDto.getMobile(), userRolesDto);
         assertEquals(rolesUpdate.length, result.getRoles().length);
     }
 

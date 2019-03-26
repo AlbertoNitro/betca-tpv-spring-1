@@ -69,7 +69,7 @@ public class UserResource {
     }
 
     @PutMapping(value = ROLES+MOBILE_ID)
-    public UserRolesDto updateRoles(@PathVariable String mobile, @Valid @RequestBody UserRolesDto userRolesDto) {
+    public UserDto updateRoles(@PathVariable String mobile, @Valid @RequestBody UserRolesDto userRolesDto) {
         return this.userController.updateRoles(mobile, userRolesDto);
     }
 

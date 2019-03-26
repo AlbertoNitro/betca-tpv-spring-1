@@ -15,12 +15,19 @@ public class BudgetResource {
 
     public static final String BUDGETS = "/budgets";
 
+    public static final String ID = "/{id}";
+
     @Autowired
     private BudgetController budgetController;
 
     @GetMapping
     public List<BudgetDto> readAll() {
         return this.budgetController.readAll();
+    }
+
+    @GetMapping(value = ID)
+    public BudgetDto readById(@PathVariable String id) {
+        return this.budgetController.readById(id);
     }
 
 }
