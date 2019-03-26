@@ -3,6 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.TestConfig;
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
+import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
 import es.upm.miw.dtos.UserRolesDto;
 import es.upm.miw.exceptions.BadRequestException;
@@ -41,16 +42,31 @@ public class UserControllerIT {
     }
 
     @Test
-    void testCreateUser() {
+    void testCreateUserMinimum() {
         UserMinimumDto userInputDto = new UserMinimumDto("111222333", "aa");
-        UserMinimumDto userMinimumDto = userController.create(new UserMinimumDto(userInputDto.getMobile(), userInputDto.getUsername()));
+        UserMinimumDto userMinimumDto = userController.createUserMinimum(new UserMinimumDto(userInputDto.getMobile(), userInputDto.getUsername()));
         assertEquals(userMinimumDto.getMobile(), userInputDto.getMobile());
+    }
+
+    @Test
+    void testCreateUserMinimumAlreadyExists() {
+        BadRequestException thrown = assertThrows(BadRequestException.class, () ->
+                userController.createUserMinimum(new UserMinimumDto(this.user.getMobile(), this.user.getUsername())));
+        assertTrue(thrown.getMessage().contains("Bad Request Exception (400)"));
+    }
+
+    @Test
+    void testCreateUser() {
+        UserDto userInputDto = new UserDto(new User("666547892", "user", "puser",
+                "123445","C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com"));
+        UserDto userOutputDto = userController.create(userInputDto);
+        assertEquals(userOutputDto.getMobile(), userInputDto.getMobile());
     }
 
     @Test
     void testCreateUserAlreadyExists() {
         BadRequestException thrown = assertThrows(BadRequestException.class, () ->
-                userController.create(new UserMinimumDto(this.user.getMobile(), this.user.getUsername())));
+                userController.create(new UserDto(this.user)));
         assertTrue(thrown.getMessage().contains("Bad Request Exception (400)"));
     }
 

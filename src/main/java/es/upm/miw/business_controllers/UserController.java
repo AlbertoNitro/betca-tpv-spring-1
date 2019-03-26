@@ -64,13 +64,22 @@ public class UserController {
         return this.userRepository.findAllUsers();
     }
 
-    public UserMinimumDto create(UserMinimumDto userMinimum) {
-        if(this.userRepository.findByMobile(userMinimum.getMobile()).isPresent()) {
-            throw new BadRequestException("User mobile (" + userMinimum.getMobile() + ") already exist.");
+    public UserMinimumDto createUserMinimum(UserMinimumDto userMinimumDto) {
+        if(this.userRepository.findByMobile(userMinimumDto.getMobile()).isPresent()) {
+            throw new BadRequestException("User mobile (" + userMinimumDto.getMobile() + ") already exist.");
         }
 
-        User saved = this.userRepository.save(new User(userMinimum));
+        User saved = this.userRepository.save(new User(userMinimumDto));
         return new UserMinimumDto(saved.getMobile(), saved.getUsername());
+    }
+
+    public UserDto create(UserDto userDto) {
+        if(this.userRepository.findByMobile(userDto.getMobile()).isPresent()) {
+            throw new BadRequestException("User mobile (" + userDto.getMobile() + ") already exist.");
+        }
+
+        User saved = this.userRepository.save(new User(userDto));
+        return new UserDto(saved);
     }
 
     public UserDto update(String mobile, UserDto userDto) {

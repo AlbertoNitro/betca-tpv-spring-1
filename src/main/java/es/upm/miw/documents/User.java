@@ -76,8 +76,21 @@ public class User {
         this.dni = userDto.getDni();
         this.address = userDto.getAddress();
         this.email = userDto.getEmail();
+        this.active = userDto.isActive();
+        this.registrationDate = userDto.getRegistrationDate();
         this.setPassword(password);
         this.setRoles(roles);
+    }
+
+    public User(UserDto userDto) {
+        this.username = userDto.getUsername();
+        this.mobile = userDto.getMobile();
+        this.dni = userDto.getDni();
+        this.email = userDto.getEmail();
+        this.address = userDto.getAddress();
+        this.active = userDto.isActive();
+        this.registrationDate = userDto.getRegistrationDate();
+        this.roles = new Role[]{Role.CUSTOMER};
     }
 
     public String getId() {
