@@ -57,7 +57,7 @@ public class User {
         this(mobile, username, password, null, null, null);
     }
 
-    public User(String id,String username,String dni,String email, String address,String password,Boolean active,LocalDateTime registrationDate,UserRolesDto userRolesDto) {
+    public User(String id,String username,String dni,String email, String address,String password,UserRolesDto userRolesDto) {
         this.id=id;
         this.mobile=userRolesDto.getMobile();
         this.roles=userRolesDto.getRoles();
@@ -66,8 +66,7 @@ public class User {
         this.setEmail(email);
         this.setAddress(address);
         this.setPassword(password);
-        this.setActive(active);
-        this.setRegistrationDate(registrationDate);
+
 
     }
 
@@ -190,7 +189,5 @@ public class User {
                 '}';
     }
 
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
-    }
+
 }

@@ -98,7 +98,7 @@ public class UserController {
         Optional<User> user = this.userRepository.findById(id);
         if (user.isPresent() && !user.get().getMobile().equals(mobile))
             throw new ConflictException("User id (" + id + ")");
-        User result = this.userRepository.save(new User(user.get().getId(),user.get().getUsername(),user.get().getDni(),user.get().getEmail(),user.get().getAddress(),user.get().getPassword(),user.get().isActive(),user.get().getRegistrationDate(),userRolesDto));
+        User result = this.userRepository.save(new User(user.get().getId(),user.get().getUsername(),user.get().getDni(),user.get().getEmail(),user.get().getAddress(),user.get().getPassword(),userRolesDto));
         return new UserDto(result);
     }
 
