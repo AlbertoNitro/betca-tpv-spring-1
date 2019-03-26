@@ -3,6 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.TestConfig;
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
+import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
 import es.upm.miw.dtos.UserRolesDto;
 import es.upm.miw.exceptions.BadRequestException;
@@ -68,9 +69,7 @@ public class UserControllerIT {
         System.out.println(userRolesDto);
         Role[] rolesUpdate= new Role[]{Role.OPERATOR, Role.MANAGER};
         userRolesDto.setRoles(rolesUpdate);
-
-        UserRolesDto result = this.userController.updateRoles(userRolesDto.getMobile(), userRolesDto);
-        System.out.println("resultado"+ result);
+        UserDto result = this.userController.updateRoles(userRolesDto.getMobile(), userRolesDto);
         assertEquals(rolesUpdate.length, result.getRoles().length);
     }
 

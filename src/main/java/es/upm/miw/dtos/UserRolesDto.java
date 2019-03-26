@@ -7,26 +7,16 @@ import java.util.Arrays;
 
 public class UserRolesDto {
 
-    private String id;
     private String mobile;
     private Role[] roles;
 
     public UserRolesDto(User user) {
-        this.id = user.getId();
         this.mobile = user.getMobile();
         this.roles = user.getRoles();
 
     }
 
     public UserRolesDto() {}
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getMobile() {
         return mobile;
@@ -47,7 +37,6 @@ public class UserRolesDto {
     @Override
     public String toString() {
         return "UserRolesDto{" +
-                "id='" + id + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", roles=" + Arrays.toString(roles) +
                 '}';

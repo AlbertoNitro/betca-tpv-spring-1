@@ -12,4 +12,7 @@ public interface BudgetRepository extends MongoRepository<Budget, String> {
     @Query(value = "{}", fields = "{ '_id' : 1, 'creationDate' : 1, 'shoppingList' : 1}")
     List<BudgetDto> findAllBudgets();
 
+    @Query(value = "{ '_id' : ?0 }", fields = "{ '_id' : 1, 'creationDate' : 1, 'shoppingList' : 1}")
+    BudgetDto findBudgetById(String id);
+
 }
