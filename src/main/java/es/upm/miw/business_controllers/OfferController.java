@@ -7,7 +7,11 @@ import es.upm.miw.repositories.OfferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +30,10 @@ public class OfferController {
     }
 
     public List<OfferOutputDto> search(String id, String offername, String idArticle, String status) {
-        return this.offerRepository.findByIdOffername(id, offername, status);
+        LocalDate now = LocalDate.now();
+        Instant instant = now.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+        Date date = Date.from(instant);
+        return this.offerRepository.findByIdOffernameEndDate(id, offername, status, date);
     }
 
     public OfferOutputDto create(OfferInputDto offerInputDto) {
