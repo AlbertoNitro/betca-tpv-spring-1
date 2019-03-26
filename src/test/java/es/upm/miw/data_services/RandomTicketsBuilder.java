@@ -4,6 +4,7 @@ import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Shopping;
 import es.upm.miw.documents.Ticket;
 import es.upm.miw.documents.User;
+import es.upm.miw.repositories.ArticleRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,6 +17,14 @@ public class RandomTicketsBuilder {
     private List<Article> articles = new ArrayList<>();
     private LocalDateTime fromDate;
     private LocalDateTime toDate = LocalDateTime.now();
+
+    public static List<Ticket> randomTickets(ArticleRepository articleRepository) {
+        return new RandomTicketsBuilder().
+                fromDate(LocalDateTime.now().minusMonths(3))
+                .addArticle(articleRepository.findById("8400000000017").orElse(null))
+                .addArticle(articleRepository.findById("8400000000024").orElse(null))
+                .build();
+    }
 
     public RandomTicketsBuilder fromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;

@@ -16,7 +16,6 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Service
@@ -151,7 +150,6 @@ public class DatabaseSeederService {
         }
 
         this.seedDatabaseWithArticlesFamilyForView();
-        this.seedDatabaseWithRandomTickets();
     }
 
     public void seedDatabase(InputStream input) {
@@ -214,16 +212,6 @@ public class DatabaseSeederService {
         root.add(c3);
         root.add(c4);
         this.articlesFamilyRepository.save(root);
-    }
-
-    private void seedDatabaseWithRandomTickets() {
-        LogManager.getLogger(this.getClass()).warn("------- Create Random Tickets -----------");
-        this.ticketRepository.saveAll(
-                new RandomTicketsBuilder().
-                        fromDate(LocalDateTime.now().minusMonths(3))
-                        .addArticle(this.articleRepository.findById("8400000000017").orElse(null))
-                        .addArticle(this.articleRepository.findById("8400000000024").orElse(null))
-                        .build());
     }
 
 }
