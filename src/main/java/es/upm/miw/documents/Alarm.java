@@ -19,10 +19,7 @@ public class Alarm {
 
     private int critical;
 
-
     public Alarm() {}
-
-
 
     public String getCode() { return code; }
 

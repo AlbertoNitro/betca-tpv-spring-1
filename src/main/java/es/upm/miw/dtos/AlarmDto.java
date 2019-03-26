@@ -24,7 +24,6 @@ public class AlarmDto {
         this.critical = alarm.getCritical();
     }
 
-
     public Article getArticle() {
         return article;
     }
