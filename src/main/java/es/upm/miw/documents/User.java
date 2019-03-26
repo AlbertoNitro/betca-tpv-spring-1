@@ -57,18 +57,26 @@ public class User {
         this(mobile, username, password, null, null, null);
     }
 
-    public User(UserRolesDto userRolesDto) {
-        this.id=userRolesDto.getId();
+    public User(String id,String username,String dni,String email, String address,String password,UserRolesDto userRolesDto) {
+        this.id=id;
         this.mobile=userRolesDto.getMobile();
         this.roles=userRolesDto.getRoles();
+        this.setUsername(username);
+        this.setDni(dni);
+        this.setEmail(email);
+        this.setAddress(address);
+        this.setPassword(password);
+
+
     }
 
     public User(UserMinimumDto userMinimum) {
         this.mobile = userMinimum.getMobile();
         this.username = userMinimum.getUsername();
+        this.roles = new Role[]{Role.CUSTOMER};
     }
 
-    public User(String id, String password, UserDto userDto) {
+    public User(String id, String password, Role[] roles, UserDto userDto) {
         this.id = id;
         this.mobile = userDto.getMobile();
         this.username = userDto.getUsername();
@@ -76,7 +84,7 @@ public class User {
         this.address = userDto.getAddress();
         this.email = userDto.getEmail();
         this.setPassword(password);
-        this.roles = userDto.getRoles();
+        this.setRoles(roles);
     }
 
     public String getId() {
@@ -180,4 +188,6 @@ public class User {
                 ", roles=" + Arrays.toString(roles) +
                 '}';
     }
+
+
 }
