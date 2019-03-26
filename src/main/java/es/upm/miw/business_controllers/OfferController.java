@@ -25,6 +25,14 @@ public class OfferController {
         return offerOutputDtoList;
     }
 
+    public String /*List<OfferOutputDto>*/ search(String id, String offername, String idArticle, String status) {
+        /*if (id != null) {  }
+        if (offername != null) { }
+        if (idArticle != null) { }
+        if (status != null) { }*/
+        return "id: " + id + " -- offername: " + offername + " -- idArticle: " + idArticle + " -- status: " + status;
+    }
+
     public OfferOutputDto create(OfferInputDto offerInputDto) {
         Offer offer = new Offer(Integer.toString(offerInputDto.hashCode()), offerInputDto.getOffername() , offerInputDto.getEndDate(), offerInputDto.getArticleLine());
         this.offerRepository.save(offer);
