@@ -4,18 +4,37 @@ import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Shopping;
 import es.upm.miw.documents.Ticket;
 import es.upm.miw.documents.User;
+import es.upm.miw.repositories.ArticleRepository;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
 public class RandomTicketsBuilder {
-    private List<Article> articles = new ArrayList<>();
+    private Map<Article, Integer> articles = new HashMap<>();
     private LocalDateTime fromDate;
     private LocalDateTime toDate = LocalDateTime.now();
+    private int numberOfTickets = 10;
+
+    public static List<Ticket> randomTickets(ArticleRepository articleRepository) {
+        return new RandomTicketsBuilder().
+                fromDate(LocalDateTime.now().minusMonths(1))
+                .numberOfTickets(5)
+                .addTicketArticle(articleRepository.findById("8400000000017").orElse(null), 3)
+                .addTicketArticle(articleRepository.findById("8400000000024").orElse(null), 2)
+                .build();
+    }
+
+    private RandomTicketsBuilder numberOfTickets(int numberOfTickets) {
+        this.numberOfTickets = numberOfTickets;
+        return this;
+    }
 
     public RandomTicketsBuilder fromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
@@ -27,26 +46,25 @@ public class RandomTicketsBuilder {
         return this;
     }
 
-    public RandomTicketsBuilder addArticle(Article article) {
-        articles.add(article);
+    public RandomTicketsBuilder addTicketArticle(Article article, int amount) {
+        articles.put(article, amount);
         return this;
     }
 
     public List<Ticket> build() {
         List<Ticket> tickets = new ArrayList<>();
-        LocalDateTime startDate = LocalDateTime.from(fromDate);
-        while (startDate.isBefore(toDate)) {
-            int randomTicketsPerDay = random(1, 3);
-            for (int i = 0; i < randomTicketsPerDay; i++) {
-                tickets.add(new TicketBuilder().idOfDay(i).creationDate(startDate).articles(articles).build());
-            }
-            startDate = startDate.plusDays(random(1, 3));
+        long fromDateInSecs = fromDate.atZone(ZoneId.systemDefault()).toEpochSecond();
+        long toDateInSecs = toDate.atZone(ZoneId.systemDefault()).toEpochSecond();
+        for (int i = 0; i < numberOfTickets; i++) {
+            LocalDateTime creationDate = Instant.ofEpochSecond(random(fromDateInSecs, toDateInSecs)).atZone(ZoneId.systemDefault()).toLocalDateTime();
+            tickets.add(new TicketBuilder().idOfDay(i).creationDate(creationDate).articles(articles).build());
         }
+
         return tickets;
     }
 
-    private int random(int min, int max) {
-        return new Random().nextInt((max - min) + 1) + min;
+    private long random(long min, long max) {
+        return (long) (Math.random() * ((max - min) + 1)) + min;
     }
 
     private class TicketBuilder {
@@ -83,8 +101,8 @@ public class RandomTicketsBuilder {
             return this;
         }
 
-        public TicketBuilder articles(List<Article> articles) {
-            articles.forEach(a -> addShopping(new Shopping(random(1, 10), BigDecimal.ZERO, a)));
+        public TicketBuilder articles(Map<Article, Integer> articles) {
+            articles.forEach((article, amount) -> addShopping(new Shopping(amount, BigDecimal.ZERO, article)));
             return this;
         }
 
