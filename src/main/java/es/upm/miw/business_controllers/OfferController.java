@@ -32,8 +32,8 @@ public class OfferController {
     public List<OfferOutputDto> search(String id, String offername, String idArticle, String status) {
         LocalDate now = LocalDate.now();
         Instant instant = now.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
-        Date date = Date.from(instant);
-        return this.offerRepository.findByIdOffernameEndDate(id, offername, status, date);
+        Date dateNow = Date.from(instant);
+        return this.offerRepository.findByIdOffernameEndDateArticleId(id, offername, status, dateNow, idArticle);
     }
 
     public OfferOutputDto create(OfferInputDto offerInputDto) {
