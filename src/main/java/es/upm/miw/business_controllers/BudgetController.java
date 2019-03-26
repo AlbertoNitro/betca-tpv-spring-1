@@ -17,8 +17,8 @@ public class BudgetController {
         return this.budgetRepository.findAllBudgets();
     }
 
-    public List<BudgetDto> readAllById(String id) {
-        return  this.budgetRepository.findAllBudgetsById(id);
+    public BudgetDto readById(String id) {
+        return this.budgetRepository.findBudgetById(id);
     }
 
 }

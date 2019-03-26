@@ -26,8 +26,8 @@ public class BudgetResource {
     }
 
     @GetMapping(value = ID)
-    public List<BudgetDto> readAllById(@PathVariable String id) {
-        return this.budgetController.readAllById(id);
+    public BudgetDto readById(@PathVariable String id) {
+        return this.budgetController.readById(id);
     }
 
 }
