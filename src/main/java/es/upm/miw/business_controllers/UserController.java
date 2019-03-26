@@ -78,15 +78,10 @@ public class UserController {
         if(!mobile.equals(userDto.getMobile())) {
             throw new BadRequestException("User mobile (" + mobile + ")");
         }
-        for (Role role: userDto.getRoles()) {
-            if (!role.isRole()) {
-                throw new BadRequestException("User role (" + role + ")");
-            }
-        }
         User userFound = this.userRepository.findByMobile(mobile)
                 .orElseThrow(() -> new NotFoundException("User mobile (" + userDto.getMobile() + ") is not found."));
 
-        User saved = this.userRepository.save(new User(userFound.getId(), userFound.getPassword(), userDto));
+        User saved = this.userRepository.save(new User(userFound.getId(), userFound.getPassword(), userFound.getRoles(), userDto));
         return new UserDto(saved);
     }
 
