@@ -25,12 +25,8 @@ public class OfferController {
         return offerOutputDtoList;
     }
 
-    public String /*List<OfferOutputDto>*/ search(String id, String offername, String idArticle, String status) {
-        /*if (id != null) {  }
-        if (offername != null) { }
-        if (idArticle != null) { }
-        if (status != null) { }*/
-        return "id: " + id + " -- offername: " + offername + " -- idArticle: " + idArticle + " -- status: " + status;
+    public List<OfferOutputDto> search(String id, String offername, String idArticle, String status) {
+        return this.offerRepository.findByIdOffername(id, offername, status);
     }
 
     public OfferOutputDto create(OfferInputDto offerInputDto) {

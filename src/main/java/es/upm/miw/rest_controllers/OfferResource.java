@@ -18,7 +18,6 @@ public class OfferResource {
     public static final String OFFERS = "/offers";
     public static final String OFFER_ID = "/{idOffer}";
     public static final String SEARCH = "/search";
-    public static final String PARAMS = "{params";
 
     @Autowired
     private OfferController offerController;
@@ -29,7 +28,7 @@ public class OfferResource {
     }
 
     @GetMapping(value = SEARCH)
-    public String /*List<OfferOutputDto>*/ search(
+    public List<OfferOutputDto> search(
             @RequestParam("id") String id,
             @RequestParam("offername") String offername,
             @RequestParam("idArticle") String idArticle,
