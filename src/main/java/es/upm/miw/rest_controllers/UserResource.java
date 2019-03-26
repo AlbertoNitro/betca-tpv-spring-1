@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class UserResource {
 
     public static final String USERS = "/users";
+    public static final String MINIMUM = "/minimum";
 
     public static final String TOKEN = "/token";
     public static final String ROLES = "/roles";
@@ -52,9 +53,14 @@ public class UserResource {
         return this.userController.readAll();
     }
 
-    @PostMapping
-    public UserMinimumDto create(@Valid @RequestBody UserMinimumDto userMinimum) {
-        return this.userController.create(userMinimum);
+    @PostMapping(value = MINIMUM)
+    public UserMinimumDto create(@Valid @RequestBody UserMinimumDto user) {
+        return this.userController.createUserMinimum(user);
+    }
+
+    @PostMapping()
+    public UserDto create(@Valid @RequestBody UserDto user) {
+        return this.userController.create(user);
     }
 
     @PutMapping(value = MOBILE_ID)
