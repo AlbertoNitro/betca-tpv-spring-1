@@ -99,9 +99,9 @@ class UserResourceIT {
         assertTrue(userMinimumDtoList.size() > 1);
     }
 
-    private RestBuilder<UserRolesDto> restUpdateRolesBuilder(String mobile, UserRolesDto userRolesDto) {
+    private RestBuilder<UserDto> restUpdateRolesBuilder(String mobile, UserRolesDto userRolesDto) {
         return this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<UserRolesDto>()).clazz(UserRolesDto.class)
+                .restBuilder(new RestBuilder<UserDto>()).clazz(UserDto.class)
                 .path(UserResource.USERS).path(UserResource.ROLES).path("/" + mobile)
                 .body(userRolesDto)
                 .put();
@@ -114,7 +114,8 @@ class UserResourceIT {
         userRolesDto.setMobile(this.existentUser.getMobile());
         Role[] rolesUpdate= new Role[]{Role.MANAGER};
         userRolesDto.setRoles(rolesUpdate);
-        UserRolesDto result = restUpdateRolesBuilder(existentUser.getMobile(), userRolesDto).build();
+        UserDto result = restUpdateRolesBuilder(existentUser.getMobile(), userRolesDto).build();
+       System.out.println(result);
         assertEquals(rolesUpdate.length, result.getRoles().length);
     }
 
@@ -122,7 +123,7 @@ class UserResourceIT {
     void testUpdateNullMobile() {
         UserRolesDto userRolesDto = new UserRolesDto();
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                restUpdateRolesBuilder(userRolesDto.getId(), userRolesDto).build());
+                restUpdateRolesBuilder(userRolesDto.getMobile(), userRolesDto).build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 

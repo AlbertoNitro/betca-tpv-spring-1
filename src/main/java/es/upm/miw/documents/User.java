@@ -57,10 +57,18 @@ public class User {
         this(mobile, username, password, null, null, null);
     }
 
-    public User(UserRolesDto userRolesDto) {
-        this.id=userRolesDto.getId();
+    public User(String id,String username,String dni,String email, String address,String password,Boolean active,LocalDateTime registrationDate,UserRolesDto userRolesDto) {
+        this.id=id;
         this.mobile=userRolesDto.getMobile();
         this.roles=userRolesDto.getRoles();
+        this.setUsername(username);
+        this.setDni(dni);
+        this.setEmail(email);
+        this.setAddress(address);
+        this.setPassword(password);
+        this.setActive(active);
+        this.setRegistrationDate(registrationDate);
+
     }
 
     public User(UserMinimumDto userMinimum) {
@@ -180,5 +188,9 @@ public class User {
                 ", address='" + address + '\'' +
                 ", roles=" + Arrays.toString(roles) +
                 '}';
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
     }
 }
