@@ -148,33 +148,14 @@ public class DatabaseSeederService {
         } else {
             LogManager.getLogger(this.getClass()).error("File db.yml doesn't configured");
         }
-    }
 
-    private void seedDatabaseWithArticlesFamilyForView() {
-        LogManager.getLogger(this.getClass()).warn("------- Create Article Family Root -----------");
-        ArticlesFamily root = new FamilyComposite(FamilyType.ARTICLES, "root", "root");
-
-        ArticlesFamily c1 = new FamilyArticle(this.articleRepository.findById("8400000000031").get());
-        ArticlesFamily c2 = new FamilyArticle(this.articleRepository.findById("8400000000048").get());
-        this.articlesFamilyRepository.save(c1);
-        this.articlesFamilyRepository.save(c2);
-        ArticlesFamily c3 = new FamilyComposite(FamilyType.ARTICLES, "c", "cards");
-        ArticlesFamily c4 = new FamilyComposite(FamilyType.SIZES, null, "X");
-        this.articlesFamilyRepository.save(c3);
-        this.articlesFamilyRepository.save(c4);
-
-        root.add(c1);
-        root.add(c2);
-        root.add(c3);
-        root.add(c4);
-        this.articlesFamilyRepository.save(root);
+        this.seedDatabaseWithArticlesFamilyForView();
     }
 
     public void seedDatabase(InputStream input) {
         Yaml yamlParser = new Yaml(new Constructor(DatabaseGraph.class));
         DatabaseGraph tpvGraph = yamlParser.load(input);
 
-        // Save Repositories -----------------------------------------------------
         this.providerRepository.saveAll(tpvGraph.getProviderList());
         this.userRepository.saveAll(tpvGraph.getUserList());
         this.voucherRepository.saveAll(tpvGraph.getVoucherList());
@@ -190,10 +171,6 @@ public class DatabaseSeederService {
 
         this.familyCompositeRepository.saveAll(tpvGraph.getFamilyCompositeList());
         this.invoiceRepository.saveAll(tpvGraph.getInvoiceList());
-        // -----------------------------------------------------------------------
-
-        // Seed ArticlesFamilyRepository  ----------------------------------------
-        this.seedDatabaseWithArticlesFamilyForView();
 
         LogManager.getLogger(this.getClass()).warn("------- Seed...   " + "-----------");
     }
@@ -215,6 +192,26 @@ public class DatabaseSeederService {
         }
 
         return this.barcode.generateEan13code(nextCodeWithoutRedundancy);
+    }
+
+    private void seedDatabaseWithArticlesFamilyForView() {
+        LogManager.getLogger(this.getClass()).warn("------- Create Article Family Root -----------");
+        ArticlesFamily root = new FamilyComposite(FamilyType.ARTICLES, "root", "root");
+
+        ArticlesFamily c1 = new FamilyArticle(this.articleRepository.findById("8400000000031").get());
+        ArticlesFamily c2 = new FamilyArticle(this.articleRepository.findById("8400000000048").get());
+        this.articlesFamilyRepository.save(c1);
+        this.articlesFamilyRepository.save(c2);
+        ArticlesFamily c3 = new FamilyComposite(FamilyType.ARTICLES, "c", "cards");
+        ArticlesFamily c4 = new FamilyComposite(FamilyType.SIZES, null, "X");
+        this.articlesFamilyRepository.save(c3);
+        this.articlesFamilyRepository.save(c4);
+
+        root.add(c1);
+        root.add(c2);
+        root.add(c3);
+        root.add(c4);
+        this.articlesFamilyRepository.save(root);
     }
 
 }

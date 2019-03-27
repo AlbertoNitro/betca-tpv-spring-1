@@ -64,13 +64,22 @@ public class UserController {
         return this.userRepository.findAllUsers();
     }
 
-    public UserMinimumDto create(UserMinimumDto userMinimum) {
-        if(this.userRepository.findByMobile(userMinimum.getMobile()).isPresent()) {
-            throw new BadRequestException("User mobile (" + userMinimum.getMobile() + ") already exist.");
+    public UserMinimumDto createUserMinimum(UserMinimumDto userMinimumDto) {
+        if(this.userRepository.findByMobile(userMinimumDto.getMobile()).isPresent()) {
+            throw new BadRequestException("User mobile (" + userMinimumDto.getMobile() + ") already exist.");
         }
 
-        User saved = this.userRepository.save(new User(userMinimum));
+        User saved = this.userRepository.save(new User(userMinimumDto));
         return new UserMinimumDto(saved.getMobile(), saved.getUsername());
+    }
+
+    public UserDto create(UserDto userDto) {
+        if(this.userRepository.findByMobile(userDto.getMobile()).isPresent()) {
+            throw new BadRequestException("User mobile (" + userDto.getMobile() + ") already exist.");
+        }
+
+        User saved = this.userRepository.save(new User(userDto));
+        return new UserDto(saved);
     }
 
     public UserDto update(String mobile, UserDto userDto) {
@@ -85,7 +94,7 @@ public class UserController {
         return new UserDto(saved);
     }
 
-    public UserRolesDto updateRoles(String mobile, UserRolesDto userRolesDto) {
+    public UserDto updateRoles(String mobile, UserRolesDto userRolesDto) {
 
 
         if (mobile == null || !mobile.equals(userRolesDto.getMobile()))
@@ -93,14 +102,13 @@ public class UserController {
 
         if (!this.userRepository.findByMobile(mobile).isPresent())
             throw new NotFoundException("User mobile (" + mobile + ")");
-        userRolesDto.setId(this.userRepository.findByMobile(mobile).get().getId());
-        String id = userRolesDto.getId();
+       // userRolesDto.setId(this.userRepository.findByMobile(mobile).get().getId());
+        String id = this.userRepository.findByMobile(mobile).get().getId();
         Optional<User> user = this.userRepository.findById(id);
         if (user.isPresent() && !user.get().getMobile().equals(mobile))
             throw new ConflictException("User id (" + id + ")");
-
-        User result = this.userRepository.save(new User(userRolesDto));
-        return new UserRolesDto(result);
+        User result = this.userRepository.save(new User(user.get().getId(),user.get().getUsername(),user.get().getDni(),user.get().getEmail(),user.get().getAddress(),user.get().getPassword(),userRolesDto));
+        return new UserDto(result);
     }
 
     public List<UserMinimumDto> readAllByUsernameDniAddressRoles(String mobile,String username,String dni, String address,  Role[] roles) {
