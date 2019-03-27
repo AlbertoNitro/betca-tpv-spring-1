@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestConfig
 public class UserControllerIT {
@@ -68,6 +66,34 @@ public class UserControllerIT {
         BadRequestException thrown = assertThrows(BadRequestException.class, () ->
                 userController.create(new UserDto(this.user)));
         assertTrue(thrown.getMessage().contains("Bad Request Exception (400)"));
+    }
+
+    @Test
+    void testUpdateUser() {
+        UserDto userInputDto = new UserDto(this.user2);
+        userInputDto.setUsername("differenteUserName");
+
+        UserDto userOutputDto = userController.update(userInputDto.getMobile(), userInputDto);
+        assertFalse(userOutputDto.getUsername().equals(this.user2.getUsername()));
+    }
+
+    @Test
+    void testUpdateUserDifferentMobile() {
+        UserDto userInputDto = new UserDto(this.user2);
+
+        BadRequestException thrown = assertThrows(BadRequestException.class, () ->
+                userController.update("111171111", userInputDto));
+        assertTrue(thrown.getMessage().contains("Bad Request Exception (400)"));
+    }
+
+    @Test
+    void testUpdateUserNotFound() {
+        UserDto userInputDto = new UserDto(this.user2);
+        userInputDto.setMobile("991982658");
+
+        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
+                userController.update(userInputDto.getMobile(), userInputDto));
+        assertTrue(thrown.getMessage().contains("Not Found Exception (404)"));
     }
 
     @Test

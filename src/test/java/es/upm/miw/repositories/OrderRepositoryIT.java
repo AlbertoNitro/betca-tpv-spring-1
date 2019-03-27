@@ -5,6 +5,8 @@ import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Order;
 import es.upm.miw.documents.OrderLine;
 import org.assertj.core.util.Arrays;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +20,19 @@ class OrderRepositoryIT {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @BeforeEach
+    void createOrder(){
+        if(this.orderRepository.findAll().size() == 0 ){
+            String[] articlesId= {"1","8400000000048", "8400000000024","8400000000031"};
+            for (int i = 0; i < 3 ; i++) {
+                Article article = this.articleRepository.findById(articlesId[i]).get();
+                OrderLine[] orderLines = Arrays.array(new OrderLine(article, 4), new OrderLine(article, 5));
+                Order order = new Order("OrderDescrip_"+articlesId[i], article.getProvider(), orderLines);
+                this.orderRepository.save(order);
+            }
+        }
+    }
 
     @Test
     void testReadAll() {
@@ -44,6 +59,12 @@ class OrderRepositoryIT {
 
 
         this.orderRepository.delete(order);
+    }
+
+    @Test
+    void readAllOrders(){
+        System.out.println(".............." + orderRepository.findAllOrders());
+        assertTrue(orderRepository.findAllOrders().size() >= 0);
     }
 
 }

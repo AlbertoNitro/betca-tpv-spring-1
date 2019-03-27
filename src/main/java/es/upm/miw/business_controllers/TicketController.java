@@ -286,32 +286,33 @@ public class TicketController {
         return results;
     }
 
-    public TicketModificationStateOrAmountDto readTicketById(String id) {
-        return new TicketModificationStateOrAmountDto(this.ticketRepository.findById(id)
+    public TicketModificationStateOrAmountDto obtainTicketModifiedById(String id) {
+        return new TicketModificationStateOrAmountDto(this.readTicketById(id));
+    }
+
+    public Ticket readTicketById(String id) {
+        return (this.ticketRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Ticket id (" + id + ")")));
     }
 
-    private Ticket createModifiedTicket(TicketModificationStateOrAmountDto ticketModificationDto) {
-        ShoppingModificationStateOrAmountDto[] modifiedShoppings;
-        modifiedShoppings = ticketModificationDto.getShoppingList();
-        Shopping[] shoppings = new Shopping[modifiedShoppings.length];
-        for(int i = 0; i < modifiedShoppings.length; i++) {
-            shoppings[i] = modifiedShoppings[i].transformModifiedShoppingToShopping();
+    public Ticket updateModifiedTicket(TicketModificationStateOrAmountDto modifiedTicket) {
+        Ticket ticketDb = this.readTicketById(modifiedTicket.getId());
+        List<Shopping> shoppings = new ArrayList<>();
+        modifiedTicket.getShoppingList().forEach(p -> {
+            shoppings.add(p.transformModifiedShoppingToShopping());
+        });
+        int i  = 0;
+        for (Shopping shopping : ticketDb.getShoppingList()){
+            shopping.setAmount(shoppings.get(i).getAmount());
+            shopping.setShoppingState(shoppings.get(i).getShoppingState());
+            i++;
         }
-        Ticket ticket = new Ticket(
-                this.nextId(),
-                ticketModificationDto.getVoucher(),
-                ticketModificationDto.getCard(),
-                ticketModificationDto.getCash(),
-                shoppings,
-                ticketModificationDto.getUser());
-        ticket.setNote(ticketModificationDto.getNote());
-        this.ticketRepository.save(ticket);
-        return ticket;
+        this.ticketRepository.save(ticketDb);
+        return ticketDb;
     }
 
-    public byte[] createModifiedTicketAndPdf(TicketModificationStateOrAmountDto modifiedTicket) {
-        return pdfService.generateTicket(this.createModifiedTicket(modifiedTicket));
+    public byte[] updateModifiedTicketAndPdf(TicketModificationStateOrAmountDto modifiedTicket) {
+        return pdfService.generateTicket(this.updateModifiedTicket(modifiedTicket));
     }
 
 }
