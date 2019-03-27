@@ -21,6 +21,10 @@ public class ShoppingModificationStateOrAmountDto {
 
     private ShoppingState shoppingState;
 
+    public ShoppingModificationStateOrAmountDto() {
+        //Empty for framework
+    }
+
 
     public ShoppingModificationStateOrAmountDto(
             String description,
