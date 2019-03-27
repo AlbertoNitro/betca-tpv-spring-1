@@ -46,13 +46,12 @@ public class OrderResourceIT {
         OrderLine orderLine = new OrderLine(article, 10);
         OrderLine[] orderLines = {orderLine};
         this.order = new Order("Test Order", this.provider, orderLines);
-        this.orderRepository.save(this.order);
-        this.order = this.orderRepository.findById(order.getId()).orElse(null);
+        this.order = this.orderRepository.save(this.order);
     }
 
     @Test
     void testCloseOrder() {
-        this.orderController.closeOrder(this.order);
-        assertNotNull(order.getClosingDate());
+        Order closedOrder = this.orderController.closeOrder(this.order);
+        assertNotNull(closedOrder.getClosingDate());
     }
 }
