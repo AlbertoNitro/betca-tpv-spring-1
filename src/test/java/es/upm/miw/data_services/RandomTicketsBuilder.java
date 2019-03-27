@@ -31,7 +31,7 @@ public class RandomTicketsBuilder {
                 .build();
     }
 
-    private RandomTicketsBuilder numberOfTickets(int numberOfTickets) {
+    public RandomTicketsBuilder numberOfTickets(int numberOfTickets) {
         this.numberOfTickets = numberOfTickets;
         return this;
     }
