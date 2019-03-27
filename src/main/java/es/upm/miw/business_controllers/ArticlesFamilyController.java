@@ -93,4 +93,8 @@ public class ArticlesFamilyController {
     public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(FamilyType familyType) {
         return familyCompositeRepository.findAllFamilyCompositeByFamilyType(familyType);
     }
+
+    public FamilyComposite readFamilyCompositeRoot() {
+        return familyCompositeRepository.findFirstByDescription("root");
+    }
 }

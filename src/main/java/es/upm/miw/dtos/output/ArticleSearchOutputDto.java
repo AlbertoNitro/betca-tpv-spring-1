@@ -1,11 +1,12 @@
 package es.upm.miw.dtos.output;
 
 import es.upm.miw.documents.Article;
+import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 
 public class ArticleSearchOutputDto {
-
+    @Id
     private String code;
 
     private String description;

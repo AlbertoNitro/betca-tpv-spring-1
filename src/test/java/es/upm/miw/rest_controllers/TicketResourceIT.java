@@ -521,4 +521,15 @@ class TicketResourceIT {
                         .body(searchTicketDto).post().build());
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
+
+    @Test
+    void testObtainTicketModifiedById() {
+        TicketModificationStateOrAmountDto modifiedTicket = restService.loginAdmin()
+                .restBuilder(new RestBuilder<TicketModificationStateOrAmountDto>())
+                .clazz(TicketModificationStateOrAmountDto.class)
+                .path(TicketResource.TICKETS).path(TicketResource.TICKET_ID).expand("201901121")
+                .get().build();
+        assertNotNull(modifiedTicket);
+    }
+
 }
