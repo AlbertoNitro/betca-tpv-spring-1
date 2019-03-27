@@ -3,7 +3,6 @@ package es.upm.miw.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.upm.miw.documents.Shopping;
 import es.upm.miw.documents.ShoppingState;
-import es.upm.miw.documents.Article;
 
 import java.math.BigDecimal;
 
@@ -22,11 +21,6 @@ public class ShoppingModificationStateOrAmountDto {
 
     private ShoppingState shoppingState;
 
-    private Article article;
-
-    public ShoppingModificationStateOrAmountDto() {
-        // Empty for framework
-    }
 
     public ShoppingModificationStateOrAmountDto(
             String description,
@@ -34,8 +28,7 @@ public class ShoppingModificationStateOrAmountDto {
             BigDecimal discount,
             BigDecimal retailPrice,
             BigDecimal totalPrice,
-            ShoppingState shoppingState,
-            Article article) {
+            ShoppingState shoppingState) {
 
         this.description = description;
         this.amount = amount;
@@ -43,7 +36,6 @@ public class ShoppingModificationStateOrAmountDto {
         this.retailPrice = retailPrice;
         this.totalPrice = totalPrice;
         this.shoppingState = shoppingState;
-        this.article = article;
     }
 
     public ShoppingModificationStateOrAmountDto(Shopping shopping) {
@@ -54,7 +46,6 @@ public class ShoppingModificationStateOrAmountDto {
         this.retailPrice = shopping.getRetailPrice();
         this.totalPrice = shopping.getShoppingTotal();
         this.shoppingState = shopping.getShoppingState();
-        this.article = shopping.getArticle();
     }
 
     public String getDescription() {
@@ -93,8 +84,6 @@ public class ShoppingModificationStateOrAmountDto {
         this.shoppingState = shoppingState;
     }
 
-    public Article getArticle() { return article; }
-
     public Shopping transformModifiedShoppingToShopping() {
         Shopping shopping = new Shopping();
         shopping.setDescription(this.getDescription());
@@ -102,7 +91,6 @@ public class ShoppingModificationStateOrAmountDto {
         shopping.setDiscount(this.getDiscount());
         shopping.setRetailPrice(this.getRetailPrice());
         shopping.setShoppingState(this.getShoppingState());
-        shopping.setArticle(this.getArticle());
         return shopping;
     }
 
