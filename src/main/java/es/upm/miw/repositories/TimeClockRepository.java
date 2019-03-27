@@ -7,7 +7,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TimeClockRepository extends MongoRepository<TimeClock, String> {
-    List<TimeClock> findByClockinDateBetweenAndUserOrderByClockinDateDesc(LocalDateTime dateFrom, LocalDateTime dateTo, String id);
 
     TimeClock findFirst1ByUserOrderByClockinDateDesc(String id);
+
+    List<TimeClock> findByClockinDateBetweenOrderByClockinDateDesc(LocalDateTime dateFrom, LocalDateTime dateTo);
+
+    List<TimeClock> findByClockinDateBetweenAndUserOrderByClockinDateDesc(LocalDateTime dateFrom, LocalDateTime dateTo, String id);
 }
