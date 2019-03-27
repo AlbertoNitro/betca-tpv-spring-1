@@ -1,6 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.ArticlesFamilyController;
+import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
@@ -21,6 +22,8 @@ public class ArticlesFamilyResource {
     public static final String CREATE = "/create";
 
     public static final String DESCRIPTION = "/{description}";
+
+    public static final String ROOT = "/family-root";
 
     @Autowired
     private ArticlesFamilyController articlesFamilyController;
@@ -55,5 +58,10 @@ public class ArticlesFamilyResource {
     @GetMapping
     public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(@Valid @RequestParam FamilyType familyType) {
         return articlesFamilyController.readAllFamilyCompositeByFamilyType(familyType);
+    }
+
+    @GetMapping(value = ROOT)
+    public FamilyComposite readFamilyCompositeRoot(){
+        return articlesFamilyController.readFamilyCompositeRoot();
     }
 }

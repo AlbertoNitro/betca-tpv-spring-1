@@ -93,4 +93,9 @@ public class ArticlesFamilyControllerIT {
         assertNotNull(articlesFamilyController.readAllComponentsInAFamily("root"));
     }
 
+    @Test
+    void testReadFamilyCompositeRoot() {
+        assertEquals("root", familyCompositeRepository.findFirstByDescription("root").getReference());
+    }
+
 }
