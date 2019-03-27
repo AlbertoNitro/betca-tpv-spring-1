@@ -17,6 +17,7 @@ public class OfferResource {
 
     public static final String OFFERS = "/offers";
     public static final String OFFER_ID = "/{idOffer}";
+    public static final String SEARCH = "/search";
 
     @Autowired
     private OfferController offerController;
@@ -24,6 +25,15 @@ public class OfferResource {
     @GetMapping
     public List<OfferOutputDto> readAll() {
         return this.offerController.readAll();
+    }
+
+    @GetMapping(value = SEARCH)
+    public List<OfferOutputDto> search(
+            @RequestParam("id") String id,
+            @RequestParam("offername") String offername,
+            @RequestParam("idArticle") String idArticle,
+            @RequestParam("status") String status) {
+        return this.offerController.search(id, offername, idArticle, status);
     }
 
     @PostMapping

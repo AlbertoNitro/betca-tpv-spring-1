@@ -12,9 +12,7 @@ public class UserMinimumDto {
     @NotNull
     private String username;
 
-    public UserMinimumDto() {
-        this("000000000", "");
-    }
+    public UserMinimumDto() {}
 
     public UserMinimumDto(String mobile, String username) {
         this.mobile = mobile;
