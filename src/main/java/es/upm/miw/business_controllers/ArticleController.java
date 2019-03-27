@@ -63,7 +63,8 @@ public class ArticleController {
     }
 
     public List<ArticleSearchOutputDto> readArticles(String description, Integer stock, BigDecimal minPrice, BigDecimal maxPrice) {
-        String minPriceStr, maxPriceStr;
+        String minPriceStr;
+        String maxPriceStr;
         minPriceStr = minPrice == null ? null : minPrice.toString();
         maxPriceStr = maxPrice == null ? null : maxPrice.toString();
 
