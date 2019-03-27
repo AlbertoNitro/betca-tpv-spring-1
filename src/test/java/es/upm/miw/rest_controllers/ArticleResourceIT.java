@@ -71,7 +71,7 @@ class ArticleResourceIT {
                 .restBuilder(new RestBuilder<ArticleSearchOutputDto[]>()).clazz(ArticleSearchOutputDto[].class)
                 .path(ArticleResource.ARTICLES).path(ArticleResource.SEARCH).path(ArticleResource.PARTIALLY_DEFINED)
                 .post().build());
-        assertTrue(articles.size() == 0);
+        assertTrue(articles.size() > 0);
     }
 
     @Test
