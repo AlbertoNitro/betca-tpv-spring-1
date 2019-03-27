@@ -36,14 +36,6 @@ public class RandomTicketsBuilder {
         return this;
     }
 
-    public static List<Ticket> randomTickets(ArticleRepository articleRepository) {
-        return new RandomTicketsBuilder().
-                fromDate(LocalDateTime.now().minusMonths(3))
-                .addArticle(articleRepository.findById("8400000000017").orElse(null))
-                .addArticle(articleRepository.findById("8400000000024").orElse(null))
-                .build();
-    }
-
     public RandomTicketsBuilder fromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
         return this;
