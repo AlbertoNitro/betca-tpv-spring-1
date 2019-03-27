@@ -14,6 +14,10 @@ public class TicketModificationStateOrAmountDto {
 
     private List<ShoppingModificationStateOrAmountDto> shoppingList;
 
+    public TicketModificationStateOrAmountDto(){
+        //Empty for framework
+    }
+
     public TicketModificationStateOrAmountDto(Ticket ticket) {
         this.id = ticket.getId();
         this.shoppingList = this.initializeShoppingTicket(ticket.getShoppingList());
