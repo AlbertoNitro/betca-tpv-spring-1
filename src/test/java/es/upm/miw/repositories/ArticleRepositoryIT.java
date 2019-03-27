@@ -59,43 +59,49 @@ class ArticleRepositoryIT {
     }
 
     @Test
-    void testFindByDescriptionAndStockAndRetailPriceNullSafe() {
+    void testFindByDescriptionAndStockAndRetailPriceNull(){
         List<ArticleSearchOutputDto> articleList = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
                 (null, null, null, null);
         assertFalse(articleList.isEmpty());
+    }
 
+    @Test
+    void testFindByDescription(){
         List<ArticleSearchOutputDto> articleList2 = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
                 ("Art", null, null, null);
         assertEquals(2, articleList2.size());
+    }
 
+    @Test
+    void testFindByStock(){
         List<ArticleSearchOutputDto> articleList3 = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
                 (null, 2, null, null);
         assertEquals(4, articleList3.size());
+    }
 
+    @Test
+    void testFindByRetailPrice(){
         List<ArticleSearchOutputDto> articleList4 = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
                 (null, null, "22.6", null);
         assertEquals(3, articleList4.size());
+    }
 
+    @Test
+    void testFindByDescriptionAndStock(){
         List<ArticleSearchOutputDto> articleList5 = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
                 ("Art", 2, null, null);
         assertEquals(1, articleList5.size());
+    }
 
-        List<ArticleSearchOutputDto> articleList6 = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                ("Art", null, null, "23");
-        assertEquals(1, articleList6.size());
-
+    @Test
+    void testFindByStockAndRetailPrice(){
         List<ArticleSearchOutputDto> articleList7 = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
                 (null, 2, "20", null);
         assertEquals(3, articleList7.size());
+    }
 
-        List<ArticleSearchOutputDto> articleList8 = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                (null, null, "20", "27");
-        assertEquals(3, articleList8.size());
-
-        List<ArticleSearchOutputDto> articleList9 = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                ("Art", null, "20", "23");
-        assertEquals(1, articleList9.size());
-
+    @Test
+    void testFindByDescriptionAndStockAndRetailPrice() {
         List<ArticleSearchOutputDto> articleList10 = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
                 ("zaR", 7, "2", "21");
         assertEquals(1, articleList10.size());
