@@ -32,6 +32,7 @@ public class RgpdResourceIT {
     void testCreatePrintableAgreementWithNoAuthenticatedUser() {
         RgpdDto dtoInput = new RgpdDto();
         dtoInput.setAgreementType("2");
+        this.restService.logout();
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 this.restService.restBuilder(new RestBuilder<RgpdDto>()).clazz(RgpdDto.class).
                         path(RgpdResource.RGPD).path(RgpdResource.PRINTABLE_AGREEMENT).
