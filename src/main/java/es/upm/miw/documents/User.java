@@ -1,7 +1,6 @@
 package es.upm.miw.documents;
 
-import es.upm.miw.dtos.UserDto;
-import es.upm.miw.dtos.UserMinimumDto;
+import es.upm.miw.dtos.UserProfileDto;
 import es.upm.miw.dtos.UserRolesDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -69,22 +68,21 @@ public class User {
 
 
     }
+    public User(String id, String username, String dni, String email, String address, Role[] roles, UserProfileDto userProfileDto) {
+        this.id=id;
+        this.mobile=userProfileDto.getMobile();
+        this.password=userProfileDto.getPassword();
+        this.setPassword(this.password);
+        this.setUsername(username);
+        this.setDni(dni);
+        this.setEmail(email);
+        this.setAddress(address);
+        this.setRoles(roles);
 
-    public User(UserMinimumDto userMinimum) {
-        this.mobile = userMinimum.getMobile();
-        this.username = userMinimum.getUsername();
-        this.roles = new Role[]{Role.CUSTOMER};
     }
 
-    public User(String id, String password, Role[] roles, UserDto userDto) {
-        this.id = id;
-        this.mobile = userDto.getMobile();
-        this.username = userDto.getUsername();
-        this.dni = userDto.getDni();
-        this.address = userDto.getAddress();
-        this.email = userDto.getEmail();
-        this.setPassword(password);
-        this.setRoles(roles);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public String getId() {
@@ -187,6 +185,72 @@ public class User {
                 ", address='" + address + '\'' +
                 ", roles=" + Arrays.toString(roles) +
                 '}';
+    }
+
+    public static class Builder {
+        private User user;
+
+        private Builder() {
+            this.user = new User();
+        }
+
+        public Builder id(String id) {
+            this.user.id = id;
+            return this;
+        }
+
+        public Builder mobile(String mobile) {
+            this.user.mobile = mobile;
+            return this;
+        }
+
+        public Builder username(String username) {
+            this.user.username = username;
+            return this;
+        }
+
+        public Builder password(String password) {
+            if (password == null) {
+                this.user.password = UUID.randomUUID().toString();
+            } else {
+                this.user.password = new BCryptPasswordEncoder().encode(password);
+            }
+            return this;
+        }
+
+        public Builder active(Boolean active) {
+            this.user.active = active;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.user.email = email;
+            return this;
+        }
+
+        public Builder dni(String dni) {
+            this.user.dni = dni;
+            return this;
+        }
+
+        public Builder address(String address) {
+            this.user.address = address;
+            return this;
+        }
+
+        public Builder registrationDate(LocalDateTime registrationDate) {
+            this.user.registrationDate = registrationDate;
+            return this;
+        }
+
+        public Builder roles(Role[] roles) {
+            this.user.roles = roles;
+            return this;
+        }
+
+        public User build() {
+            return this.user;
+        }
     }
 
 

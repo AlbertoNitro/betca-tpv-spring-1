@@ -2,10 +2,9 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
-import es.upm.miw.dtos.UserDto;
-import es.upm.miw.dtos.UserMinimumDto;
-import es.upm.miw.dtos.UserQueryDto;
-import es.upm.miw.dtos.UserRolesDto;
+import es.upm.miw.dtos.*;
+import es.upm.miw.repositories.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +22,22 @@ class UserResourceIT {
     @Autowired
     private RestService restService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private UserRolesDto existentUser;
+
+    private User userDb;
+
+    @AfterEach
+    void deleteUserDB() {
+        this.userRepository.delete(this.userDb);
+    }
 
     @BeforeEach
     void before() {
+        userDb = this.userRepository.save(new User("999777666", "123445", "666001110","123445",
+                "C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com"));
         List<UserRolesDto> users = Arrays.asList(this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<UserRolesDto[]>()).clazz(UserRolesDto[].class)
                 .path(UserResource.USERS)
@@ -246,7 +257,7 @@ class UserResourceIT {
                 .path(UserResource.USERS).path(UserResource.QUERY)
                 .body(userQueryInputDto).post().build());
         System.out.println(userMinimumDtoList);
-        assertEquals(2,userMinimumDtoList.size());
+        assertEquals(4,userMinimumDtoList.size());
     }
 
     @Test
@@ -265,19 +276,126 @@ class UserResourceIT {
     }
 
     @Test
-    void testCreateUser() {
-        UserMinimumDto userInputMinimumDto = new UserMinimumDto("111111111", "alberto");
+    void testCreateUserMinimum() {
+        UserMinimumDto userMinimumDto = new UserMinimumDto("135736823", this.userDb.getUsername());
+
         UserMinimumDto userOutputMinimumDto = this.restService.loginAdmin().restBuilder(new RestBuilder<UserMinimumDto>())
-                .clazz(UserMinimumDto.class).path(UserResource.USERS).body(userInputMinimumDto).post().build();
-        assertEquals(userOutputMinimumDto.getMobile(), userInputMinimumDto.getMobile());
+                .clazz(UserMinimumDto.class).path(UserResource.USERS).path(UserResource.MINIMUM).body(userMinimumDto).post().build();
+        assertEquals(userOutputMinimumDto.getMobile(), userMinimumDto.getMobile());
     }
 
     @Test
-    void testCreateUserBadRequest() {
+    void testCreateUserMinimumMobileNull() {
+        UserMinimumDto userMinimumDto = new UserMinimumDto(null, this.userDb.getUsername());
+
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 this.restService.loginAdmin().restBuilder(new RestBuilder<UserMinimumDto>())
-                        .clazz(UserMinimumDto.class).path(UserResource.USERS).body(new UserMinimumDto(null, "alberto"))
+                        .clazz(UserMinimumDto.class).path(UserResource.USERS).path(UserResource.MINIMUM).body(userMinimumDto)
                         .post().build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
+    void testCreateUserMinimumMobileWrong() {
+        UserMinimumDto userMinimumDto = new UserMinimumDto("66", this.userDb.getUsername());
+
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder(new RestBuilder<UserMinimumDto>())
+                        .clazz(UserMinimumDto.class).path(UserResource.USERS).path(UserResource.MINIMUM).body(userMinimumDto)
+                        .post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
+    void testCreateUserMinimumUsernameNull() {
+        UserMinimumDto userMinimumDto = new UserMinimumDto(this.userDb.getMobile(), null);
+
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder(new RestBuilder<UserMinimumDto>())
+                        .clazz(UserMinimumDto.class).path(UserResource.USERS).path(UserResource.MINIMUM).body(userMinimumDto)
+                        .post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
+    void testCreateUser() {
+        UserDto userInputDto = new UserDto(this.userDb);
+        userInputDto.setMobile("112214123");
+
+        UserDto userOutputDto = this.restService.loginAdmin().restBuilder(new RestBuilder<UserDto>())
+                .clazz(UserDto.class).path(UserResource.USERS).body(userInputDto).post().build();
+        assertEquals(userOutputDto.getMobile(), userInputDto.getMobile());
+    }
+
+    @Test
+    void testCreateUserMobileNull() {
+        UserDto userInputDto = new UserDto(this.userDb);
+        userInputDto.setMobile(null);
+
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder(new RestBuilder<UserDto>())
+                        .clazz(UserDto.class).path(UserResource.USERS).body(userInputDto).post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
+    void testCreateUserMobileWrong() {
+        UserDto userInputDto = new UserDto(this.userDb);
+        userInputDto.setMobile("66");
+
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder(new RestBuilder<UserDto>())
+                        .clazz(UserDto.class).path(UserResource.USERS).body(userInputDto).post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
+    void testCreateUserEmailWrong() {
+        this.userDb.setEmail("wrong@wrong");
+        UserDto userInputDto = new UserDto(this.userDb);
+
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder(new RestBuilder<UserDto>())
+                        .clazz(UserDto.class).path(UserResource.USERS).body(userInputDto).post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
+    void testCreateUserUsernameNull() {
+        UserDto userInputDto = new UserDto(this.userDb);
+        userInputDto.setUsername(null);
+
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder(new RestBuilder<UserDto>())
+                        .clazz(UserDto.class).path(UserResource.USERS).body(userInputDto).post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
+    void testUpdateUser() {
+        UserDto userInputDto = new UserDto(this.userDb);
+        userInputDto.setUsername("updatedUserName");
+
+        UserDto userOutputDto = this.restService.loginAdmin().restBuilder(new RestBuilder<UserDto>())
+                .clazz(UserDto.class).path(UserResource.USERS).path("/"+userInputDto.getMobile())
+                .body(userInputDto).put().build();
+        assertFalse(userOutputDto.getUsername().equals(this.userDb.getUsername()));
+    }
+
+    private RestBuilder<UserProfileDto> restUpdateProfileBuilder(String mobile, UserProfileDto userProfileDto) {
+        return this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<UserProfileDto>()).clazz(UserProfileDto.class)
+                .path(UserResource.USERS).path(UserResource.PASSWORDS).path("/" + mobile)
+                .body(userProfileDto)
+                .put();
+    }
+
+    @Test
+    void testUpdateProfile() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile(this.existentUser.getMobile());
+        userProfileDto.setPassword("nuevoPassword");
+        UserProfileDto result = restUpdateProfileBuilder(existentUser.getMobile(), userProfileDto).build();
+
     }
 }

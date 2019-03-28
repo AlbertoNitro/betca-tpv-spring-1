@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ApiTestConfig
-class ArticleResorceIT {
+class ArticleResourceIT {
 
     @Autowired
     private RestService restService;
@@ -48,7 +48,7 @@ class ArticleResorceIT {
     }
 
     @Test
-    void testReallAll(){
+    void testReadAll(){
         List<ArticleSearchOutputDto> articles = Arrays.asList(this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<ArticleSearchOutputDto[]>()).clazz(ArticleSearchOutputDto[].class)
                 .path(ArticleResource.ARTICLES).path(ArticleResource.SEARCH).body(new ArticleSearchInputDto(null, null, null, null))
@@ -57,7 +57,7 @@ class ArticleResorceIT {
     }
 
     @Test
-    void testReallArticlesBy1Field(){
+    void testReadArticlesBy1Field(){
         List<ArticleSearchOutputDto> articles = Arrays.asList(this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<ArticleSearchOutputDto[]>()).clazz(ArticleSearchOutputDto[].class)
                 .path(ArticleResource.ARTICLES).path(ArticleResource.SEARCH).body(new ArticleSearchInputDto("a", null, null, null))
@@ -66,12 +66,12 @@ class ArticleResorceIT {
     }
 
     @Test
-    void testReallPartiallyDefined(){
+    void testReadPartiallyDefined(){
         List<ArticleSearchOutputDto> articles = Arrays.asList(this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<ArticleSearchOutputDto[]>()).clazz(ArticleSearchOutputDto[].class)
                 .path(ArticleResource.ARTICLES).path(ArticleResource.SEARCH).path(ArticleResource.PARTIALLY_DEFINED)
                 .post().build());
-        assertTrue(articles.size() == 0);
+        assertTrue(articles.size() > 0);
     }
 
     @Test

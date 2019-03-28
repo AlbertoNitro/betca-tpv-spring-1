@@ -1,10 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.TicketController;
-import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Order;
-import es.upm.miw.documents.OrderLine;
-import es.upm.miw.documents.Ticket;
+import es.upm.miw.documents.*;
 import es.upm.miw.dtos.*;
 import es.upm.miw.dtos.input.TicketCreationInputDto;
 import es.upm.miw.dtos.input.TicketQueryInputDto;
@@ -521,4 +518,29 @@ class TicketResourceIT {
                         .body(searchTicketDto).post().build());
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
+
+    @Test
+    void testObtainTicketModifiedById() {
+        TicketModificationStateOrAmountDto modifiedTicket = restService.loginAdmin()
+                .restBuilder(new RestBuilder<TicketModificationStateOrAmountDto>())
+                .clazz(TicketModificationStateOrAmountDto.class)
+                .path(TicketResource.TICKETS).path(TicketResource.TICKET_ID).expand("201901121")
+                .get().build();
+        assertNotNull(modifiedTicket);
+    }
+
+    @Test
+    void testUpdateModifiedTicketAndPdf() {
+        Ticket ticket = ticketController.readTicketById("201901121");
+        TicketModificationStateOrAmountDto modifiedTicket = new TicketModificationStateOrAmountDto(ticket);
+        byte[] pdf = restService.loginAdmin()
+                .restBuilder(new RestBuilder<byte[]>())
+                .clazz(byte[].class)
+                .path(TicketResource.TICKETS).path(TicketResource.TICKET_ID)
+                .body(modifiedTicket)
+                .expand("201901121")
+                .put().build();
+        assertNotNull(pdf);
+    }
+
 }

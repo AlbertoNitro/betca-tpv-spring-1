@@ -1,15 +1,13 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.TicketController;
+import es.upm.miw.dtos.TicketModificationStateOrAmountDto;
 import es.upm.miw.dtos.input.TicketCreationInputDto;
 import es.upm.miw.dtos.input.TicketQueryInputDto;
 import es.upm.miw.dtos.output.TicketQueryOutputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,6 +19,7 @@ public class TicketResource {
     public static final String TICKETS = "/tickets";
     public static final String QUERY = "/query";
     public static final String ORDER_ID = "/orderId";
+    public static final String TICKET_ID = "/{id}";
 
     @Autowired
     private TicketController ticketController;
@@ -40,4 +39,15 @@ public class TicketResource {
         return this.ticketController.advancedTicketQueryByOrderId(ticketQueryDto);
     }
 
+    @GetMapping(value = TICKET_ID)
+    public TicketModificationStateOrAmountDto obtainTicketModifiedById(@PathVariable String id) {
+        return ticketController.obtainTicketModifiedById(id);
+    }
+
+    @PutMapping(value = TICKET_ID, produces = {"application/pdf", "application/json"})
+    public byte[] updateModifiedTicketAndPdf(
+            @PathVariable String id
+            , @Valid @RequestBody TicketModificationStateOrAmountDto modifiedTicket) {
+        return ticketController.updateModifiedTicketAndPdf(id, modifiedTicket);
+    }
 }

@@ -1,11 +1,9 @@
 package es.upm.miw.business_controllers;
 
-import es.upm.miw.documents.ArticlesFamily;
-import es.upm.miw.documents.FamilyArticle;
-import es.upm.miw.documents.FamilyComposite;
-import es.upm.miw.documents.FamilyType;
+import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
+import es.upm.miw.dtos.ArticleFamilyRootDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.FamilyArticleRepository;
@@ -92,5 +90,23 @@ public class ArticlesFamilyController {
 
     public List<ArticleFamilyMinimumDto> readAllFamilyCompositeByFamilyType(FamilyType familyType) {
         return familyCompositeRepository.findAllFamilyCompositeByFamilyType(familyType);
+    }
+
+    public  List<ArticleFamilyRootDto> readInFamilyCompositeArticlesList(String description){
+        FamilyComposite familyRoot = familyCompositeRepository.findFirstByDescription(description);
+        List<ArticleFamilyRootDto> dtos = new ArrayList<>();
+        for (ArticlesFamily articlesFamily: familyRoot.getArticlesFamilyList()) {
+            if (articlesFamily.getFamilyType() == FamilyType.ARTICLE){
+                Article article = articleRepository.findByCode(articlesFamily.getArticleIdList().get(0));
+                dtos.add(new ArticleFamilyRootDto(article.getCode(), article.getDescription(), article.getRetailPrice()));
+            }
+            if (articlesFamily.getFamilyType() == FamilyType.ARTICLES){
+                dtos.add(new ArticleFamilyRootDto(articlesFamily.getDescription(), articlesFamily.getArticlesFamilyList()));
+            }
+            if (articlesFamily.getFamilyType() == FamilyType.SIZES){
+                dtos.add(new ArticleFamilyRootDto(articlesFamily.getReference(), articlesFamily.getDescription()));
+            }
+        }
+        return dtos;
     }
 }
