@@ -5,6 +5,7 @@ import es.upm.miw.documents.ArticlesFamily;
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
+import es.upm.miw.dtos.ArticleFamilyRootDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.junit.jupiter.api.Test;
@@ -94,8 +95,8 @@ public class ArticlesFamilyControllerIT {
     }
 
     @Test
-    void testReadFamilyCompositeRoot() {
-        assertEquals("root", familyCompositeRepository.findFirstByDescription("root").getReference());
+    void testReadInFamilyCompositeArticlesList(){
+        assertEquals("8400000000031", articlesFamilyController.readInFamilyCompositeArticlesList("root").get(0).getCode());
+        assertEquals("cards", articlesFamilyController.readInFamilyCompositeArticlesList("root").get(2).getDescription());
     }
-
 }
