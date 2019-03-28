@@ -2,11 +2,8 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.UserController;
 import es.upm.miw.documents.Role;
-import es.upm.miw.dtos.UserQueryDto;
-import es.upm.miw.dtos.UserRolesDto;
+import es.upm.miw.dtos.*;
 import es.upm.miw.dtos.output.TokenOutputDto;
-import es.upm.miw.dtos.UserDto;
-import es.upm.miw.dtos.UserMinimumDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,6 +28,7 @@ public class UserResource {
     public static final String ROLES = "/roles";
     public static final String QUERY = "/query";
     public static final String MOBILE_ID = "/{mobile}";
+    public static final String PASSWORDS = "/passwords";
 
     @Autowired
     private UserController userController;
@@ -105,4 +103,8 @@ public class UserResource {
         return authorities;
     }
 
+    @PutMapping(value = PASSWORDS+MOBILE_ID)
+    public UserProfileDto updateProfile(@PathVariable String mobile, @Valid @RequestBody UserProfileDto userProfileDto) {
+        return this.userController.updateProfile(mobile, userProfileDto);
+    }
 }
