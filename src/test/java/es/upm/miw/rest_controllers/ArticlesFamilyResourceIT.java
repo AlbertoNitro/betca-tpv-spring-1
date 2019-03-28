@@ -4,9 +4,11 @@ import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
+import es.upm.miw.dtos.ArticleFamilyRootDto;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.TestExecutionListeners;
 
 import java.util.Arrays;
 import java.util.List;
@@ -78,5 +80,15 @@ public class ArticlesFamilyResourceIT {
                 .path(ArticlesFamilyResource.ARTICLES_FAMILY)
                 .param("familyType", "ARTICLES").get().build());
         assertTrue(articleFamilyMinimumDtoList.size() > 1);
+    }
+
+    @Test
+    void testReadInFamilyComposite(){
+        List<ArticleFamilyRootDto> articleFamilyRootDtos = Arrays.asList(this.restService.loginOperator()
+                .restBuilder(new RestBuilder<ArticleFamilyRootDto[]>()).clazz(ArticleFamilyRootDto[].class)
+                .path(ArticlesFamilyResource.ARTICLES_FAMILY)
+                .path(ArticlesFamilyResource.FAMILY_COMPOSITE)
+                .param("description", "root").get().build());
+        assertTrue(articleFamilyRootDtos.size() > 1);
     }
 }

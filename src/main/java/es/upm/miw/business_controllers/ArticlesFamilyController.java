@@ -98,7 +98,7 @@ public class ArticlesFamilyController {
         for (ArticlesFamily articlesFamily: familyRoot.getArticlesFamilyList()) {
             if (articlesFamily.getFamilyType() == FamilyType.ARTICLE){
                 Article article = articleRepository.findByCode(articlesFamily.getArticleIdList().get(0));
-                dtos.add(new ArticleFamilyRootDto(article.getDescription(), article.getCode(), article.getRetailPrice()));
+                dtos.add(new ArticleFamilyRootDto(article.getCode(), article.getDescription(), article.getRetailPrice()));
             }
             if (articlesFamily.getFamilyType() == FamilyType.ARTICLES){
                 dtos.add(new ArticleFamilyRootDto(articlesFamily.getDescription(), articlesFamily.getArticlesFamilyList()));

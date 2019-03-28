@@ -62,7 +62,7 @@ public class ArticlesFamilyResource {
     }
 
     @GetMapping(value = FAMILY_COMPOSITE)
-    public List<ArticleFamilyRootDto> readFamilyCompositeRoot(@Valid @RequestParam String description){
+    public List<ArticleFamilyRootDto> readInFamilyComposite(@Valid @RequestParam String description){
         return articlesFamilyController.readInFamilyCompositeArticlesList(description);
     }
 }
