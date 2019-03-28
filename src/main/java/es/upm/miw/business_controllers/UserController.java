@@ -16,7 +16,7 @@ import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -103,7 +103,6 @@ public class UserController {
 
         if (!this.userRepository.findByMobile(mobile).isPresent())
             throw new NotFoundException("User mobile (" + mobile + ")");
-       // userRolesDto.setId(this.userRepository.findByMobile(mobile).get().getId());
         String id = this.userRepository.findByMobile(mobile).get().getId();
         Optional<User> user = this.userRepository.findById(id);
         if (user.isPresent() && !user.get().getMobile().equals(mobile))

@@ -385,7 +385,6 @@ class UserResourceIT {
         userProfileDto.setMobile(this.existentUser.getMobile());
         userProfileDto.setPassword("nuevoPassword");
         UserProfileDto result = restUpdateProfileBuilder(existentUser.getMobile(), userProfileDto).build();
-        System.out.println(result);
 
     }
 }
