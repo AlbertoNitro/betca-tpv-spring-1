@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -38,7 +39,7 @@ public class PdfService {
 
     public byte[] generateTicket(Ticket ticket) {
         final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
-        PdfBuilder pdf = new PdfBuilder(path);
+        PdfBuilder pdf = new PdfBuilder(path, "");
         pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
                 .paragraph("NIF: " + this.nif + "   -   " + this.address)
                 .paragraph("Email: " + this.email + "  -  " + "Web: " + this.web);
@@ -80,6 +81,32 @@ public class PdfService {
             pdf.qrCode(ticket.getReference());
         }
         pdf.line().paragraph("Periodo de devolución o cambio: 15 dias a partir de la fecha del ticket");
+        pdf.paragraphEmphasized("Gracias por su visita").paragraphEmphasized(" ").line();
+        return pdf.build();
+    }
+
+    public byte[] generatePrintableRgpdAgreement(String userName) {
+        final String path = "/rgpd-pdfs/printable/agreement-" + userName;
+        PdfBuilder pdf = new PdfBuilder(path, "");
+        pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
+                .paragraph("NIF: " + this.nif + "   -   " + this.address)
+                .paragraph("Email: " + this.email + "  -  " + "Web: " + this.web);
+        pdf.line();
+
+        pdf.paragraphEmphasized("Contrato de proteccion de datos.");
+        pdf.paragraphEmphasized(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        pdf.line();
+        pdf.paragraphEmphasized("Otorgante: " + userName);
+        pdf.line();
+        pdf.paragraphEmphasized("Tal: ");
+        pdf.paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mollis neque commodo urna tristique rhoncus. Etiam varius leo et velit posuere, a molestie ex consectetur. Duis sit amet nulla in massa sagittis porttitor commodo vitae quam. Vivamus viverra libero id risus porttitor bibendum. Morbi et facilisis sapien. Nullam vitae rhoncus ligula. Cras accumsan cursus ipsum, vitae commodo quam ullamcorper in. Ut tincidunt mi eget lectus mattis bibendum.");
+        pdf.paragraph("Quisque vulputate nunc sit amet ligula pretium malesuada. Fusce imperdiet ante id elementum eleifend. Suspendisse massa libero, egestas interdum imperdiet quis, lacinia ut elit. Etiam velit nisi, placerat sit amet facilisis eget, euismod a ipsum. Fusce malesuada quis justo ac ultrices. Nunc quis rhoncus neque. Integer condimentum, leo aliquet pulvinar molestie, tortor nulla consectetur elit, a rhoncus risus sapien in augue. Mauris vel nisl eu risus varius cursus et vitae lorem. Donec molestie venenatis feugiat. Proin quis turpis leo. Nulla eu dolor vitae arcu suscipit tincidunt eget id arcu. Ut dictum nisi in risus porta, nec maximus felis scelerisque. In aliquet diam nibh, ac pulvinar arcu eleifend vel. Sed in convallis nulla. Donec fermentum, sapien at facilisis lacinia, neque sapien condimentum nunc, ut efficitur est lectus a arcu.");
+
+        pdf.paragraph("Etiam est felis, tristique ut tristique id, dapibus a orci. Mauris rutrum velit at lectus tristique, a congue ex lobortis. Praesent orci nulla, scelerisque ut maximus quis, ullamcorper non leo. Integer laoreet ex vel odio dignissim lobortis. In at lorem dolor. Maecenas quis diam nec leo consectetur commodo in in enim. Mauris sit amet ligula vitae magna tincidunt sagittis. Quisque ac massa nibh. Proin hendrerit rutrum augue et lacinia. Nam ullamcorper mi a felis euismod malesuada. Cras pharetra ligula a tempor porta. Nunc sed volutpat purus. Curabitur eget accumsan arcu. Integer lobortis sem libero, luctus interdum sapien cursus sed. Duis quis rhoncus nibh, eu gravida massa. Proin vel neque egestas erat pellentesque ultricies.");
+
+        pdf.paragraph("Curabitur commodo metus a vestibulum gravida. Nunc efficitur aliquam tristique. Maecenas accumsan erat nibh, et elementum risus dictum posuere. Sed ut mauris vel ligula pretium molestie. Proin fringilla ut nunc sit amet viverra. Suspendisse tristique augue sed dui congue pulvinar. Etiam ex tortor, vulputate at faucibus sit amet, egestas id libero. Praesent sodales vel ante at ultrices. Cras condimentum convallis arcu, vel tincidunt neque tincidunt id. Fusce nisl tortor, posuere facilisis lectus a, mollis viverra massa.");
+
+        pdf.paragraph("Morbi lorem elit, fringilla sed lorem quis, tempor tempus sapien. Mauris placerat justo ultrices, porta diam venenatis, laoreet orci. Cras elementum mi ut lacus elementum, eget sodales turpis pellentesque. Fusce quis consectetur justo. Curabitur quis lobortis risus. Duis in eros vel lorem tempus elementum. Vestibulum orci orci, semper in urna iaculis, tincidunt semper orci. Phasellus non rhoncus odio. Nullam nibh urna, porttitor a mattis nec, tincidunt eget orci. Quisque pharetra hendrerit ante. In nunc ex, suscipit id placerat vitae, faucibus ut orci.");
         pdf.paragraphEmphasized("Gracias por su visita").paragraphEmphasized(" ").line();
         return pdf.build();
     }
