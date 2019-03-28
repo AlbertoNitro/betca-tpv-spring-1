@@ -4,12 +4,9 @@ import es.upm.miw.business_controllers.AlarmController;
 import es.upm.miw.dtos.AlarmDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
+import javax.validation.Valid;
 
 @PreAuthorize("hasRole ('ADMIN') or hasRole('MANAGER') or hasRole('OPERATOR')")
 @RestController
@@ -29,6 +26,22 @@ public class AlarmResource {
     public AlarmDto readAlarm(@PathVariable String id){
         return alarmController.readAlarm(id);
     }
+
+    @PostMapping()
+    public AlarmDto createAlarm(@Valid @RequestBody AlarmDto alarmDto) {
+        return alarmController.createAlarm(alarmDto);
+    }
+
+    @PutMapping(value = ALARM_ID)
+    public AlarmDto updateAlarm(@PathVariable String id, @RequestBody AlarmDto alarmDto){
+        return alarmController.updateAlarm(alarmDto, id);
+    }
+
+    @DeleteMapping( value = AlarmResource.ALARM_ID)
+    public void delete(@PathVariable String id) {
+        alarmController.delete(id);
+    }
+
 
 
 }

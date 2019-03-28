@@ -8,7 +8,9 @@ import es.upm.miw.documents.Article;
 @JsonInclude(Include.NON_NULL)
 public class AlarmDto {
 
-    private Article article;
+    private String code;
+
+    private String refToArticle;
 
     private int warning;
 
@@ -19,17 +21,26 @@ public class AlarmDto {
     }
 
     public AlarmDto(Alarm alarm) {
-        this.article = alarm.getArticle();
+        this.code = alarm.getCode();
+        this.refToArticle = alarm.getArticle().getCode();
         this.warning = alarm.getWarning();
         this.critical = alarm.getCritical();
     }
 
-    public Article getArticle() {
-        return article;
+    public String getCode() {
+        return code;
     }
 
-    public void setArticle(Article article) {
-        this.article = article;
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getRefToArticle() {
+        return refToArticle;
+    }
+
+    public void setRefToArticle(String refToArticle) {
+        this.refToArticle = refToArticle;
     }
 
     public int getWarning() {
@@ -46,5 +57,15 @@ public class AlarmDto {
 
     public void setCritical(int critical) {
         this.critical = critical;
+    }
+
+    @Override
+    public String toString() {
+        return "AlarmDto{" +
+                "code='" + code + '\'' +
+                ", refArticle='" + refToArticle + '\'' +
+                ", warning=" + warning +
+                ", critical=" + critical +
+                '}';
     }
 }

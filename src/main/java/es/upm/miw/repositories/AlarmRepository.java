@@ -14,6 +14,7 @@ public interface AlarmRepository extends MongoRepository<Alarm, String> {
 
     @Query (value = "{}", fields = "{ '_id' : 0 }")
     List<AlarmDto> findAllAlarms();
+    //TODO: perhaps is not necessary, cause teh "findAll()" method
 
     // TODO: find by Critical, Warning
 }
