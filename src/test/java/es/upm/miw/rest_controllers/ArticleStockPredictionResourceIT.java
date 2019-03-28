@@ -18,7 +18,7 @@ class ArticleStockPredictionResourceIT {
     void calculateStockPredictionShouldReturnStockPredictionOutputDtoArray() {
         //ArticleResource.StockPredictionOutputDto[] stockPredictionOutputDtos = this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleResource.StockPredictionOutputDto[]>()).clazz(ArticleResource.StockPredictionOutputDto[].class);
         String json = this.restService.loginAdmin().restBuilder(new RestBuilder<String>()).clazz(String.class)
-                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand(666)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand("8400000000017")
                 .param("periodicityType", PeriodicityType.WEEKLY.name())
                 .param("periodsNumber", "5")
                 .get().build();
