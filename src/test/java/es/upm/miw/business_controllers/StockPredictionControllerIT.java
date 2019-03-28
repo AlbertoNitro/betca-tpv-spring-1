@@ -38,7 +38,9 @@ class StockPredictionControllerIT {
 
     @Test
     void testGroupTicketsByPeriodicityAlgorithm() {
-        Map<String, List<Ticket>> groupTicketsByPeriodicity = groupTicketsByPeriodicity(randomTickets(), PeriodicityType.WEEKLY);
+        Map<String, List<Ticket>> groupTicketsByPeriodicity = groupTicketsByPeriodicity(
+                randomTickets(LocalDateTime.now().minusMonths(1), 514),
+                PeriodicityType.WEEKLY);
         System.out.print("groupTicketsByPeriodicity..." + groupTicketsByPeriodicity);
 
         int countTickets = groupTicketsByPeriodicity.entrySet().stream().mapToInt(entry -> entry.getValue().size()).sum();
@@ -49,17 +51,19 @@ class StockPredictionControllerIT {
     void testCountArticleFromTicketsGroupByPeriodicityAlgorithm() {
         Map<String, Integer> countArticleFromTicketsGroupByPeriodicity = countArticleFromTicketsGroupByPeriodicity(
                 article8400000000017,
-                groupTicketsByPeriodicity(randomTickets(), PeriodicityType.WEEKLY));
+                groupTicketsByPeriodicity(
+                        randomTickets(LocalDateTime.now().minusMonths(12), 514),
+                        PeriodicityType.MONTHLY));
         System.out.print("countArticleFromTicketsGroupByPeriodicity...\n" + countArticleFromTicketsGroupByPeriodicity);
 
         int countArticles = countArticleFromTicketsGroupByPeriodicity.entrySet().stream().mapToInt(entry -> entry.getValue()).sum();
         assertEquals(1028, countArticles);
     }
 
-    private List<Ticket> randomTickets() {
+    private List<Ticket> randomTickets(LocalDateTime fromDate, int numberOfTickets) {
         return new RandomTicketsBuilder().
-                fromDate(LocalDateTime.now().minusMonths(1))
-                .numberOfTickets(514)
+                fromDate(fromDate)
+                .numberOfTickets(numberOfTickets)
                 .addTicketArticle(article8400000000017, 2)
                 .addTicketArticle(article8400000000024, 1)
                 .build();
