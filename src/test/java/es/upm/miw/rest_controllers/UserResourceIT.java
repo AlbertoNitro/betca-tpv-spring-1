@@ -2,10 +2,7 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
-import es.upm.miw.dtos.UserDto;
-import es.upm.miw.dtos.UserMinimumDto;
-import es.upm.miw.dtos.UserQueryDto;
-import es.upm.miw.dtos.UserRolesDto;
+import es.upm.miw.dtos.*;
 import es.upm.miw.repositories.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -372,5 +369,22 @@ class UserResourceIT {
                 .clazz(UserDto.class).path(UserResource.USERS).path("/"+userInputDto.getMobile())
                 .body(userInputDto).put().build();
         assertFalse(userOutputDto.getUsername().equals(this.userDb.getUsername()));
+    }
+
+    private RestBuilder<UserProfileDto> restUpdateProfileBuilder(String mobile, UserProfileDto userProfileDto) {
+        return this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<UserProfileDto>()).clazz(UserProfileDto.class)
+                .path(UserResource.USERS).path(UserResource.PASSWORDS).path("/" + mobile)
+                .body(userProfileDto)
+                .put();
+    }
+
+    @Test
+    void testUpdateProfile() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile(this.existentUser.getMobile());
+        userProfileDto.setPassword("nuevoPassword");
+        UserProfileDto result = restUpdateProfileBuilder(existentUser.getMobile(), userProfileDto).build();
+
     }
 }

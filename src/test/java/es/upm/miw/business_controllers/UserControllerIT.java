@@ -5,6 +5,7 @@ import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
 import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
+import es.upm.miw.dtos.UserProfileDto;
 import es.upm.miw.dtos.UserRolesDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.exceptions.NotFoundException;
@@ -115,16 +116,38 @@ public class UserControllerIT {
     }
 
     @Test
-    void testUpdateNotFoundMobile() {
+    void testUpdateNotRolesUserFoundMobile() {
         UserRolesDto userRolesDto = new UserRolesDto();
         userRolesDto.setMobile("no-existent-mobile-user");
         assertThrows(NotFoundException.class, () -> this.userController.updateRoles(userRolesDto.getMobile(), userRolesDto));
     }
 
     @Test
-    void testUpdateNoMobile() {
+    void testUpdateRolesUserNoMobile() {
         UserRolesDto userRolesDto = new UserRolesDto();
         assertThrows(BadRequestException.class, () -> this.userController.updateRoles(null, userRolesDto));
+    }
+
+    @Test
+    void testUpdateProfileUser() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile(this.user.getMobile());
+        String updatedpassword = "contraseniaNueva";
+        userProfileDto.setPassword(updatedpassword);
+        UserProfileDto result = this.userController.updateProfile(userProfileDto.getMobile(), userProfileDto);
+    }
+
+    @Test
+    void testProfileUserNotFoundMobile() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile("no-existent-mobile-user");
+        assertThrows(NotFoundException.class, () -> this.userController.updateProfile(userProfileDto.getMobile(), userProfileDto));
+    }
+
+    @Test
+    void testProfileUserNoMobile() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        assertThrows(BadRequestException.class, () -> this.userController.updateProfile(null, userProfileDto));
     }
 
     @Test
