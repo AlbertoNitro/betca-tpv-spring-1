@@ -69,13 +69,4 @@ class StockPredictionControllerIT {
                 .build();
     }
 
-    /*
-    new StockPredictionOutputDto[]{
-        new StockPredictionOutputDto(PeriodType.WEEK, 1, 1028),
-                new StockPredictionOutputDto(PeriodType.WEEK, 2, 964),
-                new StockPredictionOutputDto(PeriodType.WEEK, 3, 900),
-                new StockPredictionOutputDto(PeriodType.WEEK, 4, 837)
-    };
-    */
-
 }
