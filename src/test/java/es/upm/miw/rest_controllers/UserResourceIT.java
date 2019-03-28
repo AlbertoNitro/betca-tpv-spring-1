@@ -350,6 +350,17 @@ class UserResourceIT {
     }
 
     @Test
+    void testCreateUserEmailWrong() {
+        this.userDb.setEmail("wrong@wrong");
+        UserDto userInputDto = new UserDto(this.userDb);
+
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder(new RestBuilder<UserDto>())
+                        .clazz(UserDto.class).path(UserResource.USERS).body(userInputDto).post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    }
+
+    @Test
     void testCreateUserUsernameNull() {
         UserDto userInputDto = new UserDto(this.userDb);
         userInputDto.setUsername(null);

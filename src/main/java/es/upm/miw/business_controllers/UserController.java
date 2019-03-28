@@ -70,7 +70,10 @@ public class UserController {
             throw new BadRequestException("User mobile (" + userMinimumDto.getMobile() + ") already exist.");
         }
 
-        User saved = this.userRepository.save(new User(userMinimumDto));
+        User saved = User.builder().username(userMinimumDto.getUsername()).mobile(userMinimumDto.getMobile())
+                .roles(new Role[]{Role.CUSTOMER}).build();
+
+        this.userRepository.save(saved);
         return new UserMinimumDto(saved.getMobile(), saved.getUsername());
     }
 
@@ -78,8 +81,11 @@ public class UserController {
         if(this.userRepository.findByMobile(userDto.getMobile()).isPresent()) {
             throw new BadRequestException("User mobile (" + userDto.getMobile() + ") already exist.");
         }
+        User saved = User.builder().mobile(userDto.getMobile()).username(userDto.getUsername()).email(userDto.getEmail())
+                .dni(userDto.getDni()).address(userDto.getAddress()).active(userDto.isActive()).roles(new Role[]{Role.CUSTOMER})
+                .registrationDate(userDto.getRegistrationDate()).build();
 
-        User saved = this.userRepository.save(new User(userDto));
+        this.userRepository.save(saved);
         return new UserDto(saved);
     }
 
@@ -91,7 +97,11 @@ public class UserController {
         User userFound = this.userRepository.findByMobile(mobile)
                 .orElseThrow(() -> new NotFoundException("User mobile (" + userDto.getMobile() + ") is not found."));
 
-        User saved = this.userRepository.save(new User(userFound.getId(), userFound.getPassword(), userFound.getRoles(), userDto));
+        User saved = User.builder().id(userFound.getId()).username(userDto.getUsername()).password(userFound.getPassword())
+                .mobile(userDto.getMobile()).roles(userFound.getRoles()).dni(userDto.getDni()).address(userDto.getAddress())
+                .email(userDto.getEmail()).registrationDate(userDto.getRegistrationDate()).active(userDto.isActive()).build();
+
+        this.userRepository.save(saved);
         return new UserDto(saved);
     }
 
