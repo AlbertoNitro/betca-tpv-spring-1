@@ -21,4 +21,8 @@ public class PdfServiceIT {
         assertNotNull(this.pdfService.generateTicket(this.ticketRepository.findById("201901121").get()));
     }
 
+    @Test
+    void testPdfGeneratePrintableRgpdAgreement() {
+        assertNotNull(this.pdfService.generatePrintableRgpdAgreement("6"));
+    }
 }
