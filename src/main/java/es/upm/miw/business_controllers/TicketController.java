@@ -295,8 +295,8 @@ public class TicketController {
                 .orElseThrow(() -> new NotFoundException("Ticket id (" + id + ")")));
     }
 
-    public Ticket updateModifiedTicket(TicketModificationStateOrAmountDto modifiedTicket) {
-        Ticket ticketDb = this.readTicketById(modifiedTicket.getId());
+    public Ticket updateModifiedTicket(String id, TicketModificationStateOrAmountDto modifiedTicket) {
+        Ticket ticketDb = this.readTicketById(id);
         List<Shopping> shoppings = new ArrayList<>();
         modifiedTicket.getShoppingList().forEach(p -> {
             shoppings.add(p.transformModifiedShoppingToShopping());
@@ -311,8 +311,8 @@ public class TicketController {
         return ticketDb;
     }
 
-    public byte[] updateModifiedTicketAndPdf(TicketModificationStateOrAmountDto modifiedTicket) {
-        return pdfService.generateTicket(this.updateModifiedTicket(modifiedTicket));
+    public byte[] updateModifiedTicketAndPdf(String id, TicketModificationStateOrAmountDto modifiedTicket) {
+        return pdfService.generateTicket(this.updateModifiedTicket(id, modifiedTicket));
     }
 
 }
