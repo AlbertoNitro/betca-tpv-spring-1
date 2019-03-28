@@ -5,6 +5,7 @@ import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
+import es.upm.miw.dtos.ArticleFamilyRootDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class ArticlesFamilyResource {
 
     public static final String DESCRIPTION = "/{description}";
 
-    public static final String ROOT = "/family-root";
+    public static final String FAMILY_COMPOSITE = "/familydescription";
 
     @Autowired
     private ArticlesFamilyController articlesFamilyController;
@@ -60,8 +61,8 @@ public class ArticlesFamilyResource {
         return articlesFamilyController.readAllFamilyCompositeByFamilyType(familyType);
     }
 
-    @GetMapping(value = ROOT)
-    public FamilyComposite readFamilyCompositeRoot(){
-        return articlesFamilyController.readFamilyCompositeRoot();
+    @GetMapping(value = FAMILY_COMPOSITE)
+    public List<ArticleFamilyRootDto> readFamilyCompositeRoot(@Valid @RequestParam String description){
+        return articlesFamilyController.readInFamilyCompositeArticlesList(description);
     }
 }
