@@ -44,4 +44,10 @@ public class TicketResource {
         return ticketController.obtainTicketModifiedById(id);
     }
 
+    @PutMapping(value = TICKET_ID, produces = {"application/pdf", "application/json"})
+    public byte[] updateModifiedTicketAndPdf(
+            @PathVariable String id
+            , @Valid @RequestBody TicketModificationStateOrAmountDto modifiedTicket) {
+        return ticketController.updateModifiedTicketAndPdf(id, modifiedTicket);
+    }
 }

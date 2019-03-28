@@ -84,7 +84,7 @@ public class TicketControllerIT {
     void updateModifiedTicketTest() {
         this.ticketModificationStateOrAmountDto.getShoppingList().get(0).setAmount(2);
         this.ticketModificationStateOrAmountDto.getShoppingList().get(0).setShoppingState(ShoppingState.IN_STOCK);
-        Ticket ticket = ticketController.updateModifiedTicket(this.ticketModificationStateOrAmountDto);
+        Ticket ticket = ticketController.updateModifiedTicket("1395", this.ticketModificationStateOrAmountDto);
         assertEquals(ticket.getShoppingList()[0].getAmount()
                 , this.ticketModificationStateOrAmountDto.getShoppingList().get(0).getAmount());
         assertEquals(ticket.getShoppingList()[0].getShoppingState()
@@ -93,7 +93,7 @@ public class TicketControllerIT {
 
     @Test
     void updateModifiedTicketAndPdf(){
-        assertNotNull(ticketController.updateModifiedTicketAndPdf(this.ticketModificationStateOrAmountDto));
+        assertNotNull(ticketController.updateModifiedTicketAndPdf("1395", this.ticketModificationStateOrAmountDto));
     }
 
 }
