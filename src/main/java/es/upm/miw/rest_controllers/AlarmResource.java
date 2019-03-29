@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @PreAuthorize("hasRole ('ADMIN') or hasRole('MANAGER') or hasRole('OPERATOR')")
 @RestController
@@ -20,7 +21,7 @@ public class AlarmResource {
     private AlarmController alarmController;
 
     @GetMapping()
-    public String readAll() { return "Test"; };
+    public List<AlarmDto> readAll() { return this.alarmController.readAll(); };
 
     @GetMapping(value = AlarmResource.ALARM_ID)
     public AlarmDto readAlarm(@PathVariable String id){
@@ -33,7 +34,7 @@ public class AlarmResource {
     }
 
     @PutMapping(value = ALARM_ID)
-    public AlarmDto updateAlarm(@PathVariable String id, @RequestBody AlarmDto alarmDto){
+    public AlarmDto updateAlarm(@PathVariable String id, @Valid @RequestBody AlarmDto alarmDto){
         return alarmController.updateAlarm(alarmDto, id);
     }
 
@@ -41,7 +42,5 @@ public class AlarmResource {
     public void delete(@PathVariable String id) {
         alarmController.delete(id);
     }
-
-
 
 }

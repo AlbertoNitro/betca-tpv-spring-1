@@ -10,7 +10,8 @@ import es.upm.miw.repositories.AlarmRepository;
 import es.upm.miw.repositories.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
@@ -24,6 +25,14 @@ public class AlarmController {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    public List<AlarmDto> readAll(){
+        List<AlarmDto> alarmDtoList = new ArrayList<>();
+        for(Alarm alarm: this.alarmRepository.findAll()){
+            alarmDtoList.add(new AlarmDto(alarm));
+        }
+        return alarmDtoList;
+    }
 
     public AlarmDto readAlarm(String code) {
         return new AlarmDto( this.alarmRepository.findById(code)
@@ -40,16 +49,13 @@ public class AlarmController {
             throw new ConflictException("Alarm code (" + code + ")");
         }
 
-        Alarm alarm =  prepareAlarm(alarmDto, code);
-
+        Alarm alarm = prepareAlarm(alarmDto, code);
         this.alarmRepository.save(alarm);
-
         return new AlarmDto(alarm);
     }
 
     public AlarmDto updateAlarm(AlarmDto alarmDto, String code) {
         Alarm alarm = prepareAlarm(alarmDto, code);
-
         this.alarmRepository.save(alarm);
         return new AlarmDto(alarm);
     }
@@ -63,8 +69,8 @@ public class AlarmController {
     }
 
     private Alarm prepareAlarm(AlarmDto alarmDto, String code) {
-        alarmDto.setCode(code);
         Alarm alarm = new Alarm();
+        alarm.setCode(code);
 
         Article article = this.articleRepository.findByCode(alarmDto.getRefToArticle());
         if(article!=null) alarm.setArticle(article);
