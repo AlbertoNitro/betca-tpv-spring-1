@@ -25,23 +25,6 @@ public class ShoppingModificationStateOrAmountDto {
         //Empty for framework
     }
 
-
-    public ShoppingModificationStateOrAmountDto(
-            String description,
-            Integer amount,
-            BigDecimal discount,
-            BigDecimal retailPrice,
-            BigDecimal totalPrice,
-            ShoppingState shoppingState) {
-
-        this.description = description;
-        this.amount = amount;
-        this.discount = discount;
-        this.retailPrice = retailPrice;
-        this.totalPrice = totalPrice;
-        this.shoppingState = shoppingState;
-    }
-
     public ShoppingModificationStateOrAmountDto(Shopping shopping) {
 
         this.description = shopping.getDescription();
