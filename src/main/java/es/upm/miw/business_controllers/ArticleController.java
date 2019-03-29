@@ -78,8 +78,10 @@ public class ArticleController {
 
     public ArticleDto createArticle(ArticleDto articleDto) {
         String code = articleDto.getCode();
-        if (code == null || code.equals("")) {
-            code = this.databaseSeederService.nextCodeEan();
+        if (code == null) {
+            do {
+                code = this.databaseSeederService.nextCodeEan();
+            } while (this.articleRepository.findById(code).isPresent());
         }
 
         if (this.articleRepository.findById(code).isPresent()) {
@@ -93,7 +95,9 @@ public class ArticleController {
     }
 
     public ArticleDto update(String code, ArticleDto articleDto) {
-        Article article = prepareArticle(articleDto, code);
+        ArticleDto articleBBDD = readArticle(code);
+
+        Article article = prepareArticle(articleDto, articleBBDD.getCode());
 
         this.articleRepository.save(article);
         return new ArticleDto(article);
@@ -115,7 +119,7 @@ public class ArticleController {
     public void delete(String code) {
         Optional<Article> article = this.articleRepository.findById(code);
 
-        if (article.isPresent()) {
+        if (this.articleRepository.findById(code).isPresent()) {
             this.articleRepository.delete(article.get());
         }
 

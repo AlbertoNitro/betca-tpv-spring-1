@@ -40,9 +40,6 @@ public class DatabaseSeederService {
     @Autowired
     private Environment environment;
 
-    @Autowired
-    private Barcode barcode;
-
     @Value("${miw.admin.mobile}")
     private String mobile;
     @Value("${miw.admin.username}")
@@ -191,7 +188,7 @@ public class DatabaseSeederService {
             throw new RuntimeException("There is not next code EAN");
         }
 
-        return this.barcode.generateEan13code(nextCodeWithoutRedundancy);
+        return new Barcode().generateEan13code(nextCodeWithoutRedundancy);
     }
 
     private void seedDatabaseWithArticlesFamilyForView() {
