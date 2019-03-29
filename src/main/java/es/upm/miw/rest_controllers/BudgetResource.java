@@ -2,10 +2,12 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.dtos.BudgetDto;
 import es.upm.miw.business_controllers.BudgetController;
+import es.upm.miw.dtos.ShoppingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('OPERATOR')")
@@ -19,6 +21,11 @@ public class BudgetResource {
 
     @Autowired
     private BudgetController budgetController;
+
+    @PostMapping()
+    public BudgetDto create(@Valid @RequestBody ShoppingDto[] shopping) {
+        return this.budgetController.create(shopping);
+    }
 
     @GetMapping
     public List<BudgetDto> readAll() {

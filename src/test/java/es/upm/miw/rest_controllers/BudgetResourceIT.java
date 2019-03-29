@@ -1,10 +1,14 @@
 package es.upm.miw.rest_controllers;
 
+import es.upm.miw.documents.Article;
+import es.upm.miw.documents.Shopping;
 import es.upm.miw.dtos.BudgetDto;
+import es.upm.miw.dtos.ShoppingDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +30,19 @@ class BudgetResourceIT {
                 .path(BudgetResource.BUDGETS)
                 .get().build());
         this.existentBudget = budgets.get(0);
+    }
+
+    @Test
+    void testCreate() {
+        ShoppingDto[] shoppings = new ShoppingDto[1];
+        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20").build());
+        ShoppingDto shoppingDto = new ShoppingDto(shopping);
+        shoppings[0] = shoppingDto;
+
+        BudgetDto budgetDto = this.restService.loginAdmin().restBuilder(new RestBuilder<BudgetDto>())
+                .clazz(BudgetDto.class).path(BudgetResource.BUDGETS).body(shoppings).post().build();
+        assertNotNull(budgetDto);
+        assertNotNull(budgetDto.getId());
     }
 
     @Test
