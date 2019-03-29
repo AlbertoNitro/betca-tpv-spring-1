@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
 
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @JsonInclude(Include.NON_NULL)
 public class UserDto extends UserMinimumDto {
 
+    @Pattern(regexp = es.upm.miw.dtos.validations.Pattern.EMAIL_PATTERN)
     private String email;
 
     private String dni;

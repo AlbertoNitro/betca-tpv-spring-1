@@ -5,6 +5,7 @@ import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
 import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
+import es.upm.miw.dtos.UserProfileDto;
 import es.upm.miw.dtos.UserRolesDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.exceptions.NotFoundException;
@@ -16,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestConfig
 public class UserControllerIT {
@@ -71,6 +70,34 @@ public class UserControllerIT {
     }
 
     @Test
+    void testUpdateUser() {
+        UserDto userInputDto = new UserDto(this.user2);
+        userInputDto.setUsername("differenteUserName");
+
+        UserDto userOutputDto = userController.update(userInputDto.getMobile(), userInputDto);
+        assertFalse(userOutputDto.getUsername().equals(this.user2.getUsername()));
+    }
+
+    @Test
+    void testUpdateUserDifferentMobile() {
+        UserDto userInputDto = new UserDto(this.user2);
+
+        BadRequestException thrown = assertThrows(BadRequestException.class, () ->
+                userController.update("111171111", userInputDto));
+        assertTrue(thrown.getMessage().contains("Bad Request Exception (400)"));
+    }
+
+    @Test
+    void testUpdateUserNotFound() {
+        UserDto userInputDto = new UserDto(this.user2);
+        userInputDto.setMobile("991982658");
+
+        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
+                userController.update(userInputDto.getMobile(), userInputDto));
+        assertTrue(thrown.getMessage().contains("Not Found Exception (404)"));
+    }
+
+    @Test
     void testReadAll() {
         List<UserMinimumDto> users = userController.readAll();
         System.out.println(users);
@@ -89,16 +116,38 @@ public class UserControllerIT {
     }
 
     @Test
-    void testUpdateNotFoundMobile() {
+    void testUpdateNotRolesUserFoundMobile() {
         UserRolesDto userRolesDto = new UserRolesDto();
         userRolesDto.setMobile("no-existent-mobile-user");
         assertThrows(NotFoundException.class, () -> this.userController.updateRoles(userRolesDto.getMobile(), userRolesDto));
     }
 
     @Test
-    void testUpdateNoMobile() {
+    void testUpdateRolesUserNoMobile() {
         UserRolesDto userRolesDto = new UserRolesDto();
         assertThrows(BadRequestException.class, () -> this.userController.updateRoles(null, userRolesDto));
+    }
+
+    @Test
+    void testUpdateProfileUser() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile(this.user.getMobile());
+        String updatedpassword = "contraseniaNueva";
+        userProfileDto.setPassword(updatedpassword);
+        UserProfileDto result = this.userController.updateProfile(userProfileDto.getMobile(), userProfileDto);
+    }
+
+    @Test
+    void testProfileUserNotFoundMobile() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile("no-existent-mobile-user");
+        assertThrows(NotFoundException.class, () -> this.userController.updateProfile(userProfileDto.getMobile(), userProfileDto));
+    }
+
+    @Test
+    void testProfileUserNoMobile() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        assertThrows(BadRequestException.class, () -> this.userController.updateProfile(null, userProfileDto));
     }
 
     @Test

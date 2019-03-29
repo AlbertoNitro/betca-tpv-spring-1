@@ -2,81 +2,58 @@ package es.upm.miw.dtos;
 
 import es.upm.miw.documents.Shopping;
 import es.upm.miw.documents.Ticket;
-import es.upm.miw.documents.User;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class TicketModificationStateOrAmountDto {
 
-    private ShoppingModificationStateOrAmountDto[] shoppingList;
+    private String id;
 
-    private BigDecimal cash;
+    private List<ShoppingModificationStateOrAmountDto> shoppingList;
 
-    private BigDecimal card;
-
-    private BigDecimal voucher;
-
-    private String note;
-
-    private User user;
-
-    public TicketModificationStateOrAmountDto(Ticket ticket) {
-        this.shoppingList = this.initializeShoppingTicket(ticket.getShoppingList());
-        this.cash = ticket.getCash();
-        this.card = ticket.getCard();
-        this.voucher = ticket.getVoucher();
-        this.note = ticket.getNote();
-        this.user = ticket.getUser();
+    public TicketModificationStateOrAmountDto(){
+        //Empty for framework
     }
 
-    private ShoppingModificationStateOrAmountDto[] initializeShoppingTicket(Shopping[] shoppings) {
-        ShoppingModificationStateOrAmountDto[] shoppingModificationDto = new ShoppingModificationStateOrAmountDto[shoppings.length];
-        for(int i = 0; i > shoppings.length; i++) {
-            shoppingModificationDto[i] = new ShoppingModificationStateOrAmountDto(shoppings[i]);
-        }
+    public TicketModificationStateOrAmountDto(Ticket ticket) {
+        this.id = ticket.getId();
+        this.shoppingList = this.initializeShoppingTicket(ticket.getShoppingList());
+    }
+
+    private List<ShoppingModificationStateOrAmountDto> initializeShoppingTicket(Shopping[] shoppings) {
+
+        List<ShoppingModificationStateOrAmountDto> shoppingModificationDto = new ArrayList<>();
+        Arrays.stream(shoppings).forEach(p -> {
+            shoppingModificationDto.add(new ShoppingModificationStateOrAmountDto(p));
+        });
         return shoppingModificationDto;
     }
 
-    public ShoppingModificationStateOrAmountDto[] getShoppingList() {
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public List<ShoppingModificationStateOrAmountDto> getShoppingList() {
         return shoppingList;
     }
 
-    public void setShoppingList(ShoppingModificationStateOrAmountDto[] shoppingList) {
+    public void setShoppingList(List<ShoppingModificationStateOrAmountDto> shoppingList) {
         this.shoppingList = shoppingList;
     }
 
-    public BigDecimal getCash() {
-        return cash;
-    }
-
-    public BigDecimal getCard() {
-        return card;
-    }
-
-    public BigDecimal getVoucher() {
-        return voucher;
-    }
-
-
-    public String getNote() {
-        return note;
-    }
-
-    public User getUser() {
-        return user;
-    }
 
     @Override
     public String toString() {
         return "TicketModificationStateOrAmountDto{" +
-                "shoppingList=" + Arrays.toString(shoppingList) +
-                ", cash=" + cash +
-                ", card=" + card +
-                ", voucher=" + voucher +
-                ", note='" + note + '\'' +
-                ", user=" + user +
+                "id=" + id +
+                "shoppingList=" + shoppingList.toString() +
                 '}';
     }
 }

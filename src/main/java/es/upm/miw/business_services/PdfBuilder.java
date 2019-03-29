@@ -52,6 +52,13 @@ public class PdfBuilder {
         this.document.setFontSize(THERMAL_FONT_SIZE);
     }
 
+    public PdfBuilder(String path, String t) {
+        this.filename = System.getProperty(USER_HOME) + path + PDF_FILE_EXT;
+        this.prepareDocument(new PageSize(PageSize.A4.getWidth(), PageSize.A4.getHeight()));
+        this.document.setMargins(THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_RIGHT, THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_LEFT);
+        this.document.setFontSize(THERMAL_FONT_SIZE);
+    }
+
     private void prepareDocument(PageSize pageSize) {
         File file = new File(this.filename);
         if (!file.exists()) {
