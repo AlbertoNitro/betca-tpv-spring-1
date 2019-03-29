@@ -398,4 +398,34 @@ class UserResourceIT {
         UserProfileDto result = restUpdateProfileBuilder(existentUser.getMobile(), userProfileDto).build();
 
     }
+
+    private RestBuilder<Boolean> restvalidatorBuilder(String mobile, UserProfileDto userProfileDto) {
+        return this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<Boolean>()).clazz(Boolean.class)
+                .path(UserResource.USERS).path(UserResource.PROFILES).path(UserResource.VALIDATORS).path("/" + mobile)
+                .body(userProfileDto)
+                .put();
+    }
+
+    @Test
+    void testValidatorPassword() {
+
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile(this.existentUser.getMobile());
+        System.out.println(this.existentUser.getMobile());
+        userProfileDto.setPassword("pprueba");
+        boolean result = restvalidatorBuilder(existentUser.getMobile(), userProfileDto).build();
+        assertEquals(true, result);
+    }
+
+    @Test
+    void testValidatorIncorrectPassword() {
+
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile(this.existentUser.getMobile());
+        System.out.println(this.existentUser.getMobile());
+        userProfileDto.setPassword("");
+        boolean result = restvalidatorBuilder(existentUser.getMobile(), userProfileDto).build();
+        assertEquals(false, result);
+    }
 }
