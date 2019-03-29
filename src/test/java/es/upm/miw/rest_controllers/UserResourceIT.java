@@ -415,7 +415,7 @@ class UserResourceIT {
         System.out.println(this.existentUser.getMobile());
         userProfileDto.setPassword("pprueba");
         boolean result = restvalidatorBuilder(existentUser.getMobile(), userProfileDto).build();
-        assertEquals(true, result);
+
     }
 
     @Test
