@@ -108,7 +108,6 @@ public class UserControllerIT {
     void testUpdateRolesUser() {
         UserRolesDto userRolesDto = new UserRolesDto();
         userRolesDto.setMobile(this.user2.getMobile());
-        System.out.println(userRolesDto);
         Role[] rolesUpdate= new Role[]{Role.OPERATOR, Role.MANAGER};
         userRolesDto.setRoles(rolesUpdate);
         UserDto result = this.userController.updateRoles(userRolesDto.getMobile(), userRolesDto);
@@ -135,6 +134,7 @@ public class UserControllerIT {
         String updatedpassword = "contraseniaNueva";
         userProfileDto.setPassword(updatedpassword);
         UserProfileDto result = this.userController.updateProfile(userProfileDto.getMobile(), userProfileDto);
+
     }
 
     @Test

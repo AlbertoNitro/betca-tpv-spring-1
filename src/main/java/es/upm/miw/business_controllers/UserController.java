@@ -9,17 +9,13 @@ import es.upm.miw.dtos.output.TokenOutputDto;
 import es.upm.miw.dtos.UserDto;
 import es.upm.miw.dtos.UserMinimumDto;
 import es.upm.miw.exceptions.BadRequestException;
-import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.ForbiddenException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -107,17 +103,11 @@ public class UserController {
 
     public UserDto updateRoles(String mobile, UserRolesDto userRolesDto) {
 
-
-        if (mobile == null || !mobile.equals(userRolesDto.getMobile()))
+    if (mobile == null || !mobile.equals(userRolesDto.getMobile()))
             throw new BadRequestException("User mobile (" + userRolesDto.getMobile() + ")");
 
-        if (!this.userRepository.findByMobile(mobile).isPresent())
-            throw new NotFoundException("User mobile (" + mobile + ")");
-        String id = this.userRepository.findByMobile(mobile).get().getId();
-        Optional<User> user = this.userRepository.findById(id);
-        if (user.isPresent() && !user.get().getMobile().equals(mobile))
-            throw new ConflictException("User id (" + id + ")");
-        User result = this.userRepository.save(new User(user.get().getId(),user.get().getUsername(),user.get().getDni(),user.get().getEmail(),user.get().getAddress(),user.get().getPassword(),userRolesDto));
+        User user = this.userRepository.findByMobile(mobile).orElseThrow(() -> new NotFoundException("User mobile (" + mobile + ")"));;
+        User result = this.userRepository.save(new User(user.getId(),user.getUsername(),user.getDni(),user.getEmail(),user.getAddress(),user.getPassword(),userRolesDto));
         return new UserDto(result);
     }
 
@@ -126,22 +116,12 @@ public class UserController {
         if (mobile == null || !mobile.equals(userProfileDto.getMobile()))
             throw new BadRequestException("User mobile (" + userProfileDto.getMobile() + ")");
 
-        if (!this.userRepository.findByMobile(mobile).isPresent())
-            throw new NotFoundException("User mobile (" + mobile + ")");
-
-        String id = this.userRepository.findByMobile(mobile).get().getId();
-        Optional<User> user = this.userRepository.findById(id);
-
-        if (user.isPresent() && !user.get().getMobile().equals(mobile))
-            throw new ConflictException("User id (" + id + ")");
-
-        User result = this.userRepository.save(new User(user.get().getId(),user.get().getUsername(),user.get().getDni(),user.get().getEmail(),user.get().getAddress(),user.get().getRoles(),userProfileDto));
+        User user = this.userRepository.findByMobile(mobile).orElseThrow(() -> new NotFoundException("User mobile (" + mobile + ")"));;
+        User result = this.userRepository.save(new User(user.getId(),user.getUsername(),user.getDni(),user.getEmail(),user.getAddress(),user.getRoles(),userProfileDto));
         return new UserProfileDto(result);
     }
 
     public List<UserMinimumDto> readAllByUsernameDniAddressRoles(String mobile,String username,String dni, String address,  Role[] roles) {
        return this.userRepository.findByMobileUsernameDniAddressLikeNullSafeandRoles(mobile,username,dni,address,roles);
     }
-
-
 }
