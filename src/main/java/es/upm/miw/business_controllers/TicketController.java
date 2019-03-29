@@ -3,7 +3,6 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.business_services.PdfService;
 import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ShoppingDto;
-import es.upm.miw.dtos.ShoppingModificationStateOrAmountDto;
 import es.upm.miw.dtos.TicketModificationStateOrAmountDto;
 import es.upm.miw.dtos.input.TicketCreationInputDto;
 import es.upm.miw.dtos.input.TicketQueryInputDto;
@@ -298,9 +297,8 @@ public class TicketController {
     public Ticket updateModifiedTicket(String id, TicketModificationStateOrAmountDto modifiedTicket) {
         Ticket ticketDb = this.readTicketById(id);
         List<Shopping> shoppings = new ArrayList<>();
-        modifiedTicket.getShoppingList().forEach(p -> {
-            shoppings.add(p.transformModifiedShoppingToShopping());
-        });
+        modifiedTicket.getShoppingList().forEach(p ->
+            shoppings.add(p.transformModifiedShoppingToShopping()));
         int i  = 0;
         for (Shopping shopping : ticketDb.getShoppingList()){
             shopping.setAmount(shoppings.get(i).getAmount());
