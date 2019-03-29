@@ -25,24 +25,32 @@ public class ArticleFamilyRootDto {
     public ArticleFamilyRootDto(){}
 
 
-    public ArticleFamilyRootDto(String code, String description, BigDecimal retailPrice) {
+    public ArticleFamilyRootDto(FamilyType familyType, String code, String description, BigDecimal retailPrice) {
+        this.familyType = familyType;
         this.description = description;
         this.code = code;
         this.retailPrice = retailPrice;
     }
 
-    public ArticleFamilyRootDto(String description, List<ArticlesFamily> articlesFamilyList ) {
+    public ArticleFamilyRootDto(FamilyType familyType, String description, List<ArticlesFamily> articlesFamilyList ) {
         this.familyType = familyType;
         this.description = description;
         this.articlesFamilyList = articlesFamilyList;
     }
 
-    public ArticleFamilyRootDto(String reference, String description) {
+    public ArticleFamilyRootDto(FamilyType familyType, String reference, String description) {
+        this.familyType = familyType;
         this.description = description;
         this.reference = reference;
     }
 
+    public FamilyType getFamilyType() {
+        return familyType;
+    }
 
+    public void setFamilyType(FamilyType familyType) {
+        this.familyType = familyType;
+    }
 
     public String getDescription() {
         return description;
@@ -90,7 +98,7 @@ public class ArticleFamilyRootDto {
                 "description='" + description + '\'' +
                 ", reference='" + reference + '\'' +
                 ", code='" + code + '\'' +
-                ", retailPrice='" + retailPrice + '\'' +
+                ", retailPrice=" + retailPrice +
                 ", familyType=" + familyType +
                 ", articlesFamilyList=" + articlesFamilyList +
                 '}';

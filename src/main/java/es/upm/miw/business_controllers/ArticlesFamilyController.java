@@ -98,13 +98,13 @@ public class ArticlesFamilyController {
         for (ArticlesFamily articlesFamily: familyRoot.getArticlesFamilyList()) {
             if (articlesFamily.getFamilyType() == FamilyType.ARTICLE){
                 Article article = articleRepository.findByCode(articlesFamily.getArticleIdList().get(0));
-                dtos.add(new ArticleFamilyRootDto(article.getCode(), article.getDescription(), article.getRetailPrice()));
+                dtos.add(new ArticleFamilyRootDto(articlesFamily.getFamilyType(), article.getCode(), article.getDescription(), article.getRetailPrice()));
             }
             if (articlesFamily.getFamilyType() == FamilyType.ARTICLES){
-                dtos.add(new ArticleFamilyRootDto(articlesFamily.getDescription(), articlesFamily.getArticlesFamilyList()));
+                dtos.add(new ArticleFamilyRootDto(articlesFamily.getFamilyType(),articlesFamily.getDescription(), articlesFamily.getArticlesFamilyList()));
             }
             if (articlesFamily.getFamilyType() == FamilyType.SIZES){
-                dtos.add(new ArticleFamilyRootDto(articlesFamily.getReference(), articlesFamily.getDescription()));
+                dtos.add(new ArticleFamilyRootDto(articlesFamily.getFamilyType(),articlesFamily.getReference(), articlesFamily.getDescription()));
             }
         }
         return dtos;
