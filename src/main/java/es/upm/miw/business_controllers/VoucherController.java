@@ -12,7 +12,6 @@ import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.VoucherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,6 +42,12 @@ public class VoucherController {
         }
     }
 
+    public List<VoucherOutputDto> readAll() {
+        List<Voucher> lVouchers = this.voucherRepository.findAllVouchers();
+        return lVouchers.stream()
+                .sorted(Comparator.comparing(Voucher::getCreationDate)).map(VoucherOutputDto::new).collect(Collectors.toList());
+
+    }
 
 }
 

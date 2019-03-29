@@ -28,5 +28,10 @@ public class VoucherResource {
         return this.voucherController.create(voucher);
     }
 
+    @PreAuthorize("authenticated")
+    @GetMapping
+    public List<VoucherOutputDto> readAll() {
+        return this.voucherController.readAll();
+    }
 
 }
