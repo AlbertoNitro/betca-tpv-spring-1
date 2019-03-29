@@ -1,5 +1,6 @@
 package es.upm.miw.dtos.input;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import es.upm.miw.exceptions.BadRequestException;
 import org.springframework.util.StringUtils;
 
@@ -72,6 +73,10 @@ public class TimeClockSearchInputDto {
                     String.format("User Mobile '%s' is not a valid mobile for the query",
                             userMobile));
         }
+    }
+
+    public boolean empty(){
+        return dateFrom == null && dateTo == null && StringUtils.isEmpty(userMobile);
     }
 
     @Override
