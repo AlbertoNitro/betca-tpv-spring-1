@@ -13,6 +13,7 @@ import es.upm.miw.exceptions.ForbiddenException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import java.util.Arrays;
 import java.util.List;
@@ -123,5 +124,13 @@ public class UserController {
 
     public List<UserMinimumDto> readAllByUsernameDniAddressRoles(String mobile,String username,String dni, String address,  Role[] roles) {
        return this.userRepository.findByMobileUsernameDniAddressLikeNullSafeandRoles(mobile,username,dni,address,roles);
+    }
+
+    public Boolean validatorPassword(String mobile, UserProfileDto userProfileDto) {
+        if (mobile == null || !mobile.equals(userProfileDto.getMobile()))
+            throw new BadRequestException("User mobile (" + userProfileDto.getMobile() + ")");
+
+        User user = this.userRepository.findByMobile(mobile).orElseThrow(() -> new NotFoundException("User mobile (" + mobile + ")"));;
+        return new BCryptPasswordEncoder().matches(userProfileDto.getPassword(),user.getPassword());
     }
 }
