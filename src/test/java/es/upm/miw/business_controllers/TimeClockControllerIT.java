@@ -40,7 +40,7 @@ public class TimeClockControllerIT {
     @Test
     void testReadAll() {
         TimeClockOutputDto[] timeClocksOutput = this.timeClockController.readAll();
-        assertTrue(timeClocksOutput.length >= 0);
+        assertNotNull(timeClocksOutput);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class TimeClockControllerIT {
         String mobile = "666666000";
         TimeClockSearchInputDto timeClockSearchInputDto = new TimeClockSearchInputDto(dateFromMs, dateToMs, mobile);
         TimeClockOutputDto[] timeClocksOutput = this.timeClockController.searchByDateRangeAndUserMobile(timeClockSearchInputDto);
-        assertTrue(timeClocksOutput.length >= 0);
+        assertNotNull(timeClocksOutput);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class TimeClockControllerIT {
         String mobile = "666666000";
         TimeClockSearchInputDto timeClockSearchInputDto = new TimeClockSearchInputDto(dateFromMs, dateToMs, mobile);
         TimeClockOutputDto[] timeClocksOutput = this.timeClockController.searchByDateRangeAndUserMobile(timeClockSearchInputDto);
-        assertTrue(timeClocksOutput.length >= 0);
+        assertNotNull(timeClocksOutput);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TimeClockControllerIT {
         String mobile = null;
         TimeClockSearchInputDto timeClockSearchInputDto = new TimeClockSearchInputDto(dateFromMs, dateToMs, mobile);
         TimeClockOutputDto[] timeClocksOutput = this.timeClockController.searchByDateRangeAndUserMobile(timeClockSearchInputDto);
-        assertTrue(timeClocksOutput.length >= 0);
+        assertNotNull(timeClocksOutput);
     }
 
     @Test
