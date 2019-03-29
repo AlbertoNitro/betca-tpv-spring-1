@@ -85,6 +85,18 @@ public class ProviderControllerIT {
     }
 
     @Test
+    void testUpdateSameCompany() {
+        ProviderDto providerDto = new ProviderDto("same-company");
+        providerDto = this.providerController.create(providerDto);
+        providerDto = new ProviderDto("another-company");
+        providerDto = this.providerController.create(providerDto);
+        String id = providerDto.getId();
+        providerDto.setCompany("same-company");
+        ProviderDto finalProviderDto = providerDto;
+        assertThrows(ConflictException.class, () -> this.providerController.update(id, finalProviderDto));
+    }
+
+    @Test
     void testFindByAttributesLike() {
         ProviderSearchInputDto providerSearchInputDto = new ProviderSearchInputDto(true);
         List<ProviderMinimunDto> activesProviders = providerController.readAllActives();
