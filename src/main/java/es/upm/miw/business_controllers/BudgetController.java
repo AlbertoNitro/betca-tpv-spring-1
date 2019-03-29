@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class BudgetController {
@@ -29,6 +30,14 @@ public class BudgetController {
 
         return new BudgetDto(budget);
     }
+
+    public void delete(String id) {
+        Optional<Budget> budget = this.budgetRepository.findById(id);
+        if (budget.isPresent()) {
+            this.budgetRepository.delete(budget.get());
+        }
+    }
+
 
     public List<BudgetDto> readAll() {
         return this.budgetRepository.findAllBudgets();

@@ -72,6 +72,15 @@ public class BudgetControllerIT {
         assertNotNull(budget.getId());
     }
 
+    @Test
+    void testDelete() {
+        List<BudgetDto> budgets = budgetController.readAll();
+        Integer size = budgets.size();
+        budgetController.delete(this.budget.getId());
+        budgets = budgetController.readAll();
+        assertTrue(budgets.size() == size - 1);
+    }
+
     @AfterEach
     void delete() {
         this.budgetRepository.delete(budget);

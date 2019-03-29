@@ -27,6 +27,11 @@ public class BudgetResource {
         return this.budgetController.create(shopping);
     }
 
+    @DeleteMapping(value = ID)
+    public void delete(@PathVariable String id) {
+        this.budgetController.delete(id);
+    }
+    
     @GetMapping
     public List<BudgetDto> readAll() {
         return this.budgetController.readAll();
