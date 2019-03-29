@@ -6,7 +6,6 @@ import javax.validation.constraints.NotNull;
 
 public class ArticleMinimumDto {
 
-    @NotNull
     private String code;
 
     @NotNull
