@@ -385,7 +385,7 @@ class UserResourceIT {
     private RestBuilder<UserProfileDto> restUpdateProfileBuilder(String mobile, UserProfileDto userProfileDto) {
         return this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<UserProfileDto>()).clazz(UserProfileDto.class)
-                .path(UserResource.USERS).path(UserResource.PASSWORDS).path("/" + mobile)
+                .path(UserResource.USERS).path(UserResource.PROFILES).path("/" + mobile)
                 .body(userProfileDto)
                 .put();
     }
