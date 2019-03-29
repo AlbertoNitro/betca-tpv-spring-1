@@ -29,6 +29,7 @@ public class UserResource {
     public static final String QUERY = "/query";
     public static final String MOBILE_ID = "/{mobile}";
     public static final String PASSWORDS = "/passwords";
+    public static final String LOGOUT = "/logout";
 
     @Autowired
     private UserController userController;
@@ -106,5 +107,11 @@ public class UserResource {
     @PutMapping(value = PASSWORDS+MOBILE_ID)
     public UserProfileDto updateProfile(@PathVariable String mobile, @Valid @RequestBody UserProfileDto userProfileDto) {
         return this.userController.updateProfile(mobile, userProfileDto);
+    }
+
+    @PreAuthorize("authenticated")
+    @GetMapping(value = LOGOUT)
+    public void logout(@Valid @RequestParam(required = false) String mobile) {
+        //Empty
     }
 }
