@@ -1,7 +1,6 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.UserController;
-import es.upm.miw.config.RegisterTimeClock;
 import es.upm.miw.documents.Role;
 import es.upm.miw.dtos.*;
 import es.upm.miw.dtos.output.TokenOutputDto;
@@ -37,7 +36,6 @@ public class UserResource {
 
     @PreAuthorize("authenticated")
     @PostMapping(value = TOKEN)
-    @RegisterTimeClock
     public TokenOutputDto login(@AuthenticationPrincipal User activeUser) {
         return userController.login(activeUser.getUsername());
     }

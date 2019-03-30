@@ -23,7 +23,7 @@ public class TimeClockController {
     @Autowired
     private UserRepository userRepository;
 
-    private static LocalDateTime DEFAULT_LOCAL_DATE_TIME = LocalDateTime.now().minusYears(1);
+    private static final LocalDateTime DEFAULT_LOCAL_DATE_TIME = LocalDateTime.now().minusYears(1);
 
     public TimeClockOutputDto[] readAll() {
         return convertResultDomainModelToDto(this.timeClockRepository.findAll());
