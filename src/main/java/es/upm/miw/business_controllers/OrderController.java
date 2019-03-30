@@ -1,15 +1,19 @@
 package es.upm.miw.business_controllers;
 
+import es.upm.miw.documents.Order;
+import es.upm.miw.exceptions.BadRequestException;
+import es.upm.miw.repositories.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
 import es.upm.miw.documents.OrderLine;
 import es.upm.miw.dtos.OrderDto;
 import es.upm.miw.dtos.OrderSearchDto;
-import es.upm.miw.repositories.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class OrderController {
@@ -17,6 +21,18 @@ public class OrderController {
     @Autowired
     private OrderRepository orderRepository;
 
+    public Order closeOrder(String orderId, OrderLine[] orderLine) {
+        Order closeOrder = orderRepository.findById(orderId).orElse(null);
+        if(closeOrder.getOrderLines().length > 0) {
+            closeOrder.close();
+            closeOrder.setOrderLines(orderLine);
+            closeOrder = orderRepository.save(closeOrder);
+        } else {
+            throw new BadRequestException("orderLine is empty");
+        }
+
+        return closeOrder;
+    }
     private List<OrderSearchDto> orderSearchDtos;
 
     public static String SEARCHWORD = "";
