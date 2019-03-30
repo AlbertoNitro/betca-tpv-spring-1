@@ -49,18 +49,19 @@ public class VoucherController {
 
     public VoucherOutputDto update(String code) {
         this.validate(code, "Code");
-        Voucher voucher = new Voucher();
-        if (this.voucherRepository.existsById(code)) {
-            voucher = this.voucherRepository.findById(code)
-                    .orElseThrow(() -> new NotFoundException("Voucher (" + code + ")"));
+        Voucher voucherBBDD = readVoucher(code);
+        if (!voucherBBDD.isUsed()) {
+            voucherBBDD.use();
         }
-        if (!voucher.isUsed()) {
-            voucher.use();
-        }
-        this.voucherRepository.save(voucher);
-        return new VoucherOutputDto(voucher);
+        Voucher v = this.voucherRepository.save(voucherBBDD);
+        VoucherOutputDto voutput = new VoucherOutputDto(v);
+        return voutput;
     }
 
+    private Voucher readVoucher(String code) {
+        return (this.voucherRepository.findById(code)
+                .orElseThrow(() -> new NotFoundException("Voucher code (" + code + ")")));
+    }
 
     public List<VoucherOutputDto> findVouchersByDateWithinConsumed(String dateFrom, String dateTo) {
         this.validate(dateFrom, "DateFrom");
