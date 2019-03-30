@@ -9,6 +9,7 @@ import es.upm.miw.exceptions.UnauthorizedException;
 import es.upm.miw.repositories.RgpdAgreementRepository;
 import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -94,6 +95,14 @@ public class RgpdResource {
 
         this.rgpdAgreementRepository.save(rgpd);
         return dto;
+    }
+
+    @DeleteMapping(value = USER_AGREEMENT)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUserAgreement() {
+        List<RgpdAgreement> rgpdAgreementList = this.rgpdAgreementRepository.findByAssignee(getAuthenticathedUser().getId());
+        for (RgpdAgreement rgpdAgreement : rgpdAgreementList)
+            this.rgpdAgreementRepository.delete(rgpdAgreement);
     }
 
     private User getAuthenticathedUser() {

@@ -115,6 +115,19 @@ public class RgpdResourceIT {
         deleteUserAgreement(getUser(this.restService.loginAdmin().getAdminMobile()));
     }
 
+    @Test
+    void testDeleteUserAgreement() {
+        assertDoesNotThrow(() -> this.restService.loginAdmin().
+                restBuilder(new RestBuilder<RgpdDto>()).clazz(RgpdDto.class).
+                path(RgpdResource.RGPD)
+                .path(RgpdResource.USER_AGREEMENT).delete().build());
+        RgpdDto rgpd = this.restService.loginAdmin().
+                restBuilder(new RestBuilder<RgpdDto>()).clazz(RgpdDto.class).
+                path(RgpdResource.RGPD)
+                .path(RgpdResource.USER_AGREEMENT).get().build();
+        assertFalse(rgpd.isAccepted());
+    }
+
     private void deleteUserAgreement(User user) {
         Iterator<RgpdAgreement> iterator = this.rgpdAgreementRepository.findByAssignee(user.getId()).iterator();
         while (iterator.hasNext())
