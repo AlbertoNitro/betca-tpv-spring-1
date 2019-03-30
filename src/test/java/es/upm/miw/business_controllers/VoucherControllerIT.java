@@ -67,7 +67,7 @@ class VoucherControllerIT {
         LocalDateTime dateTo = LocalDateTime.now().plusDays(1).withNano(0);
         List<VoucherOutputDto> voucherDtoOutputList = this.voucherController
                 .findVouchersByDateConsumed(dateFrom.toString(), dateTo.toString());
-        assertTrue(voucherDtoOutputList.size() == 1);
+        assertTrue(voucherDtoOutputList.size() >= 1);
     }
 
     @Test
