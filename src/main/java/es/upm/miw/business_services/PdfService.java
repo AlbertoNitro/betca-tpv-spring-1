@@ -67,7 +67,7 @@ public class PdfService {
 
     public byte[] generateBudget(Budget budget) {
         final String path = "/tpv-pdfs/budgets/budget-" + budget.getId();
-        PdfBuilder pdf = new PdfBuilder(path, "");
+        PdfBuilder pdf = new PdfBuilder(path, PdfBuilder.PAGE_SIZE_A4);
         this.generateCommonHead(pdf);
         pdf.paragraphEmphasized("PRESUPUESTO");
         pdf.line();
@@ -87,7 +87,7 @@ public class PdfService {
 
     public byte[] generateTicket(Ticket ticket) {
         final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
-        PdfBuilder pdf = new PdfBuilder(path, "");
+        PdfBuilder pdf = new PdfBuilder(path);
         this.generateCommonHead(pdf);
         if (ticket.isDebt()) {
             pdf.paragraphEmphasized("RESERVA");
@@ -122,7 +122,7 @@ public class PdfService {
 
     public byte[] generatePrintableRgpdAgreement(String userName) {
         final String path = "/rgpd-pdfs/printable/agreement-" + userName;
-        PdfBuilder pdf = new PdfBuilder(path, "");
+        PdfBuilder pdf = new PdfBuilder(path, PdfBuilder.PAGE_SIZE_A4);
         pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
                 .paragraph("NIF: " + this.nif + "   -   " + this.address)
                 .paragraph("Email: " + this.email + "  -  " + "Web: " + this.web);

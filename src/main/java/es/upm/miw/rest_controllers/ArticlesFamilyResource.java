@@ -1,7 +1,6 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.ArticlesFamilyController;
-import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
 import es.upm.miw.dtos.ArticleFamilyMinimumDto;
