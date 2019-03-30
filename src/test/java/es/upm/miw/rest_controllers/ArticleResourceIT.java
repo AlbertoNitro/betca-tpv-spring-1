@@ -31,6 +31,16 @@ class ArticleResourceIT {
     }
 
     @Test
+    void testReadAllArticles(){
+        List<ArticleSearchOutputDto> articles = Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleSearchOutputDto[]>())
+                .clazz(ArticleSearchOutputDto[].class).path(ArticleResource.ARTICLES)
+                .get().build());
+
+        assertNotNull(articles);
+        assertTrue(articles.size() > 0);
+    }
+
+    @Test
     void testReadArticleOne() {
         ArticleDto articleDto = this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleDto>()).clazz(ArticleDto.class)
                 .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).expand("1")
