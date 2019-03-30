@@ -62,7 +62,7 @@ public class OrderResourceIT {
 
     @Test
     void testCloseOrder() {
-        Order closedOrder = orderController.closeOrder(this.order.getId());
+        Order closedOrder = orderController.closeOrder(this.order.getId(), this.order.getOrderLines());
         assertNotNull(closedOrder.getClosingDate());
         this.orderRepository.delete(closedOrder);
     }

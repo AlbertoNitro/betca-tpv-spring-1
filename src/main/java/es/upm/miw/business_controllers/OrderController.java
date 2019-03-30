@@ -21,10 +21,11 @@ public class OrderController {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Order closeOrder(String orderId) {
+    public Order closeOrder(String orderId, OrderLine[] orderLine) {
         Order closeOrder = orderRepository.findById(orderId).orElse(null);
         if(closeOrder.getOrderLines().length > 0) {
             closeOrder.close();
+            closeOrder.setOrderLines(orderLine);
             orderRepository.save(closeOrder);
         } else {
             throw new BadRequestException("orderLine is empty");
