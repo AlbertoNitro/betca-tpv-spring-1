@@ -11,18 +11,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 @ApiTestConfig
 class VoucherResourceIT {
@@ -72,7 +67,7 @@ class VoucherResourceIT {
     void testUpdate() {
         String code = "1234567890";
         VoucherOutputDto result = restUpdateBuilder(code).build();
-        assertTrue(code.equals(result.getId()));
+        Assertions.assertEquals(code, result.getId());
 
     }
 
@@ -84,14 +79,29 @@ class VoucherResourceIT {
                 .put();
     }
 
-    private RestBuilder<VoucherOutputDto> restCreateService(VoucherOutputDto voucherDto) {
-        return this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<VoucherOutputDto>()).clazz(VoucherOutputDto.class)
+
+    @Test
+    void testSearchVoucherConsumed() {
+        LocalDateTime dateFrom = LocalDateTime.of(2019, 3, 1, 0, 0, 0);
+        LocalDateTime dateTo = LocalDateTime.of(2019, 3, 31, 23, 59, 59);
+        VoucherOutputDto[] results = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<VoucherOutputDto[]>().clazz(VoucherOutputDto[].class))
                 .path(VoucherResource.VOUCHERS)
-                .body(voucherDto)
-                .post();
+                .path(VoucherResource.SEARCH)
+                .path("?consumed=true&dateFrom=" + dateFrom + "&dateTo=" + dateTo).get().build();
+        assertTrue(results.length >= 0);
     }
 
-
+    @Test
+    void testSearchVoucherWithinConsumed() {
+        LocalDateTime dateFrom = LocalDateTime.of(2019, 3, 1, 0, 0, 0);
+        LocalDateTime dateTo = LocalDateTime.of(2019, 3, 31, 23, 59, 59);
+        VoucherOutputDto[] results = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<VoucherOutputDto[]>().clazz(VoucherOutputDto[].class))
+                .path(VoucherResource.VOUCHERS)
+                .path(VoucherResource.SEARCH)
+                .path("?consumed=false&dateFrom=" + dateFrom + "&dateTo=" + dateTo).get().build();
+        assertTrue(results.length >= 0);
+    }
 
 }
