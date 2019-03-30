@@ -11,6 +11,7 @@ import es.upm.miw.repositories.VoucherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,5 +62,21 @@ public class VoucherController {
     }
 
 
+    public List<VoucherOutputDto> findVouchersByDateWithinConsumed(String dateFrom, String dateTo) {
+        this.validate(dateFrom, "DateFrom");
+        this.validate(dateTo, "Date to");
+        List<Voucher> listVouchers = this.voucherRepository.findByCreationDateBetweenAndDateOfUseIsNull(LocalDateTime.parse(dateFrom), LocalDateTime.parse(dateTo));
+        return listVouchers.stream()
+                .sorted(Comparator.comparing(Voucher::getCreationDate)).map(VoucherOutputDto::new).collect(Collectors.toList());
+    }
+
+    public List<VoucherOutputDto> findVouchersByDateConsumed(String dateFrom, String dateTo) {
+        this.validate(dateFrom, "DateFrom");
+        this.validate(dateTo, "Date to");
+        List<Voucher> listVouchers = this.voucherRepository.findByCreationDateBetweenAndDateOfUseIsNotNull(LocalDateTime.parse(dateFrom), LocalDateTime.parse(dateTo));
+        return listVouchers.stream()
+                .sorted(Comparator.comparing(Voucher::getCreationDate)).map(VoucherOutputDto::new).collect(Collectors.toList());
+
+    }
 }
 
