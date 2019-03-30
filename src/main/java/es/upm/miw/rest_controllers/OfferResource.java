@@ -28,7 +28,7 @@ public class OfferResource {
     }
 
     @GetMapping(value = SEARCH)
-    public List<OfferOutputDto> search(
+    public List<OfferOutputDto> filter(
             @RequestParam("id") String id,
             @RequestParam("offername") String offername,
             @RequestParam("idArticle") String idArticle,
