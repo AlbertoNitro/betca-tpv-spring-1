@@ -1,6 +1,7 @@
 package es.upm.miw.dtos.output;
 
 import es.upm.miw.documents.TimeClock;
+import org.bson.types.ObjectId;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -11,23 +12,26 @@ import java.time.format.DateTimeFormatter;
 public class TimeClockOutputDto {
 
     protected static final String TIME_FORMAT = "HH:mm:ss";
+    protected static final String DATE_FORMAT = "dd/MM/yyyy";
     protected static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter
             .ofPattern(TIME_FORMAT);
+    protected static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
+            .ofPattern(DATE_FORMAT);
 
     @NotNull
     private String id;
 
     @NotNull
-    private Long dateMs;
+    private String date;
 
     @NotNull
-    private String inMs;
+    private String in;
 
     @NotNull
-    private String outMs;
+    private String out;
 
     @NotNull
-    private Long totalHours;
+    private Long total;
 
     private String username;
 
@@ -38,15 +42,15 @@ public class TimeClockOutputDto {
     private String mobile;
 
     public TimeClockOutputDto() {
-        // Empty for framework
+        this.id = new ObjectId().toHexString();
     }
 
     public TimeClockOutputDto(TimeClock timeClock) {
         this.id = timeClock.getId();
-        this.dateMs = getDateMs(timeClock.getClockinDate());
-        this.inMs = getInMsFromClockinDate(timeClock.getClockinDate());
-        this.outMs = getOutMsFromClockoutDate(timeClock.getClockoutDate());
-        this.totalHours = timeClock.getTotalHours();
+        this.date = parserDateToString(timeClock.getClockinDate());
+        this.in = getInMsFromClockinDate(timeClock.getClockinDate());
+        this.out = getOutMsFromClockoutDate(timeClock.getClockoutDate());
+        this.total = timeClock.getTotalHours();
         this.dni = timeClock.getUser().getDni();
         this.username = timeClock.getUser().getUsername();
         this.mobile = timeClock.getUser().getMobile();
@@ -60,9 +64,9 @@ public class TimeClockOutputDto {
         return clockinDate.toLocalTime().format(TIME_FORMATTER);
     }
 
-    private Long getDateMs(LocalDateTime dateTime) {
+    private String parserDateToString(LocalDateTime dateTime) {
         ZoneId zoneId = ZoneId.systemDefault();
-        return dateTime.toLocalDate().atStartOfDay(zoneId).toInstant().toEpochMilli();
+        return dateTime.toLocalDate().atStartOfDay(zoneId).format(DATE_FORMATTER);
     }
 
     public String getId() {
@@ -73,36 +77,36 @@ public class TimeClockOutputDto {
         this.id = id;
     }
 
-    public Long getDateMs() {
-        return dateMs;
+    public String getDate() {
+        return date;
     }
 
-    public void setDateMs(Long dateMs) {
-        this.dateMs = dateMs;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getInMs() {
-        return inMs;
+    public String getIn() {
+        return in;
     }
 
-    public void setInMs(String inMs) {
-        this.inMs = inMs;
+    public void setIn(String in) {
+        this.in = in;
     }
 
-    public String getOutMs() {
-        return outMs;
+    public String getOut() {
+        return out;
     }
 
-    public void setOutMs(String outMs) {
-        this.outMs = outMs;
+    public void setOut(String out) {
+        this.out = out;
     }
 
-    public Long getTotalHours() {
-        return totalHours;
+    public Long getTotal() {
+        return total;
     }
 
-    public void setTotalHours(Long totalHours) {
-        this.totalHours = totalHours;
+    public void setTotal(Long total) {
+        this.total = total;
     }
 
     public String getUsername() {
@@ -133,10 +137,10 @@ public class TimeClockOutputDto {
     public String toString() {
         return "TimeClockOutputDto{" +
                 "id='" + id + '\'' +
-                ", dateMs=" + dateMs +
-                ", inMs='" + inMs + '\'' +
-                ", outMs='" + outMs + '\'' +
-                ", totalHours=" + totalHours +
+                ", date='" + date + '\'' +
+                ", in='" + in + '\'' +
+                ", out='" + out + '\'' +
+                ", total=" + total +
                 ", username='" + username + '\'' +
                 ", dni='" + dni + '\'' +
                 ", mobile='" + mobile + '\'' +

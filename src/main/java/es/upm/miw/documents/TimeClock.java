@@ -80,7 +80,7 @@ public class TimeClock {
 
     public void clockout() {
         this.clockoutDate = LocalDateTime.now();
-        this.totalHours = Duration.between(this.clockoutDate, this.clockinDate).toHours();
+        this.totalHours = Duration.between(this.clockinDate, this.clockoutDate).toHours();
     }
 
     @Override
