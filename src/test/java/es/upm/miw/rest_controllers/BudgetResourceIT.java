@@ -35,7 +35,8 @@ class BudgetResourceIT {
     @Test
     void testCreate() {
         ShoppingDto[] shoppings = new ShoppingDto[1];
-        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20").build());
+        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20").
+                description("Varios").build());
         ShoppingDto shoppingDto = new ShoppingDto(shopping);
         shoppings[0] = shoppingDto;
 
