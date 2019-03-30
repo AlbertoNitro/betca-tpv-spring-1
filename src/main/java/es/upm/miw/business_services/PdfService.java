@@ -1,5 +1,6 @@
 package es.upm.miw.business_services;
 
+import es.upm.miw.documents.Budget;
 import es.upm.miw.documents.Shopping;
 import es.upm.miw.documents.ShoppingState;
 import es.upm.miw.documents.Ticket;
@@ -36,6 +37,17 @@ public class PdfService {
 
     @Value("${miw.company.web}")
     private String web;
+
+    public byte[] generateBudget(Budget budget) {
+        final String path = "/tpv-pdfs/budgets/budget-" + budget.getId();
+        PdfBuilder pdf = new PdfBuilder(path, "");
+        pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
+                .paragraph("NIF: " + this.nif + "   -   " + this.address)
+                .paragraph("Email: " + this.email + "  -  " + "Web: " + this.web);
+        pdf.line();
+
+        return pdf.build();
+    }
 
     public byte[] generateTicket(Ticket ticket) {
         final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();

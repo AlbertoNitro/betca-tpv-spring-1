@@ -1,5 +1,6 @@
 package es.upm.miw.business_controllers;
 
+import es.upm.miw.business_services.PdfService;
 import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Budget;
 import es.upm.miw.documents.Shopping;
@@ -18,7 +19,10 @@ public class BudgetController {
     @Autowired
     private BudgetRepository budgetRepository;
 
-    public BudgetDto create(ShoppingDto[] shoppingsDto) {
+    @Autowired
+    private PdfService pdfService;
+
+    private Budget create(ShoppingDto[] shoppingsDto) {
         Shopping[] shoppings = new Shopping[shoppingsDto.length];
         for(int i=0; i<shoppingsDto.length; i++) {
             shoppings[i] = new Shopping(shoppingsDto[i].getAmount(), shoppingsDto[i].getDiscount(),
@@ -28,7 +32,11 @@ public class BudgetController {
         Budget budget = new Budget(shoppings);
         this.budgetRepository.save(budget);
 
-        return new BudgetDto(budget);
+        return budget;
+    }
+
+    public byte[] createPdf(ShoppingDto[] shoppingsDto) {
+        return this.pdfService.generateBudget(this.create(shoppingsDto));
     }
 
     public void delete(String id) {
