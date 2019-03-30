@@ -43,7 +43,7 @@ class OfferControllerIT {
     }
 
     @Test
-    void testCreateOffer() {
+    void testCreateOfferController() {
         this.offerOutputDto = this.offerController.create(this.offerInputDto);
         System.out.println(this.offerOutputDto.toString());
         assertNotNull(this.offerOutputDto.getId());
@@ -54,21 +54,21 @@ class OfferControllerIT {
     }
 
     @Test
-    void testReadAllOffers() {
+    void testReadAllOffersController() {
         List<OfferOutputDto> offers = this.offerController.readAll();
         assertNotNull(offers);
         assertTrue( offers.size() >= 1);
     }
 
     @Test
-    void testFilterSearchNull(){
+    void testFilterSearchNullController(){
         List<OfferOutputDto> offerList = this.offerController.search(
                 "aaaa", "aaaaa", "", "false");
         assertEquals(0, offerList.size());
     }
 
     @Test
-    void testDeleteOfferNotExist(){
+    void testDeleteOfferNotExistController(){
         this.offerController.delete("aaa");
     }
 }

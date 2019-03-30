@@ -23,6 +23,7 @@ public class OfferInputDto {
         this.endDate = endDate;
         this.articleLine = articleLine;
     }
+    public OfferInputDto(){}
 
     public String getOffername() {
         return offername;
