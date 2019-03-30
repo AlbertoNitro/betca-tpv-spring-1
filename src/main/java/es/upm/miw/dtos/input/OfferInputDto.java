@@ -12,6 +12,7 @@ public class OfferInputDto {
     @NotNull
     private String offername;
 
+    @NotNull
     private LocalDateTime endDate;
 
     @NotNull
