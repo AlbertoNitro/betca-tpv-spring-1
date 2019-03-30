@@ -26,7 +26,7 @@ public class OrderController {
         if(closeOrder.getOrderLines().length > 0) {
             closeOrder.close();
             closeOrder.setOrderLines(orderLine);
-            orderRepository.save(closeOrder);
+            closeOrder = orderRepository.save(closeOrder);
         } else {
             throw new BadRequestException("orderLine is empty");
         }

@@ -12,6 +12,8 @@ import java.util.Arrays;
 @JsonInclude(Include.NON_NULL)
 public class OrderDto {
 
+    private String id;
+
     private String description;
 
     private Provider provider;
@@ -27,7 +29,9 @@ public class OrderDto {
     }
 
     public OrderDto(Order order) {
+        this.id = order.getId();
         this.openingDate = order.getOpeningDate();
+        this.closingDate = order.getClosingDate();
         this.description = order.getDescription();
         this.provider = order.getProvider();
         this.orderLines = order.getOrderLines();
@@ -73,10 +77,19 @@ public class OrderDto {
         this.orderLines = orderLines;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "OrderDto{" +
-                "description='" + description + '\'' +
+                "id=" + id + "\'" +
+                ", description='" + description + '\'' +
                 ", provider=" + provider +
                 ", openingDate=" + openingDate +
                 ", closingDate=" + closingDate +

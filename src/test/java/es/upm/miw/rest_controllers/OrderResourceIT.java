@@ -8,10 +8,12 @@ import es.upm.miw.documents.Provider;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
 import es.upm.miw.repositories.ProviderRepository;
+import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import es.upm.miw.dtos.OrderSearchDto;
+import es.upm.miw.dtos.OrderDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -62,9 +64,14 @@ public class OrderResourceIT {
 
     @Test
     void testCloseOrder() {
-        Order closedOrder = orderController.closeOrder(this.order.getId(), this.order.getOrderLines());
-        assertNotNull(closedOrder.getClosingDate());
-        this.orderRepository.delete(closedOrder);
+        //Order closedOrder = orderController.closeOrder(this.order.getId(), this.order.getOrderLines());
+        OrderDto orderDto = new OrderDto(this.order);
+        OrderDto[] closedOrder = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<OrderDto[]>()).clazz(OrderDto[].class)
+                .path(OrderResource.ORDERS).path(OrderResource.CLOSE)
+                .body(orderDto).post().build();
+        assertNotNull(closedOrder[0].getClosingDate());
+        this.orderRepository.delete(this.order);
     }
 
     @Test
