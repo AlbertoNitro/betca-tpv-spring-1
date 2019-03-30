@@ -9,7 +9,6 @@ import es.upm.miw.repositories.VoucherRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,7 +44,6 @@ class VoucherControllerIT {
         assertEquals(voucherOutputDto.getValue(), voucherInputDto.getValue());
     }
 
-
     @Test
     void testReadAllVouchers() {
         List<VoucherOutputDto> vouchers = voucherController.readAll();
@@ -67,7 +65,6 @@ class VoucherControllerIT {
     void testFindVouchersByDateConsumed() {
         LocalDateTime dateFrom = LocalDateTime.now().minusDays(1).withNano(0);
         LocalDateTime dateTo = LocalDateTime.now().plusDays(1).withNano(0);
-
         List<VoucherOutputDto> voucherDtoOutputList = this.voucherController
                 .findVouchersByDateConsumed(dateFrom.toString(), dateTo.toString());
         assertTrue(voucherDtoOutputList.size() == 1);
@@ -77,7 +74,6 @@ class VoucherControllerIT {
     void testFindVouchersByDateWithinConsumed() {
         LocalDateTime dateFrom = LocalDateTime.now().minusDays(1).withNano(0);
         LocalDateTime dateTo = LocalDateTime.now().plusDays(1).withNano(0);
-
         List<VoucherOutputDto> voucherDtoOutputList = this.voucherController
                 .findVouchersByDateWithinConsumed(dateFrom.toString(), dateTo.toString());
         assertTrue(voucherDtoOutputList.size() > 0);
