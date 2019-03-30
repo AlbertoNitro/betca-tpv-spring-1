@@ -25,6 +25,8 @@ public class Offer {
         this.articleLine = articleLine;
     }
 
+    public Offer(){}
+
     public String getId() {
         return id;
     }
