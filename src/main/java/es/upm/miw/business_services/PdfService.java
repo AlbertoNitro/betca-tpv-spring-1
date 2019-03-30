@@ -39,7 +39,7 @@ public class PdfService {
 
     public byte[] generateTicket(Ticket ticket) {
         final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
-        PdfBuilder pdf = new PdfBuilder(path, PdfBuilder.PAGE_SIZE_A4);
+        PdfBuilder pdf = new PdfBuilder(path);
         pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
                 .paragraph("NIF: " + this.nif + "   -   " + this.address)
                 .paragraph("Email: " + this.email + "  -  " + "Web: " + this.web);
