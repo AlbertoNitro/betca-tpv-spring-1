@@ -12,7 +12,6 @@ public class OfferInputDto {
     @NotNull
     private String offername;
 
-    @NotNull
     private LocalDateTime endDate;
 
     @NotNull
@@ -23,14 +22,9 @@ public class OfferInputDto {
         this.endDate = endDate;
         this.articleLine = articleLine;
     }
-    public OfferInputDto(){}
 
     public String getOffername() {
         return offername;
-    }
-
-    public void setOffername(String offername) {
-        this.offername = offername;
     }
 
     public LocalDateTime getEndDate() {
@@ -43,10 +37,6 @@ public class OfferInputDto {
 
     public ArticleLine[] getArticleLine() {
         return articleLine;
-    }
-
-    public void setArticleLine(ArticleLine[] articleLine) {
-        this.articleLine = articleLine;
     }
 
     @Override

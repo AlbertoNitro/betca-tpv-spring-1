@@ -51,7 +51,7 @@ class OfferRepositoryIT {
 
     @Test
     void testReadAll() {
-        assertTrue(this.offerRepository.findAll().size() > 1);
+        assertTrue(this.offerRepository.findAll().size() >= 1);
     }
 
     @Test

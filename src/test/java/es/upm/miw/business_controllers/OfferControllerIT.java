@@ -1,22 +1,14 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
-import es.upm.miw.documents.Article;
 import es.upm.miw.documents.ArticleLine;
-import es.upm.miw.documents.Offer;
-import es.upm.miw.documents.Tax;
-import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.input.OfferInputDto;
 import es.upm.miw.dtos.output.OfferOutputDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

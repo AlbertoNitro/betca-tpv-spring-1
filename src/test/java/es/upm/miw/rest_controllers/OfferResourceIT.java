@@ -19,35 +19,25 @@ class OfferResourceIT {
     @Autowired
     private RestService restService;
 
-    private OfferInputDto offerInputDto;
-
     @BeforeEach
     void seed() {
-        ArticleLine articleLine = new ArticleLine();
-        articleLine.setIdArticle("8400000000055");
-        articleLine.setPercentage(5);
-        ArticleLine[] articleLinesResource = { articleLine };
-        this.offerInputDto = new OfferInputDto();
-        this.offerInputDto.setOffername("Offer Prueba Resource");
-        this.offerInputDto.setEndDate(LocalDateTime.now());
-        this.offerInputDto.setArticleLine(articleLinesResource);
-        System.out.println(this.offerInputDto.toString());
     }
 
-    @Test
+   /*@Test
     void testCreateOfferResource() {
+       ArticleLine articleLine = new ArticleLine();
+       articleLine.setIdArticle("8400000000055");
+       articleLine.setPercentage(5);
+       ArticleLine[] articleLinesResource = { articleLine };
+       OfferInputDto offerInputDto = new OfferInputDto("FakeOfferName", LocalDateTime.now(), articleLinesResource);
 
-    }
-    /*@Test
-    void testCreateOfferResource() {
         OfferOutputDto offerOutputDto = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<OfferOutputDto>())
                 .clazz(OfferOutputDto.class)
                 .path(OfferResource.OFFERS)
-                .body(this.offerInputDto)
+                .body(offerInputDto)
                 .post()
                 .build();
-        System.out.println(offerOutputDto.toString());
         assertNotNull(offerOutputDto);
         assertNotNull(offerOutputDto.getId());
     }
