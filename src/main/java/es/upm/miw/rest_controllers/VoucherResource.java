@@ -15,6 +15,7 @@ import java.util.List;
 @RequestMapping(VoucherResource.VOUCHERS)
 public class VoucherResource {
     public static final String VOUCHERS = "/vouchers";
+    public static final String CODE_ID = "/{code}";
     @Autowired
     private VoucherController voucherController;
 
@@ -30,4 +31,8 @@ public class VoucherResource {
         return this.voucherController.readAll();
     }
 
+    @PutMapping(value = CODE_ID)
+    public VoucherOutputDto update(@Valid @PathVariable String code) {
+        return this.voucherController.update(code);
+    }
 }
