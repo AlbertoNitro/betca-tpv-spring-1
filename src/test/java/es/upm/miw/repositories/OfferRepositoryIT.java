@@ -3,13 +3,18 @@ package es.upm.miw.repositories;
 import es.upm.miw.TestConfig;
 import es.upm.miw.documents.ArticleLine;
 import es.upm.miw.documents.Offer;
-import es.upm.miw.dtos.output.ArticleSearchOutputDto;
+import es.upm.miw.dtos.output.OfferOutputDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,18 +25,16 @@ class OfferRepositoryIT {
     private OfferRepository offerRepository;
 
     private Offer offer;
-    private ArticleLine articleLine_1;
-    private ArticleLine articleLine_2;
 
     @BeforeEach
     void seedDb() {
-        this.articleLine_1 = new ArticleLine();
-        this.articleLine_1.setIdArticle("8400000000017");
-        this.articleLine_1.setPercentage(5);
-        this.articleLine_2 = new ArticleLine();
-        this.articleLine_2.setIdArticle("8400000000024");
-        this.articleLine_2.setPercentage(8);
-        ArticleLine[] articleLines = { this.articleLine_1, this.articleLine_2 };
+        ArticleLine articleLine_1 = new ArticleLine();
+        articleLine_1.setIdArticle("8400000000017");
+        articleLine_1.setPercentage(5);
+        ArticleLine articleLine_2 = new ArticleLine();
+        articleLine_2.setIdArticle("8400000000024");
+        articleLine_2.setPercentage(8);
+        ArticleLine[] articleLines = { articleLine_1, articleLine_2 };
 
         this.offer = new Offer();
         this.offer.setId("0123456789");
@@ -51,70 +54,23 @@ class OfferRepositoryIT {
         assertTrue(this.offerRepository.findAll().size() > 1);
     }
 
-    /*@Test
-    void testFindByReferenceNullAndProviderNull() {
-        List<ArticleSearchOutputDto> articleList = articleRepository.findByReferenceNullAndProviderNull();
-        assertEquals(4, articleList.size());
+    @Test
+    void testfindByIdOffernameEndDateArticleId(){
+        LocalDate now = LocalDate.now();
+        Instant instant = now.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+        Date dateNow = Date.from(instant);
+        List<OfferOutputDto> offerList = this.offerRepository.findByIdOffernameEndDateArticleId(
+                "345", "keOf", "false", dateNow, "024");
+        assertEquals(1, offerList.size());
     }
 
     @Test
-    void testFindByCode() {
-        assertNotNull(this.articleRepository.findByCode("8400000000031"));
-        assertEquals("descrip-a3", this.articleRepository.findByCode("8400000000031").getDescription());
+    void testFilterSearchNull(){
+        LocalDate now = LocalDate.now();
+        Instant instant = now.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+        Date dateNow = Date.from(instant);
+        List<OfferOutputDto> offerList = this.offerRepository.findByIdOffernameEndDateArticleId(
+                "aaaa", "aaaaa", "false", dateNow, "");
+        assertEquals(0, offerList.size());
     }
-
-    @Test
-    void testFindByDescriptionAndStockAndRetailPriceNull(){
-        List<ArticleSearchOutputDto> articleList = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                (null, null, null, null);
-        assertFalse(articleList.isEmpty());
-    }
-
-    @Test
-    void testFindByDescription(){
-        List<ArticleSearchOutputDto> articleList = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                ("zaR", null, null, null);
-        assertEquals(2, articleList.size());
-    }
-
-    @Test
-    void testFindByStock(){
-        List<ArticleSearchOutputDto> articleList = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                (null, 2, null, null);
-        assertEquals(6, articleList.size());
-    }
-
-    @Test
-    void testFindByRetailPrice(){
-        List<ArticleSearchOutputDto> articleList = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                (null, null, "22.6", null);
-        assertEquals(3, articleList.size());
-    }
-
-    @Test
-    void testFindByDescriptionAndStock(){
-        List<ArticleSearchOutputDto> articleList = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                ("zAr", 2, null, null);
-        assertEquals(2, articleList.size());
-    }
-
-    @Test
-    void testFindByStockAndRetailPrice(){
-        List<ArticleSearchOutputDto> articleList = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                (null, 2, "20", null);
-        assertEquals(5, articleList.size());
-    }
-
-    @Test
-    void testFindByDescriptionAndStockAndRetailPrice() {
-        List<ArticleSearchOutputDto> articleList = articleRepository.findByDescriptionAndStockAndRetailPriceNullSafe
-                ("zaR", 7, "2", "21");
-        assertEquals(1, articleList.size());
-    }
-
-    @Test
-    void testFindFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(){
-        Article article = articleRepository.findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc("84");
-        assertEquals("8400000000085", article.getCode());
-    }*/
 }
