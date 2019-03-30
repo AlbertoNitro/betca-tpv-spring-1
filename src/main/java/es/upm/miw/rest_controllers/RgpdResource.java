@@ -2,16 +2,17 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_services.PdfService;
 import es.upm.miw.documents.RgpdAgreement;
+import es.upm.miw.documents.RgpdAgreementType;
+import es.upm.miw.documents.User;
 import es.upm.miw.dtos.RgpdDto;
-import es.upm.miw.exceptions.BadRequestException;
+import es.upm.miw.exceptions.UnauthorizedException;
 import es.upm.miw.repositories.RgpdAgreementRepository;
 import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -36,15 +37,11 @@ public class RgpdResource {
     private UserRepository userRepository;
 
     @PostMapping(value = PRINTABLE_AGREEMENT)
-    public RgpdDto createPrintableAgreement(@RequestBody RgpdDto rgpdInput, @AuthenticationPrincipal User activeUser) {
+    public RgpdDto createPrintableAgreement(@RequestBody RgpdDto rgpdInput) {
         RgpdDto rgpdOutput = new RgpdDto();
         rgpdOutput.setAgreementType(rgpdInput.getAgreementType());
         byte[] agreement;
-        if (activeUser != null) {
-            agreement = pdfService.generatePrintableRgpdAgreement("Active user " + activeUser.getUsername());
-        } else {
-            agreement = pdfService.generatePrintableRgpdAgreement(SecurityContextHolder.getContext().getAuthentication().getName());
-        }
+        agreement = pdfService.generatePrintableRgpdAgreement(SecurityContextHolder.getContext().getAuthentication().getName());
         String content = Base64.getEncoder().encodeToString(agreement);
         rgpdOutput.setPrintableAgreement(content);
         return rgpdOutput;
@@ -52,10 +49,8 @@ public class RgpdResource {
 
     @GetMapping(value = USER_AGREEMENT)
     public RgpdDto getUserAgreement() {
-        es.upm.miw.documents.User user = userRepository.findByMobile(SecurityContextHolder.getContext().
-                getAuthentication().getName()).orElse(null);
         RgpdDto result = new RgpdDto();
-        List<RgpdAgreement> rgpdAgreementList = rgpdAgreementRepository.findByAssignee(user.getId());
+        List<RgpdAgreement> rgpdAgreementList = rgpdAgreementRepository.findByAssignee(getAuthenticathedUser().getId());
         if (rgpdAgreementList.size() > 0) {
             RgpdAgreement rgpdAgreement = rgpdAgreementList.get(0);
             String content = Base64.getEncoder().encodeToString(rgpdAgreement.getAgreement());
@@ -78,4 +73,33 @@ public class RgpdResource {
         return result;
     }
 
+    @PostMapping(value = USER_AGREEMENT)
+    public RgpdDto saveUserAgreement(@RequestBody RgpdDto dto) {
+        byte[] agreement = Base64.getDecoder().decode(dto.getPrintableAgreement());
+        RgpdAgreement rgpd = new RgpdAgreement();
+        rgpd.setAgreement(agreement);
+        rgpd.setAssignee(this.getAuthenticathedUser());
+        switch (dto.getPrintableAgreement()) {
+            case "1":
+                rgpd.setType(RgpdAgreementType.BASIC);
+                break;
+
+            case "2":
+                rgpd.setType(RgpdAgreementType.MEDIUM);
+                break;
+            case "3":
+                rgpd.setType(RgpdAgreementType.ADVANCE);
+                break;
+        }
+
+        this.rgpdAgreementRepository.save(rgpd);
+        return dto;
+    }
+
+    private User getAuthenticathedUser() {
+        Optional<User> optional = userRepository.findByMobile(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (optional.isPresent())
+            return optional.get();
+        throw new UnauthorizedException("Usuario no encontrado.");
+    }
 }
