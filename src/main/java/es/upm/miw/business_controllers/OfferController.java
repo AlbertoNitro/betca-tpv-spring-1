@@ -37,6 +37,7 @@ public class OfferController {
     }
 
     public OfferOutputDto create(OfferInputDto offerInputDto) {
+        offerInputDto.setEndDate(offerInputDto.getEndDate().plusDays(1));
         Offer offer = new Offer(Integer.toString(offerInputDto.hashCode()), offerInputDto.getOffername() , offerInputDto.getEndDate(), offerInputDto.getArticleLine());
         this.offerRepository.save(offer);
         return new OfferOutputDto(offer.getId(), offer.getOffername(), offer.getEndDate(), offer.getArticleLine());

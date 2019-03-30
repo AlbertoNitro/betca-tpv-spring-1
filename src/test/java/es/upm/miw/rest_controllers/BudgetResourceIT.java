@@ -35,14 +35,14 @@ class BudgetResourceIT {
     @Test
     void testCreate() {
         ShoppingDto[] shoppings = new ShoppingDto[1];
-        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20").build());
+        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20").
+                description("Varios").build());
         ShoppingDto shoppingDto = new ShoppingDto(shopping);
         shoppings[0] = shoppingDto;
 
-        BudgetDto budgetDto = this.restService.loginAdmin().restBuilder(new RestBuilder<BudgetDto>())
-                .clazz(BudgetDto.class).path(BudgetResource.BUDGETS).body(shoppings).post().build();
-        assertNotNull(budgetDto);
-        assertNotNull(budgetDto.getId());
+        byte[] budgetPdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>())
+                .clazz(byte[].class).path(BudgetResource.BUDGETS).body(shoppings).post().build();
+        assertNotNull(budgetPdf);
     }
 
     @Test

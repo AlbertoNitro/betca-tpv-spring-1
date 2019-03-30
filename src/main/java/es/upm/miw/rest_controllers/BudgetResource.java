@@ -23,8 +23,8 @@ public class BudgetResource {
     private BudgetController budgetController;
 
     @PostMapping()
-    public BudgetDto create(@Valid @RequestBody ShoppingDto[] shopping) {
-        return this.budgetController.create(shopping);
+    public byte[] createPdf(@Valid @RequestBody ShoppingDto[] shopping) {
+        return this.budgetController.createPdf(shopping);
     }
 
     @DeleteMapping(value = ID)

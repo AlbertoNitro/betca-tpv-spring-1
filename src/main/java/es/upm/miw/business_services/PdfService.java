@@ -1,5 +1,6 @@
 package es.upm.miw.business_services;
 
+import es.upm.miw.documents.Budget;
 import es.upm.miw.documents.Shopping;
 import es.upm.miw.documents.ShoppingState;
 import es.upm.miw.documents.Ticket;
@@ -37,13 +38,57 @@ public class PdfService {
     @Value("${miw.company.web}")
     private String web;
 
-    public byte[] generateTicket(Ticket ticket) {
-        final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
-        PdfBuilder pdf = new PdfBuilder(path, "");
+    private void generateCommonHead(PdfBuilder pdf) {
         pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
                 .paragraph("NIF: " + this.nif + "   -   " + this.address)
                 .paragraph("Email: " + this.email + "  -  " + "Web: " + this.web);
         pdf.line();
+    }
+
+    private void generateCommonFooter(PdfBuilder pdf) {
+        pdf.paragraphEmphasized("Gracias por su visita").paragraphEmphasized(" ").line();
+    }
+
+    private int generateTableCellFromShopping(PdfTableBuilder table, Shopping shopping, int index, int notCommitted) {
+        String state = "";
+        if (shopping.getShoppingState() != ShoppingState.COMMITTED && shopping.getAmount() > 0) {
+            state = "N";
+            notCommitted++;
+        }
+        String discount = "";
+        if ((shopping.getDiscount().doubleValue() > 0.009) && !shopping.getArticle().getCode().equals("1")) {
+            discount = "" + shopping.getDiscount().setScale(2, RoundingMode.HALF_UP);
+        }
+        table.tableCell(String.valueOf(index + 1), shopping.getDescription(), "" + shopping.getAmount(), discount,
+                shopping.getShoppingTotal().setScale(2, RoundingMode.HALF_UP) + "€", state);
+
+        return notCommitted;
+    }
+
+    public byte[] generateBudget(Budget budget) {
+        final String path = "/tpv-pdfs/budgets/budget-" + budget.getId();
+        PdfBuilder pdf = new PdfBuilder(path, PdfBuilder.PAGE_SIZE_A4);
+        this.generateCommonHead(pdf);
+        pdf.paragraphEmphasized("PRESUPUESTO");
+        pdf.line();
+        pdf.paragraphEmphasized(budget.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        PdfTableBuilder table = pdf.table(TABLE_COLUMNS_SIZES_TICKETS).tableColumnsHeader(TABLE_COLUMNS_HEADERS);
+        for (int i = 0; i < budget.getShoppingList().length; i++) {
+            Shopping shopping = budget.getShoppingList()[i];
+            this.generateTableCellFromShopping(table, shopping, i, 0);
+        }
+        table.build();
+        pdf.paragraph("ID PRESUPUESTO: " + budget.getId());
+        pdf.line();
+        this.generateCommonFooter(pdf);
+
+        return pdf.build();
+    }
+
+    public byte[] generateTicket(Ticket ticket) {
+        final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
+        PdfBuilder pdf = new PdfBuilder(path);
+        this.generateCommonHead(pdf);
         if (ticket.isDebt()) {
             pdf.paragraphEmphasized("RESERVA");
             pdf.paragraphEmphasized("Abonado: " + ticket.pay().setScale(2, RoundingMode.HALF_UP) + "€");
@@ -58,17 +103,7 @@ public class PdfService {
         PdfTableBuilder table = pdf.table(TABLE_COLUMNS_SIZES_TICKETS).tableColumnsHeader(TABLE_COLUMNS_HEADERS);
         for (int i = 0; i < ticket.getShoppingList().length; i++) {
             Shopping shopping = ticket.getShoppingList()[i];
-            String state = "";
-            if (shopping.getShoppingState() != ShoppingState.COMMITTED && shopping.getAmount() > 0) {
-                state = "N";
-                notCommitted++;
-            }
-            String discount = "";
-            if ((shopping.getDiscount().doubleValue() > 0.009) && !shopping.getArticle().getCode().equals("1")) {
-                discount = "" + shopping.getDiscount().setScale(2, RoundingMode.HALF_UP);
-            }
-            table.tableCell(String.valueOf(i + 1), shopping.getDescription(), "" + shopping.getAmount(), discount,
-                    shopping.getShoppingTotal().setScale(2, RoundingMode.HALF_UP) + "€", state);
+            notCommitted = this.generateTableCellFromShopping(table, shopping, i, notCommitted);
         }
         table.tableColspanRight(ticket.getTotal().setScale(2, RoundingMode.HALF_UP) + "€").build();
         pdf.paragraph(ticket.getNote());
@@ -81,13 +116,13 @@ public class PdfService {
             pdf.qrCode(ticket.getReference());
         }
         pdf.line().paragraph("Periodo de devolución o cambio: 15 dias a partir de la fecha del ticket");
-        pdf.paragraphEmphasized("Gracias por su visita").paragraphEmphasized(" ").line();
+        this.generateCommonFooter(pdf);
         return pdf.build();
     }
 
     public byte[] generatePrintableRgpdAgreement(String userName) {
         final String path = "/rgpd-pdfs/printable/agreement-" + userName;
-        PdfBuilder pdf = new PdfBuilder(path, "");
+        PdfBuilder pdf = new PdfBuilder(path, PdfBuilder.PAGE_SIZE_A4);
         pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
                 .paragraph("NIF: " + this.nif + "   -   " + this.address)
                 .paragraph("Email: " + this.email + "  -  " + "Web: " + this.web);
