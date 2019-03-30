@@ -16,6 +16,7 @@ import java.util.List;
 public class VoucherResource {
     public static final String VOUCHERS = "/vouchers";
     public static final String CODE_ID = "/{code}";
+    public static final String SEARCH = "/search";
     @Autowired
     private VoucherController voucherController;
 
@@ -34,5 +35,19 @@ public class VoucherResource {
     @PutMapping(value = CODE_ID)
     public VoucherOutputDto update(@Valid @PathVariable String code) {
         return this.voucherController.update(code);
+    }
+
+    @PreAuthorize("authenticated")
+    @GetMapping(value = SEARCH, produces = {"application/json"})
+    public List<VoucherOutputDto> search(@RequestParam boolean consumed, @RequestParam String dateFrom, @RequestParam String dateTo) {
+        List<VoucherOutputDto> dataReturn;
+        if (consumed) {
+            dataReturn = this.voucherController.findVouchersByDateConsumed(dateFrom, dateTo);
+
+        } else {
+            dataReturn = this.voucherController.findVouchersByDateWithinConsumed(dateFrom, dateTo);
+
+        }
+        return dataReturn;
     }
 }
