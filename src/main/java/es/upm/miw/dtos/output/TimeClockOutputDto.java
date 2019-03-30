@@ -1,6 +1,5 @@
 package es.upm.miw.dtos.output;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import es.upm.miw.documents.TimeClock;
 
 import javax.validation.constraints.NotNull;

@@ -112,11 +112,15 @@ public class TimeClockControllerIT {
         assertNotNull(timeClockCreated.getClockinDate());
         assertNotNull(timeClockCreated.getTotalHours());
 
-        timeClockCreated.clockout();
-        TimeClock timeClockUpdated = this.timeClockController.updateTimeClock(timeClockCreated.getUser());
+        User user = this.timeClockController.getUserTimeClockByMobile(timeClockCreated.getUser().getMobile());
+        TimeClock timeClockToUpdate = this.timeClockController.getLastTimeClockByUser(user.getId());
+        assertNotNull(timeClockToUpdate);
+        timeClockToUpdate.clockout();
+        TimeClock timeClockUpdated = this.timeClockController.updateTimeClock(timeClockToUpdate);
         assertEquals(timeClockUpdated.getUser(), timeClockCreated.getUser());
         assertEquals(timeClockUpdated.getId(), timeClockCreated.getId());
         assertEquals(timeClockUpdated.getClockinDate(), timeClockCreated.getClockinDate());
         assertNotEquals(timeClockUpdated.getClockoutDate(), timeClockCreated.getClockoutDate());
     }
+
 }

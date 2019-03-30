@@ -15,13 +15,21 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
 @Aspect
-public class TimeClockAspect {
+public class UserAccessAspect {
+
+    public enum RoleType {
+        ROLE_AUTHENTICATED,
+        ROLE_MANAGER,
+        ROLE_OPERATOR;
+    }
 
     @Autowired
     private TimeClockRepository timeClockRepository;
@@ -31,12 +39,12 @@ public class TimeClockAspect {
 
     @Pointcut("execution(* es.upm.miw.rest_controllers.UserResource.logout(..))")
     public void saveLogoutTimeClock() {
-        // Empty
+        // Empty but necessary for the implementation
     }
 
     @Pointcut("execution(* es.upm.miw.rest_controllers.UserResource.login(..))")
     public void saveLoginTimeClock() {
-        // Empty
+        // Empty but necessary for the implementation
     }
 
     @Before("saveLogoutTimeClock()")
@@ -44,17 +52,19 @@ public class TimeClockAspect {
         Object[] lArgs = joinPoint.getArgs();
         String activeUserMobile = (String) lArgs[0];
         es.upm.miw.documents.User userLogged = this.userRepository.findByMobile(activeUserMobile).orElse(null);
-        if (hasActiveUserRolOperatorManager(userLogged)) {
-            TimeClock timeClockUpdated = saveClockOutActiveUser(userLogged);
-            String log = "<<< logoutTimeClock Return << " + joinPoint.getSignature().getName() + ": " + timeClockUpdated.toString();
-            LogManager.getLogger(joinPoint.getSignature().getDeclaringTypeName()).info(log);
+        if (userLogged != null && hasActiveUserRolOperatorManager(userLogged)) {
+            TimeClock timeClockActiveUser = this.timeClockRepository.findFirst1ByUserOrderByClockinDateDesc(userLogged.getId()).orElse(null);
+            if (timeClockActiveUser != null && sameDay(timeClockActiveUser)) {
+                timeClockActiveUser.clockout();
+                LogManager.getLogger(joinPoint.getSignature().getDeclaringTypeName()).info(timeClockActiveUser.toString());
+                this.timeClockRepository.save(timeClockActiveUser);
+                toLogResult(joinPoint, timeClockActiveUser, "[LogoutTimeClock Return] ::: ");
+            }
         }
     }
 
-    private TimeClock saveClockOutActiveUser(es.upm.miw.documents.User userLogged) {
-        TimeClock timeClockActiveUser = this.timeClockRepository.findFirst1ByUserOrderByClockinDateDesc(userLogged.getId());
-        timeClockActiveUser.clockout();
-        return this.timeClockRepository.save(timeClockActiveUser);
+    private boolean sameDay(TimeClock timeClockActiveUser) {
+        return timeClockActiveUser.getClockoutDate().toLocalDate().isEqual(LocalDate.now());
     }
 
     private boolean isActiveUserAuthenticated(User activeUser) {
@@ -67,22 +77,26 @@ public class TimeClockAspect {
         Object[] lArgs = joinPoint.getArgs();
         User activeUser = (User) lArgs[0];
         es.upm.miw.documents.User userLogged = this.userRepository.findByMobile(activeUser.getUsername()).orElse(null);
-        if (isActiveUserAuthenticated(activeUser) && hasActiveUserRolOperatorManager(userLogged)) {
-            // TODO: Controlar que no exista ya un registro para ese usuario en ese mismo día. Verificar
-            // que es el primer login.
-            // TimeClock firstTimeClock = this.timeClockRepository.findFirst1ByUserOrderByClockinDateDesc(userLogged.getId());
-            TimeClock timeClockCreated = this.timeClockRepository.save(new TimeClock(userLogged));
-            String log = "<<< loginTimeClock Return << " + joinPoint.getSignature().getName() + ": " + timeClockCreated.toString();
-            LogManager.getLogger(joinPoint.getSignature().getDeclaringTypeName()).info(log);
+        if (userLogged != null && isActiveUserAuthenticated(activeUser) && hasActiveUserRolOperatorManager(userLogged)) {
+            TimeClock firstTimeClockUser = this.timeClockRepository.findFirst1ByUserOrderByClockinDateDesc(userLogged.getId()).orElse(null);
+            if (firstTimeClockUser == null || !sameDay(firstTimeClockUser)) {
+                TimeClock timeClockCreated = this.timeClockRepository.save(new TimeClock(userLogged));
+                toLogResult(joinPoint, timeClockCreated, "[LoginTimeClock Return] ::: ");
+            }
         }
     }
 
-    public boolean hasActiveUserRolOperatorManager(es.upm.miw.documents.User userLogged) {
+    private boolean hasActiveUserRolOperatorManager(es.upm.miw.documents.User userLogged) {
         List<Role> roles = Arrays.asList(userLogged.getRoles());
         Role rol = roles.stream()
-                .filter(role -> RoleType.ROLE_MANAGER.name().equals(role.roleName()) || RoleType.ROLE_OPERATOR.name().equals(role.roleName()))
+                .filter(Objects::nonNull).filter(role -> RoleType.ROLE_MANAGER.name().equals(role.roleName()) || RoleType.ROLE_OPERATOR.name().equals(role.roleName()))
                 .findAny()
                 .orElse(null);
         return rol != null;
+    }
+
+    private void toLogResult(JoinPoint joinPoint, TimeClock timeClockUpdated, String s) {
+        String log = s + joinPoint.getSignature().getName() + ": " + timeClockUpdated.toString();
+        LogManager.getLogger(joinPoint.getSignature().getDeclaringTypeName()).info(log);
     }
 }
