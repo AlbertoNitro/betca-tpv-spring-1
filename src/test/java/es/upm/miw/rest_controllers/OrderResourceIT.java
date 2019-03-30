@@ -8,11 +8,11 @@ import es.upm.miw.documents.Provider;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
 import es.upm.miw.repositories.ProviderRepository;
-import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.BeforeEach;
+import es.upm.miw.dtos.OrderSearchDto;
+import es.upm.miw.dtos.OrderSearchInputDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import es.upm.miw.dtos.OrderSearchDto;
 import es.upm.miw.dtos.OrderDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
@@ -89,7 +89,17 @@ public class OrderResourceIT {
                 .restBuilder(new RestBuilder<OrderSearchDto[]>()).clazz(OrderSearchDto[].class)
                 .path(OrderResource.ORDERS)
                 .get().build());
-        System.out.println("OrdersResource: " + orders);
         assertTrue(orders.size() >= 0);
+    }
+
+    @Test
+    void testFindByAttributesLike() {
+        OrderSearchInputDto orderSearchInputDto = new OrderSearchInputDto("null", "null", false);
+        List<OrderSearchDto> activesSearch = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<OrderSearchDto[]>()).clazz(OrderSearchDto[].class)
+                .path(OrderResource.ORDERS).path(OrderResource.SEARCH).body(orderSearchInputDto)
+                .post().build());
+        assertTrue(activesSearch.size() >= 0);
+
     }
 }

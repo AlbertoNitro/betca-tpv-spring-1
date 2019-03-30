@@ -46,6 +46,7 @@ class UserRepositoryIT {
     @Test
     void testFindCustomerAll() {
         List<UserMinimumDto> userList = userRepository.findAllUsers();
+        assertTrue(userList.size()>1);
     }
 
     @Test

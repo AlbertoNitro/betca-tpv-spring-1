@@ -6,6 +6,8 @@ public class RgpdDto {
 
     private String printableAgreement;
 
+    private boolean accepted;
+
     public RgpdDto() {
         // Empty for framework
     }
@@ -24,6 +26,14 @@ public class RgpdDto {
 
     public void setPrintableAgreement(String printableAgreement) {
         this.printableAgreement = printableAgreement;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 
     @Override

@@ -26,9 +26,8 @@ public class TicketModificationStateOrAmountDto {
     private List<ShoppingModificationStateOrAmountDto> initializeShoppingTicket(Shopping[] shoppings) {
 
         List<ShoppingModificationStateOrAmountDto> shoppingModificationDto = new ArrayList<>();
-        Arrays.stream(shoppings).forEach(p -> {
-            shoppingModificationDto.add(new ShoppingModificationStateOrAmountDto(p));
-        });
+        Arrays.stream(shoppings).forEach(p ->
+            shoppingModificationDto.add(new ShoppingModificationStateOrAmountDto(p)));
         return shoppingModificationDto;
     }
 

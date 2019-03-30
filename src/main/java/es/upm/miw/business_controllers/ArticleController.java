@@ -18,7 +18,7 @@ import org.springframework.stereotype.Controller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class ArticleController {
@@ -39,13 +39,7 @@ public class ArticleController {
     private FamilyCompositeRepository familyCompositeRepository;
 
     public List<ArticleSearchOutputDto> readAll() {
-        List<ArticleSearchOutputDto> articleSearchDtoList = new ArrayList<>();
-
-        for (Article article : this.articleRepository.findAll()) {
-            articleSearchDtoList.add(new ArticleSearchOutputDto(article));
-        }
-
-        return articleSearchDtoList;
+        return this.articleRepository.findAll().stream().map(ArticleSearchOutputDto::new).collect(Collectors.toList());
     }
 
     public List<ArticleMinimumDto> readArticlesMinimum() {
@@ -78,7 +72,7 @@ public class ArticleController {
 
     public ArticleDto createArticle(ArticleDto articleDto) {
         String code = articleDto.getCode();
-        if (code == null || code.equals("")) {
+        if (code == null) {
             code = this.databaseSeederService.nextCodeEan();
         }
 
@@ -93,7 +87,9 @@ public class ArticleController {
     }
 
     public ArticleDto update(String code, ArticleDto articleDto) {
-        Article article = prepareArticle(articleDto, code);
+        ArticleDto articleBBDD = readArticle(code);
+
+        Article article = prepareArticle(articleDto, articleBBDD.getCode());
 
         this.articleRepository.save(article);
         return new ArticleDto(article);
@@ -113,12 +109,9 @@ public class ArticleController {
     }
 
     public void delete(String code) {
-        Optional<Article> article = this.articleRepository.findById(code);
-
-        if (article.isPresent()) {
-            this.articleRepository.delete(article.get());
+        if (this.articleRepository.findById(code).isPresent()) {
+            this.articleRepository.deleteById(code);
         }
-
     }
 
     public FamilySizeInputDto createFamilySize(FamilySizeInputDto familySizeInputDto) {
