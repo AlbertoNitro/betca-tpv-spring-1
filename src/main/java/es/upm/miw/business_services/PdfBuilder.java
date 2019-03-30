@@ -54,10 +54,7 @@ public class PdfBuilder {
 
     public PdfBuilder(String path, PageSize pageSize) {
         this.filename = System.getProperty(USER_HOME) + path + PDF_FILE_EXT;
-        if (pageSize != null)
-            this.prepareDocument(pageSize);
-        else
-            this.prepareDocument(new PageSize(THERMAL_PAGE_WIDTH, THERMAL_PAGE_HEIGHT));
+        this.prepareDocument(pageSize);
         this.document.setMargins(THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_RIGHT, THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_LEFT);
         this.document.setFontSize(THERMAL_FONT_SIZE);
     }
