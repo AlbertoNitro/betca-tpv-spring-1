@@ -28,8 +28,8 @@ public class OfferOutputDto extends OfferInputDto {
         return "OfferOutputDto{" +
                 "id='" + id + '\'' +
                 ", offername='" + super.getOffername() + '\'' +
-                ", offername='" + super.getEndDate() + '\'' +
-                ", offername='" + Arrays.toString(super.getArticleLine()) + '\'' +
+                ", endDate='" + super.getEndDate() + '\'' +
+                ", articleLine='" + Arrays.toString(super.getArticleLine()) + '\'' +
                 '}';
     }
 }
