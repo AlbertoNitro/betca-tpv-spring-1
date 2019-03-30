@@ -5,7 +5,6 @@ import es.upm.miw.documents.ArticlesFamily;
 import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 import es.upm.miw.dtos.ArticleFamilyDto;
-import es.upm.miw.dtos.ArticleFamilyRootDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.FamilyCompositeRepository;
 import org.junit.jupiter.api.Test;

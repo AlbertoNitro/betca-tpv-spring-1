@@ -30,6 +30,8 @@ public class UserResource {
     public static final String MOBILE_ID = "/{mobile}";
     public static final String PASSWORDS = "/passwords";
     public static final String LOGOUT = "/logout";
+    public static final String PROFILES = "/profiles";
+    public static final String VALIDATORS = "/validators";
 
     @Autowired
     private UserController userController;
@@ -67,7 +69,7 @@ public class UserResource {
         return this.userController.update(mobile, user);
     }
 
-    @PutMapping(value = ROLES+MOBILE_ID)
+    @PutMapping(value = ROLES + MOBILE_ID)
     public UserDto updateRoles(@PathVariable String mobile, @Valid @RequestBody UserRolesDto userRolesDto) {
         return this.userController.updateRoles(mobile, userRolesDto);
     }
@@ -78,35 +80,40 @@ public class UserResource {
         List<String> userRoles = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         Role[] authorities;
-        if(userQueryDto.isOnlyCustomer()){
-            authorities=new Role[]{Role.CUSTOMER};
-        }else {
+        if (userQueryDto.isOnlyCustomer()) {
+            authorities = new Role[]{Role.CUSTOMER};
+        } else {
             String[] rolesLoing = userRoles.get(0).split("ROLE_");
             authorities = autorizationRole(Role.valueOf(rolesLoing[1]));
         }
-        String mobile=userQueryDto.getMobile();
-        String username=userQueryDto.getUsername();
-        String dni=userQueryDto.getDni();
-        String address=userQueryDto.getAddress();
+        String mobile = userQueryDto.getMobile();
+        String username = userQueryDto.getUsername();
+        String dni = userQueryDto.getDni();
+        String address = userQueryDto.getAddress();
 
-        return this.userController.readAllByUsernameDniAddressRoles(mobile,username,dni,address,authorities);
+        return this.userController.readAllByUsernameDniAddressRoles(mobile, username, dni, address, authorities);
     }
 
-    public Role[] autorizationRole(Role userRoles){
+    public Role[] autorizationRole(Role userRoles) {
         Role[] authorities;
-        if(userRoles.equals(Role.ADMIN)) {
-            authorities=new Role[]{Role.ADMIN,Role.MANAGER,Role.OPERATOR,Role.CUSTOMER};
-        }else if(userRoles.equals(Role.MANAGER)){
-            authorities=new Role[]{Role.MANAGER,Role.OPERATOR,Role.CUSTOMER};
-        }else {
-            authorities=new Role[]{Role.OPERATOR,Role.CUSTOMER};
+        if (userRoles.equals(Role.ADMIN)) {
+            authorities = new Role[]{Role.ADMIN, Role.MANAGER, Role.OPERATOR, Role.CUSTOMER};
+        } else if (userRoles.equals(Role.MANAGER)) {
+            authorities = new Role[]{Role.MANAGER, Role.OPERATOR, Role.CUSTOMER};
+        } else {
+            authorities = new Role[]{Role.OPERATOR, Role.CUSTOMER};
         }
         return authorities;
     }
 
-    @PutMapping(value = PASSWORDS+MOBILE_ID)
+    @PutMapping(value = PROFILES + MOBILE_ID)
     public UserProfileDto updateProfile(@PathVariable String mobile, @Valid @RequestBody UserProfileDto userProfileDto) {
         return this.userController.updateProfile(mobile, userProfileDto);
+    }
+
+    @PutMapping(value = PROFILES + VALIDATORS + MOBILE_ID)
+    public Boolean validatorUser(@PathVariable String mobile, @RequestBody UserProfileDto userProfileDto, @AuthenticationPrincipal User activeUser) {
+        return this.userController.validatorPassword(mobile, userProfileDto);
     }
 
     @PreAuthorize("authenticated")
