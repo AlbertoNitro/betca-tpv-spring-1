@@ -66,10 +66,8 @@ public class BudgetControllerIT {
     @Test
     void testCreate() {
         ShoppingDto[] shoppings = this.createShoppingListDto();
-        BudgetDto budget = budgetController.create(shoppings);
-        System.out.println(budget);
-        assertNotNull(budget);
-        assertNotNull(budget.getId());
+        byte[] budgetPdf = budgetController.createPdf(shoppings);
+        assertNotNull(budgetPdf);
     }
 
     @Test

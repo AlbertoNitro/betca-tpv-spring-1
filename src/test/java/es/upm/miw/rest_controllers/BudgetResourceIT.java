@@ -39,10 +39,9 @@ class BudgetResourceIT {
         ShoppingDto shoppingDto = new ShoppingDto(shopping);
         shoppings[0] = shoppingDto;
 
-        BudgetDto budgetDto = this.restService.loginAdmin().restBuilder(new RestBuilder<BudgetDto>())
-                .clazz(BudgetDto.class).path(BudgetResource.BUDGETS).body(shoppings).post().build();
-        assertNotNull(budgetDto);
-        assertNotNull(budgetDto.getId());
+        byte[] budgetPdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>())
+                .clazz(byte[].class).path(BudgetResource.BUDGETS).body(shoppings).post().build();
+        assertNotNull(budgetPdf);
     }
 
     @Test
