@@ -22,13 +22,13 @@ class OrderRepositoryIT {
     private ArticleRepository articleRepository;
 
     @BeforeEach
-    void createOrder(){
-        if(this.orderRepository.findAll().size() == 0 ){
-            String[] articlesId= {"1","8400000000048", "8400000000024","8400000000031"};
-            for (int i = 0; i < 3 ; i++) {
+    void createOrder() {
+        if (this.orderRepository.findAll().size() == 0) {
+            String[] articlesId = {"1", "8400000000048", "8400000000024", "8400000000031"};
+            for (int i = 0; i < 3; i++) {
                 Article article = this.articleRepository.findById(articlesId[i]).get();
                 OrderLine[] orderLines = Arrays.array(new OrderLine(article, 4), new OrderLine(article, 5));
-                Order order = new Order("OrderDescrip_"+articlesId[i], article.getProvider(), orderLines);
+                Order order = new Order("OrderDescrip_" + articlesId[i], article.getProvider(), orderLines);
                 this.orderRepository.save(order);
             }
         }
@@ -57,13 +57,11 @@ class OrderRepositoryIT {
 
         assertNotNull(dbOrder.getClosingDate());
 
-
         this.orderRepository.delete(order);
     }
 
     @Test
-    void readAllOrders(){
-        System.out.println(".............." + orderRepository.findAllOrders());
+    void readAllOrders() {
         assertTrue(orderRepository.findAllOrders().size() >= 0);
     }
 

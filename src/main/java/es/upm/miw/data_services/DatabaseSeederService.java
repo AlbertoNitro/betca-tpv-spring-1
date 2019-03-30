@@ -2,6 +2,7 @@ package es.upm.miw.data_services;
 
 import es.upm.miw.business_services.Barcode;
 import es.upm.miw.documents.*;
+import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.repositories.*;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,6 @@ public class DatabaseSeederService {
     public CashierClosureRepository cashierClosureRepository;
     @Autowired
     private Environment environment;
-
-    @Autowired
-    private Barcode barcode;
 
     @Value("${miw.admin.mobile}")
     private String mobile;
@@ -188,10 +186,10 @@ public class DatabaseSeederService {
         }
 
         if (nextCodeWithoutRedundancy > LAST_CODE_ARTICLE) {
-            throw new RuntimeException("There is not next code EAN");
+            throw new ConflictException("There is not next code EAN");
         }
 
-        return this.barcode.generateEan13code(nextCodeWithoutRedundancy);
+        return new Barcode().generateEan13code(nextCodeWithoutRedundancy);
     }
 
     private void seedDatabaseWithArticlesFamilyForView() {

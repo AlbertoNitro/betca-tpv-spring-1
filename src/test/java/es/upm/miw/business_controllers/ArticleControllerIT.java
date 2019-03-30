@@ -8,6 +8,7 @@ import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,13 @@ class ArticleControllerIT {
         this.article = new Article();
         this.article.setCode("99999999");
         this.articleRepository.save(this.article);
+    }
+
+    @Test
+    void testReadAllArticles() {
+        List<ArticleSearchOutputDto> articles = this.articleController.readAll();
+        assertNotNull(articles);
+        assertTrue(articles.size() > 0);
     }
 
     @Test
@@ -68,6 +76,27 @@ class ArticleControllerIT {
     void testInitStock() {
         assertNotNull(this.articleController.createArticle(articleDto).getStock());
         this.articleRepository.deleteById(this.articleDto.getCode());
+    }
+
+    @Test
+    void testUpdateArticleNotFoundException() {
+        assertThrows(NotFoundException.class, () -> this.articleController.update("miw", articleDto));
+    }
+
+    @Test
+    void testUpdateArticleWithProviderNotFoundException() {
+        this.articleDto.setProvider("non exist");
+        assertThrows(NotFoundException.class, () -> this.articleController.update("99999999", articleDto));
+    }
+
+    @Test
+    void testDeleteArticleNotExist(){
+        this.articleController.delete("miw");
+    }
+
+    @AfterEach
+    void delete() {
+        this.articleRepository.delete(article);
     }
 
 }
