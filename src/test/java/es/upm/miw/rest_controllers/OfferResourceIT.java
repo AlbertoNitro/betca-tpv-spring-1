@@ -1,8 +1,8 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.documents.ArticleLine;
+import es.upm.miw.documents.Offer;
 import es.upm.miw.dtos.input.OfferInputDto;
-import es.upm.miw.dtos.output.OfferOutputDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ class OfferResourceIT {
     void seed() {
     }
 
-   /*@Test
+   @Test
     void testCreateOfferResource() {
        ArticleLine articleLine = new ArticleLine();
        articleLine.setIdArticle("8400000000055");
@@ -31,26 +31,55 @@ class OfferResourceIT {
        ArticleLine[] articleLinesResource = { articleLine };
        OfferInputDto offerInputDto = new OfferInputDto("FakeOfferName", LocalDateTime.now(), articleLinesResource);
 
-        OfferOutputDto offerOutputDto = this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<OfferOutputDto>())
-                .clazz(OfferOutputDto.class)
+        Offer offer = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<Offer>())
+                .clazz(Offer.class)
                 .path(OfferResource.OFFERS)
                 .body(offerInputDto)
                 .post()
                 .build();
-        assertNotNull(offerOutputDto);
-        assertNotNull(offerOutputDto.getId());
+       assertNotNull(offer);
+       assertNotNull(offer.getId());
+       assertNotNull(offer.getOffername());
+       assertNotNull(offer.getEndDate());
+       assertNotNull(offer.getArticleLine());
+       assertEquals(offerInputDto.getOffername(),  offer.getOffername());
     }
 
     @Test
     void testReadAllOffersResource(){
-        List<OfferOutputDto> offers = Arrays.asList(this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<OfferOutputDto[]>())
-                .clazz(OfferOutputDto[].class)
+        List<Offer> offers = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<Offer[]>())
+                .clazz(Offer[].class)
                 .path(OfferResource.OFFERS)
                 .get()
                 .build());
         assertNotNull(offers);
         assertTrue(offers.size() > 0);
-    }*/
+    }
+
+    @Test
+    void testFilterOffersResource(){
+        List<Offer> offers = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<Offer[]>())
+                .clazz(Offer[].class)
+                .path(OfferResource.OFFERS)
+                .path(OfferResource.SEARCH)
+                .param("id", "aaaa")
+                .param("offername", "aaaa")
+                .param("idArticle", "aaa")
+                .param("status", "false")
+                .get()
+                .build());
+        assertTrue(offers.size() == 0);
+    }
+
+    @Test
+    void testDeleteNoExistsOfferResource() {
+        this.restService.loginAdmin().restBuilder(new RestBuilder<Offer>())
+                .clazz(Offer.class).path(OfferResource.OFFERS)
+                .path(OfferResource.OFFER_ID)
+                .expand("aaaa")
+                .delete().build();
+    }
 }
