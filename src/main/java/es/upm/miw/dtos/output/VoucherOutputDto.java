@@ -27,6 +27,7 @@ public class VoucherOutputDto {
         this.id = voucher.getId();
         this.value = voucher.getValue();
         this.creationDate = voucher.getCreationDate();
+        this.dateOfUse = voucher.getDateOfUse();
     }
 
     public VoucherOutputDto(@NotNull BigDecimal value, @NotNull LocalDateTime creationDate, LocalDateTime dateOfUse) {
