@@ -112,6 +112,7 @@ public class RgpdResourceIT {
         assertEquals(dtoInput.getAgreementType(), results.getAgreementType());
         assertNotNull(results.getPrintableAgreement());
         assertEquals(dtoInput.getPrintableAgreement(), results.getPrintableAgreement());
+        deleteUserAgreement(getUser(this.restService.loginAdmin().getAdminMobile()));
     }
 
     private void deleteUserAgreement(User user) {
