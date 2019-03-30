@@ -18,7 +18,7 @@ import org.springframework.stereotype.Controller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class ArticleController {
@@ -39,13 +39,7 @@ public class ArticleController {
     private FamilyCompositeRepository familyCompositeRepository;
 
     public List<ArticleSearchOutputDto> readAll() {
-        List<ArticleSearchOutputDto> articleSearchDtoList = new ArrayList<>();
-
-        for (Article article : this.articleRepository.findAll()) {
-            articleSearchDtoList.add(new ArticleSearchOutputDto(article));
-        }
-
-        return articleSearchDtoList;
+        return this.articleRepository.findAll().stream().map(ArticleSearchOutputDto::new).collect(Collectors.toList());
     }
 
     public List<ArticleMinimumDto> readArticlesMinimum() {
@@ -79,9 +73,7 @@ public class ArticleController {
     public ArticleDto createArticle(ArticleDto articleDto) {
         String code = articleDto.getCode();
         if (code == null) {
-            do {
-                code = this.databaseSeederService.nextCodeEan();
-            } while (this.articleRepository.findById(code).isPresent());
+            code = this.databaseSeederService.nextCodeEan();
         }
 
         if (this.articleRepository.findById(code).isPresent()) {
@@ -117,12 +109,9 @@ public class ArticleController {
     }
 
     public void delete(String code) {
-        Optional<Article> article = this.articleRepository.findById(code);
-
         if (this.articleRepository.findById(code).isPresent()) {
-            this.articleRepository.delete(article.get());
+            this.articleRepository.deleteById(code);
         }
-
     }
 
     public FamilySizeInputDto createFamilySize(FamilySizeInputDto familySizeInputDto) {

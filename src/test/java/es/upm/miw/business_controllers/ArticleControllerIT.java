@@ -39,6 +39,13 @@ class ArticleControllerIT {
     }
 
     @Test
+    void testReadAllArticles() {
+        List<ArticleSearchOutputDto> articles = this.articleController.readAll();
+        assertNotNull(articles);
+        assertTrue(articles.size() > 0);
+    }
+
+    @Test
     void testReadArticles() {
         List<ArticleSearchOutputDto> articles = articleController.readArticles("d", null, null, null);
         assertTrue(articles.size() > 0);
@@ -74,6 +81,17 @@ class ArticleControllerIT {
     @Test
     void testUpdateArticleNotFoundException() {
         assertThrows(NotFoundException.class, () -> this.articleController.update("miw", articleDto));
+    }
+
+    @Test
+    void testUpdateArticleWithProviderNotFoundException() {
+        this.articleDto.setProvider("non exist");
+        assertThrows(NotFoundException.class, () -> this.articleController.update("99999999", articleDto));
+    }
+
+    @Test
+    void testDeleteArticleNotExist(){
+        this.articleController.delete("miw");
     }
 
     @AfterEach
