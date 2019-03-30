@@ -42,13 +42,14 @@ public class PdfBuilder {
     private static final float THERMAL_PAGE_HEIGHT = 800;
 
     public static final PageSize PAGE_SIZE_A4 = PageSize.A4;
+    public static final PageSize PAGE_SIZE_TICKET = new PageSize(THERMAL_PAGE_WIDTH, THERMAL_PAGE_HEIGHT);
 
     private String filename;
 
     private Document document;
 
     public PdfBuilder(String path) {
-        this(path, null);
+        this(path, PAGE_SIZE_TICKET);
     }
 
     public PdfBuilder(String path, PageSize pageSize) {
