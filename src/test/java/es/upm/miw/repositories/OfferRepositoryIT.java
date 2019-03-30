@@ -63,14 +63,4 @@ class OfferRepositoryIT {
                 "345", "keOf", "false", dateNow, "024");
         assertEquals(1, offerList.size());
     }
-
-    @Test
-    void testFilterSearchNull(){
-        LocalDate now = LocalDate.now();
-        Instant instant = now.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
-        Date dateNow = Date.from(instant);
-        List<OfferOutputDto> offerList = this.offerRepository.findByIdOffernameEndDateArticleId(
-                "aaaa", "aaaaa", "false", dateNow, "");
-        assertEquals(0, offerList.size());
-    }
 }
