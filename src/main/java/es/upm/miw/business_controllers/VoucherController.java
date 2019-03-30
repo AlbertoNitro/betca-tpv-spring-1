@@ -5,15 +5,11 @@ import es.upm.miw.dtos.output.VoucherOutputDto;
 
 import es.upm.miw.business_services.Encrypting;
 import es.upm.miw.documents.Voucher;
-import es.upm.miw.dtos.input.VoucherInputDto;
-import es.upm.miw.dtos.output.VoucherOutputDto;
 import es.upm.miw.exceptions.BadRequestException;
-import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.VoucherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
