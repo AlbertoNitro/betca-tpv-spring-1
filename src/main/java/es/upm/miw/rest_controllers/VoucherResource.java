@@ -15,8 +15,6 @@ import java.util.List;
 @RequestMapping(VoucherResource.VOUCHERS)
 public class VoucherResource {
     public static final String VOUCHERS = "/vouchers";
-    public static final String SEARCH = "/search";
-    public static final String CODE_ID = "/{code}";
     @Autowired
     private VoucherController voucherController;
 
