@@ -41,20 +41,22 @@ public class PdfBuilder {
     private static final float THERMAL_PAGE_WIDTH = 227;
     private static final float THERMAL_PAGE_HEIGHT = 800;
 
+    public static final PageSize PAGE_SIZE_A4 = PageSize.A4;
+
     private String filename;
 
     private Document document;
 
     public PdfBuilder(String path) {
-        this.filename = System.getProperty(USER_HOME) + path + PDF_FILE_EXT;
-        this.prepareDocument(new PageSize(THERMAL_PAGE_WIDTH, THERMAL_PAGE_HEIGHT));
-        this.document.setMargins(THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_RIGHT, THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_LEFT);
-        this.document.setFontSize(THERMAL_FONT_SIZE);
+        this(path, null);
     }
 
-    public PdfBuilder(String path, String t) {
+    public PdfBuilder(String path, PageSize pageSize) {
         this.filename = System.getProperty(USER_HOME) + path + PDF_FILE_EXT;
-        this.prepareDocument(new PageSize(PageSize.A4.getWidth(), PageSize.A4.getHeight()));
+        if (pageSize != null)
+            this.prepareDocument(pageSize);
+        else
+            this.prepareDocument(new PageSize(THERMAL_PAGE_WIDTH, THERMAL_PAGE_HEIGHT));
         this.document.setMargins(THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_RIGHT, THERMAL_MARGIN_TOP_BOTTOM, THERMAL_MARGIN_LEFT);
         this.document.setFontSize(THERMAL_FONT_SIZE);
     }
