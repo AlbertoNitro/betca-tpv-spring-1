@@ -71,13 +71,13 @@ public class RgpdAgreementRepositoryIT {
         assertEquals(1, rgpdAgreementList.size());
         RgpdAgreement rgpdAgreement = rgpdAgreementList.get(0);
         assertEquals(this.agreement3.getType(), rgpdAgreement.getType());
-        assertNotEquals(this.agreement3, RgpdAgreementType.BASIC);
+        assertNotEquals(RgpdAgreementType.BASIC, this.agreement3);
         this.agreement3.setType(RgpdAgreementType.BASIC);
         this.rgpdAgreementRepository.save(this.agreement3);
         rgpdAgreementList = this.rgpdAgreementRepository.findByAssignee(this.user3.getId());
         assertEquals(1, rgpdAgreementList.size());
         rgpdAgreement = rgpdAgreementList.get(0);
-        assertEquals(rgpdAgreement.getType(), RgpdAgreementType.BASIC);
+        assertEquals(RgpdAgreementType.BASIC, rgpdAgreement.getType());
     }
 
     @AfterEach

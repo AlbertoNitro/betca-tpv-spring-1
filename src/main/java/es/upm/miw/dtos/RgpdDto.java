@@ -2,7 +2,7 @@ package es.upm.miw.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.upm.miw.documents.RgpdAgreement;
-
+import es.upm.miw.documents.RgpdAgreementType;
 import javax.validation.constraints.NotNull;
 import java.util.Base64;
 
@@ -17,6 +17,7 @@ public class RgpdDto {
     private boolean accepted;
 
     public RgpdDto() {
+        this.agreementType = RgpdAgreementType.BASIC.toString();
         this.accepted = false;
     }
 
