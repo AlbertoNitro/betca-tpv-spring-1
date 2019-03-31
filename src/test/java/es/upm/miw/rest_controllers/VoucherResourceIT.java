@@ -83,7 +83,8 @@ class VoucherResourceIT {
 
     @Test
     void testUpdateVoucherExist() {
-        VoucherOutputDto voucherOut = this.restService.loginAdmin().restBuilder(new RestBuilder<VoucherOutputDto>()).clazz(VoucherOutputDto.class)
+        VoucherOutputDto voucherOut;
+        voucherOut = this.restService.loginAdmin().restBuilder(new RestBuilder<VoucherOutputDto>()).clazz(VoucherOutputDto.class)
                 .path(VoucherResource.VOUCHERS).path(VoucherResource.ID).expand("0123456789").put().build();
 
         assertNotNull(voucherOut.getDateOfUse());
@@ -132,6 +133,8 @@ class VoucherResourceIT {
                 .path(VoucherResource.VOUCHERS)
                 .path(VoucherResource.ID)
                 .expand(firstVoucher.getId()).get().build();
+
+        assertNotNull(result);
     }
 
 }
