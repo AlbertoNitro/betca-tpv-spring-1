@@ -29,7 +29,7 @@ class OfferResourceIT {
        articleLine.setIdArticle("8400000000055");
        articleLine.setPercentage(5);
        ArticleLine[] articleLinesResource = { articleLine };
-       OfferInputDto offerInputDto = new OfferInputDto("FakeOfferName", LocalDateTime.now(), articleLinesResource);
+       OfferInputDto offerInputDto = new OfferInputDto("FakeOfferName Resource", LocalDateTime.now(), articleLinesResource);
 
         Offer offer = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<Offer>())
@@ -71,7 +71,7 @@ class OfferResourceIT {
                 .param("status", "false")
                 .get()
                 .build());
-        assertTrue(offers.size() == 0);
+        assertEquals(0,offers.size());
     }
 
     @Test
