@@ -42,7 +42,14 @@ public class RgpdResource {
         RgpdDto rgpdOutput = new RgpdDto();
         rgpdOutput.setAgreementType(rgpdInput.getAgreementType());
         byte[] agreement;
-        agreement = pdfService.generatePrintableRgpdAgreement(SecurityContextHolder.getContext().getAuthentication().getName());
+        RgpdAgreementType type;
+        if (rgpdInput.getAgreementType().equalsIgnoreCase("1"))
+            type = RgpdAgreementType.BASIC;
+        else if (rgpdInput.getAgreementType().equalsIgnoreCase("2"))
+            type = RgpdAgreementType.MEDIUM;
+        else
+            type = RgpdAgreementType.ADVANCE;
+        agreement = pdfService.generatePrintableRgpdAgreement(getAuthenticathedUser(), type);
         String content = Base64.getEncoder().encodeToString(agreement);
         rgpdOutput.setPrintableAgreement(content);
         return rgpdOutput;
@@ -94,6 +101,7 @@ public class RgpdResource {
         }
 
         this.rgpdAgreementRepository.save(rgpd);
+        dto.setAccepted(true);
         return dto;
     }
 
