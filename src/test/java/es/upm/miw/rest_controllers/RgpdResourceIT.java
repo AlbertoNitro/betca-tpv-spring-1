@@ -129,6 +129,19 @@ public class RgpdResourceIT {
         assertFalse(rgpd.isAccepted());
     }
 
+
+    @Test
+    void testCreatePrintableAgreementWithBadType() {
+        RgpdDto dtoInput = new RgpdDto();
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().
+                        restBuilder(new RestBuilder<RgpdDto>()).clazz(RgpdDto.class).
+                        path(RgpdResource.RGPD)
+                        .path(RgpdResource.PRINTABLE_AGREEMENT).body(dtoInput).post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+
+    }
+
     private void deleteUserAgreement(User user) {
         Iterator<RgpdAgreement> iterator = this.rgpdAgreementRepository.findByAssignee(user.getId()).iterator();
         while (iterator.hasNext())
