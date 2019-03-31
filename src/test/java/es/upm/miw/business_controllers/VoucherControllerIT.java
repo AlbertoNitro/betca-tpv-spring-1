@@ -78,4 +78,13 @@ class VoucherControllerIT {
                 .findVouchersByDateWithinConsumed(dateFrom.toString(), dateTo.toString());
         assertTrue(voucherDtoOutputList.size() > 0);
     }
+
+    @Test
+    void testReadById() {
+        VoucherOutputDto voucherdto = voucherController.readById(this.voucher.getId());
+        assertNotNull(voucherdto);
+        assertNotNull(voucherdto.getId());
+    }
+
+
 }

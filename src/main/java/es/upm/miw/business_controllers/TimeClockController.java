@@ -23,7 +23,7 @@ public class TimeClockController {
     @Autowired
     private UserRepository userRepository;
 
-    private static LocalDateTime DEFAULT_LOCAL_DATE_TIME = LocalDateTime.now().minusYears(1);
+    private static final LocalDateTime DEFAULT_LOCAL_DATE_TIME = LocalDateTime.now().minusYears(1);
 
     public TimeClockOutputDto[] readAll() {
         return convertResultDomainModelToDto(this.timeClockRepository.findAll());
@@ -50,18 +50,8 @@ public class TimeClockController {
         return this.timeClockRepository.save(timeClock);
     }
 
-    public TimeClock updateTimeClock(User user) {
-        TimeClock timeClockToUpdate = this.timeClockRepository.findFirst1ByUserOrderByClockinDateDesc(user.getId());
-        if (sameDay(timeClockToUpdate.getClockinDate(), timeClockToUpdate.getClockoutDate())) {
-            timeClockToUpdate.clockout();
-            return this.timeClockRepository.save(timeClockToUpdate);
-        } else {
-            return timeClockToUpdate;
-        }
-    }
-
-    private LocalDateTime getCurrentLocalDateTime() {
-        return Instant.ofEpochMilli(Instant.now().toEpochMilli()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    public TimeClock updateTimeClock(TimeClock timeClock) {
+        return this.timeClockRepository.save(timeClock);
     }
 
     public User getUserTimeClockByMobile(String mobile) {
@@ -69,8 +59,12 @@ public class TimeClockController {
                 .orElseThrow(() -> new NotFoundException("User mobile:" + mobile));
     }
 
-    private boolean sameDay(LocalDateTime dateSource, LocalDateTime dateTarget) {
-        return dateSource.toLocalDate().isEqual(dateTarget.toLocalDate());
+    public TimeClock getLastTimeClockByUser(String userId) {
+        return this.timeClockRepository.findFirst1ByUserOrderByClockinDateDesc(userId).orElse(null);
+    }
+
+    private LocalDateTime getCurrentLocalDateTime() {
+        return Instant.ofEpochMilli(Instant.now().toEpochMilli()).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
     private TimeClockOutputDto[] convertResultDomainModelToDto(List<TimeClock> all) {

@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.Base64;
+import java.util.Iterator;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +49,7 @@ public class RgpdResourceIT {
     }
 
     @AfterEach
-    void deleteUserDB() {
+    void deleteRgpdAgreementDB() {
         this.rgpdAgreementRepository.delete(this.rgpdAgreement);
     }
 
@@ -92,8 +94,48 @@ public class RgpdResourceIT {
                 restBuilder(new RestBuilder<RgpdDto>()).clazz(RgpdDto.class).
                 path(RgpdResource.RGPD)
                 .path(RgpdResource.USER_AGREEMENT).get().build();
-        assertNull(results.getAgreementType());
         assertNull(results.getPrintableAgreement());
         assertFalse(results.isAccepted());
+    }
+
+    @Test
+    void testSaveUserAgreement() {
+        deleteUserAgreement(getUser(this.restService.loginAdmin().getAdminMobile()));
+        RgpdDto dtoInput = new RgpdDto();
+        dtoInput.setAgreementType("2");
+        byte[] agreement = pdfService.generatePrintableRgpdAgreement("Print for user tests");
+        dtoInput.setPrintableAgreement(Base64.getEncoder().encodeToString(agreement));
+        RgpdDto results = this.restService.loginAdmin().
+                restBuilder(new RestBuilder<RgpdDto>()).clazz(RgpdDto.class).
+                path(RgpdResource.RGPD)
+                .path(RgpdResource.USER_AGREEMENT).body(dtoInput).post().build();
+        assertEquals(dtoInput.getAgreementType(), results.getAgreementType());
+        assertNotNull(results.getPrintableAgreement());
+        assertEquals(dtoInput.getPrintableAgreement(), results.getPrintableAgreement());
+        deleteUserAgreement(getUser(this.restService.loginAdmin().getAdminMobile()));
+    }
+
+    @Test
+    void testDeleteUserAgreement() {
+        assertDoesNotThrow(() -> this.restService.loginAdmin().
+                restBuilder(new RestBuilder<RgpdDto>()).clazz(RgpdDto.class).
+                path(RgpdResource.RGPD)
+                .path(RgpdResource.USER_AGREEMENT).delete().build());
+        RgpdDto rgpd = this.restService.loginAdmin().
+                restBuilder(new RestBuilder<RgpdDto>()).clazz(RgpdDto.class).
+                path(RgpdResource.RGPD)
+                .path(RgpdResource.USER_AGREEMENT).get().build();
+        assertFalse(rgpd.isAccepted());
+    }
+
+    private void deleteUserAgreement(User user) {
+        Iterator<RgpdAgreement> iterator = this.rgpdAgreementRepository.findByAssignee(user.getId()).iterator();
+        while (iterator.hasNext())
+            this.rgpdAgreementRepository.delete(iterator.next());
+    }
+
+    private User getUser(String username) {
+        Optional<User> optional = userRepository.findByMobile(username);
+        return optional.orElse(null);
     }
 }

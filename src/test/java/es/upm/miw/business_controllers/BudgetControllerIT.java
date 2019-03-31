@@ -31,8 +31,10 @@ public class BudgetControllerIT {
 
     private ShoppingDto[] createShoppingListDto() {
         ShoppingDto[] shoppings = new ShoppingDto[2];
-        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20").build());
-        Shopping shopping2 = new Shopping(2, new BigDecimal(1), Article.builder("2").retailPrice("5").build());
+        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20")
+                .description("Varios").build());
+        Shopping shopping2 = new Shopping(2, new BigDecimal(1), Article.builder("2").retailPrice("5")
+                .description("Varios2").build());
 
         ShoppingDto shoppingDto = new ShoppingDto(shopping);
         ShoppingDto shoppingDto2 = new ShoppingDto(shopping2);
@@ -66,10 +68,8 @@ public class BudgetControllerIT {
     @Test
     void testCreate() {
         ShoppingDto[] shoppings = this.createShoppingListDto();
-        BudgetDto budget = budgetController.create(shoppings);
-        System.out.println(budget);
-        assertNotNull(budget);
-        assertNotNull(budget.getId());
+        byte[] budgetPdf = budgetController.createPdf(shoppings);
+        assertNotNull(budgetPdf);
     }
 
     @Test

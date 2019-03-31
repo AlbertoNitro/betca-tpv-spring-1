@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -30,8 +31,7 @@ public class VoucherController {
         } while (this.voucherRepository.existsById(id));
         Voucher voucher = new Voucher(id, voucherInput.getValue());
         voucherRepository.save(voucher);
-        VoucherOutputDto voucherOutput = new VoucherOutputDto(voucher);
-        return voucherOutput;
+        return new VoucherOutputDto(voucher);
     }
 
     private void validate(Object property, String message) {
@@ -54,8 +54,8 @@ public class VoucherController {
             voucherBBDD.use();
         }
         Voucher v = this.voucherRepository.save(voucherBBDD);
-        VoucherOutputDto voutput = new VoucherOutputDto(v);
-        return voutput;
+
+        return new VoucherOutputDto(v);
     }
 
     private Voucher readVoucher(String code) {
@@ -77,6 +77,17 @@ public class VoucherController {
         List<Voucher> listVouchers = this.voucherRepository.findByCreationDateBetweenAndDateOfUseIsNotNull(LocalDateTime.parse(dateFrom), LocalDateTime.parse(dateTo));
         return listVouchers.stream()
                 .sorted(Comparator.comparing(Voucher::getCreationDate)).map(VoucherOutputDto::new).collect(Collectors.toList());
+
+    }
+
+    public VoucherOutputDto readById(String id) {
+        this.validate(id, "id");
+        Optional<Voucher> voucher = voucherRepository.findById(id);
+        if (!voucher.isPresent())
+            throw new NotFoundException("Voucher id (" + id + ")");
+        else
+            return new VoucherOutputDto(voucher.get());
+
 
     }
 }
