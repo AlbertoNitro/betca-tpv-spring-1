@@ -35,8 +35,8 @@ public class VoucherResource {
     }
 
     @PutMapping(value = ID)
-    public VoucherOutputDto update(@Valid @PathVariable String code) {
-        return this.voucherController.update(code);
+    public VoucherOutputDto update(@Valid @PathVariable String id) {
+        return this.voucherController.update(id);
     }
 
     @PreAuthorize("authenticated")
