@@ -80,7 +80,7 @@ public class OrderController {
     }
 
     private void sendNotificationAvailableStock(User user, String message) {
-        emailService.sendSimpleMessage("miguelcalderon10@gmail.com", "Notification", message);
+        emailService.sendSimpleMessage(user.getEmail(), "Notification", message);
     }
 
     private List<OrderSearchDto> orderSearchDtos;
