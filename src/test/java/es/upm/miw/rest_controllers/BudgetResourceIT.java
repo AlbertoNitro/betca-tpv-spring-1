@@ -33,7 +33,7 @@ class BudgetResourceIT {
     }
 
     @Test
-    void testCreate() {
+    void testCreatePdf() {
         ShoppingDto[] shoppings = new ShoppingDto[1];
         Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20").
                 description("Varios").build());
@@ -42,6 +42,14 @@ class BudgetResourceIT {
 
         byte[] budgetPdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>())
                 .clazz(byte[].class).path(BudgetResource.BUDGETS).body(shoppings).post().build();
+        assertNotNull(budgetPdf);
+    }
+
+    @Test
+    void testCreatePdfById() {
+        byte[] budgetPdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>())
+                .clazz(byte[].class).path(BudgetResource.BUDGETS+BudgetResource.PDF).path(BudgetResource.ID)
+                .expand(this.existentBudget.getId()).get().build();
         assertNotNull(budgetPdf);
     }
 
