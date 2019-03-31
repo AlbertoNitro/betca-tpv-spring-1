@@ -45,7 +45,7 @@ public class BudgetController {
         if (budget.isPresent()) {
             return this.pdfService.generateBudget(budget.get());
         } else {
-            return null;
+            return new byte[0];
         }
     }
 
