@@ -24,6 +24,7 @@ public class RgpdController {
         RgpdDto result = new RgpdDto();
         byte[] agreement = pdfService.generatePrintableRgpdAgreement(user, type);
         result.setPrintableAgreement(agreement);
+        result.setAgreementType(type.toString());
         return result;
     }
 

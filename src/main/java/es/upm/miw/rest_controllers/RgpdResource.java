@@ -32,9 +32,8 @@ public class RgpdResource {
 
     @PostMapping(value = PRINTABLE_AGREEMENT)
     public RgpdDto createPrintableAgreement(@RequestBody RgpdDto rgpdInput) {
-        RgpdDto rgpdOutput = rgpdController.createPrintableAgreement(getAuthenticathedUser(), getAgreementTypeFromDto(rgpdInput));
-        rgpdOutput.setAgreementType(rgpdInput.getAgreementType());
-        return rgpdOutput;
+        return rgpdController.createPrintableAgreement(getAuthenticathedUser(),
+                RgpdAgreementType.getRgpdAgreementType(rgpdInput.getAgreementType()));
     }
 
     @GetMapping(value = USER_AGREEMENT)
@@ -45,7 +44,8 @@ public class RgpdResource {
     @PostMapping(value = USER_AGREEMENT)
     public RgpdDto saveUserAgreement(@RequestBody RgpdDto dto) {
         byte[] agreement = Base64.getDecoder().decode(dto.getPrintableAgreement());
-        return this.rgpdController.saveUserAgreement(getAuthenticathedUser(), getAgreementTypeFromDto(dto), agreement);
+        return this.rgpdController.saveUserAgreement(getAuthenticathedUser(),
+                RgpdAgreementType.getRgpdAgreementType(dto.getAgreementType()), agreement);
     }
 
     @DeleteMapping(value = USER_AGREEMENT)
@@ -59,16 +59,5 @@ public class RgpdResource {
         if (optional.isPresent())
             return optional.get();
         throw new UnauthorizedException("Usuario no encontrado.");
-    }
-
-    private RgpdAgreementType getAgreementTypeFromDto(RgpdDto dto) {
-        RgpdAgreementType type = null;
-        if (dto.getAgreementType().equalsIgnoreCase("1"))
-            type = RgpdAgreementType.BASIC;
-        if (dto.getAgreementType().equalsIgnoreCase("2"))
-            type = RgpdAgreementType.MEDIUM;
-        if (dto.getAgreementType().equalsIgnoreCase("3"))
-            type = RgpdAgreementType.ADVANCE;
-        return type;
     }
 }
