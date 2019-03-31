@@ -274,6 +274,11 @@ shoppingList:
     discount: 10
     article: *ar1
 
+giftTicketList:
+  - &gtil1
+    id: gt201901121
+    note: "gift ticket"
+
 ticketList:
   - &ti1
     id: 201901121
@@ -284,6 +289,8 @@ ticketList:
       - *sh1
       - *sh2
     user: *us4
+    giftTicket: *gtil1
+
   - &ti2
     id: 201901122
     reference: 6P0ISee_twnCisFmYGRFd5sGQqE
