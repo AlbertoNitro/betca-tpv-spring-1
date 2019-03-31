@@ -1,14 +1,17 @@
 package es.upm.miw.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import es.upm.miw.documents.RgpdAgreement;
-import es.upm.miw.documents.RgpdAgreementType;
 
+import javax.validation.constraints.NotNull;
 import java.util.Base64;
 
 public class RgpdDto {
 
+    @NotNull
     private String agreementType;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String printableAgreement;
 
     private boolean accepted;
@@ -20,12 +23,7 @@ public class RgpdDto {
     public RgpdDto(RgpdAgreement rgpd) {
         this.printableAgreement = Base64.getEncoder().encodeToString(rgpd.getAgreement());
         this.accepted = true;
-        if (rgpd.getType().equals(RgpdAgreementType.BASIC))
-            this.agreementType = "1";
-        else if (rgpd.getType().equals(RgpdAgreementType.MEDIUM))
-            this.agreementType = "2";
-        else if (rgpd.getType().equals(RgpdAgreementType.ADVANCE))
-            this.agreementType = "3";
+        this.setAgreementType(rgpd.getType().toString());
     }
 
     public String getAgreementType() {
