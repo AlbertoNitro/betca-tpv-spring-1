@@ -1,72 +1,46 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
-import es.upm.miw.data_services.RandomTicketsBuilder;
-import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Ticket;
+import es.upm.miw.data_services.RandomTicketsService;
 import es.upm.miw.dtos.stock_prediction.PeriodicityType;
-import es.upm.miw.repositories.ArticleRepository;
+import es.upm.miw.dtos.stock_prediction.StockPredictionInputDto;
+import es.upm.miw.dtos.stock_prediction.StockPredictionOutputDto;
+import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.TicketRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
-import static es.upm.miw.business_controllers.StockPredictionController.CountArticleFromTicketsGroupByPeriodicityAlgorithm.countArticleFromTicketsGroupByPeriodicity;
-import static es.upm.miw.business_controllers.StockPredictionController.GroupTicketsByPeriodicityAlgorithm.groupTicketsByPeriodicity;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 @TestConfig
 class StockPredictionControllerIT {
-
-    TicketRepository mockTicketRepository;
-    Article article8400000000017;
-    Article article8400000000024;
     @Autowired
     private StockPredictionController controller;
     @Autowired
-    private ArticleRepository articleRepository;
+    private RandomTicketsService randomTicketsService;
 
-    @BeforeEach
-    public void before() {
-        article8400000000017 = articleRepository.findById("8400000000017").orElse(null);
-        article8400000000024 = articleRepository.findById("8400000000024").orElse(null);
+    @Test
+    void calculateStockPredictionWithNotExistArticleShouldThrowException() {
+        assertThrows(NotFoundException.class, () -> controller.calculateStockPrediction(
+                new StockPredictionInputDto("notExistArticle", PeriodicityType.WEEKLY, 3)));
     }
 
     @Test
-    void testGroupTicketsByPeriodicityAlgorithm() {
-        Map<String, List<Ticket>> groupTicketsByPeriodicity = groupTicketsByPeriodicity(
-                randomTickets(LocalDateTime.now().minusMonths(1), 514),
-                PeriodicityType.WEEKLY);
-        System.out.print("groupTicketsByPeriodicity..." + groupTicketsByPeriodicity);
+    void calculateStockPredictionWith3PeriodsShouldReturn3StockPredictionOutputDto() {
+        TicketRepository mockTicketRepository = mock(TicketRepository.class);
+        when(mockTicketRepository.findByShoppingListArticle("8400000000017"))
+                .thenReturn(randomTicketsService.randomTickets(LocalDateTime.now().minusWeeks(12), 514));
+        controller.setTicketRepository(mockTicketRepository);
 
-        int countTickets = groupTicketsByPeriodicity.entrySet().stream().mapToInt(entry -> entry.getValue().size()).sum();
-        assertEquals(514, countTickets);
-    }
-
-    @Test
-    void testCountArticleFromTicketsGroupByPeriodicityAlgorithm() {
-        Map<String, Integer> countArticleFromTicketsGroupByPeriodicity = countArticleFromTicketsGroupByPeriodicity(
-                article8400000000017,
-                groupTicketsByPeriodicity(
-                        randomTickets(LocalDateTime.now().minusMonths(12), 514),
-                        PeriodicityType.MONTHLY));
-        System.out.print("countArticleFromTicketsGroupByPeriodicity...\n" + countArticleFromTicketsGroupByPeriodicity);
-
-        int countArticles = countArticleFromTicketsGroupByPeriodicity.entrySet().stream().mapToInt(entry -> entry.getValue()).sum();
-        assertEquals(1028, countArticles);
-    }
-
-    private List<Ticket> randomTickets(LocalDateTime fromDate, int numberOfTickets) {
-        return new RandomTicketsBuilder().
-                fromDate(fromDate)
-                .numberOfTickets(numberOfTickets)
-                .addTicketArticle(article8400000000017, 2)
-                .addTicketArticle(article8400000000024, 1)
-                .build();
+        StockPredictionOutputDto[] stockPredictionOutputDtos = controller.calculateStockPrediction(
+                new StockPredictionInputDto("8400000000017", PeriodicityType.WEEKLY, 3));
+        assertThat(stockPredictionOutputDtos.length, is(3));
+        verify(mockTicketRepository).findByShoppingListArticle("8400000000017");
     }
 
 }
