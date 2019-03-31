@@ -21,10 +21,7 @@ public enum RgpdAgreementType {
         return null;
     }
 
-    public boolean equals(String otherType) {
-        return this.type.equals(otherType);
-    }
-
+    @Override
     public String toString() {
         return this.type;
     }

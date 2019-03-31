@@ -30,7 +30,7 @@ public class RgpdController {
 
     public RgpdDto getUserAgreement(User user) {
         List<RgpdAgreement> rgpdAgreementList = rgpdAgreementRepository.findByAssignee(user.getId());
-        if (rgpdAgreementList.size() > 0)
+        if (!rgpdAgreementList.isEmpty())
             return new RgpdDto(rgpdAgreementList.get(0));
         else
             return new RgpdDto();
