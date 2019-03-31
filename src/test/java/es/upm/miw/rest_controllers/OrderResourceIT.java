@@ -64,13 +64,41 @@ public class OrderResourceIT {
 
     @Test
     void testCloseOrder() {
-        //Order closedOrder = orderController.closeOrder(this.order.getId(), this.order.getOrderLines());
         OrderDto orderDto = new OrderDto(this.order);
         OrderDto[] closedOrder = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<OrderDto[]>()).clazz(OrderDto[].class)
                 .path(OrderResource.ORDERS).path(OrderResource.CLOSE)
                 .body(orderDto).post().build();
         assertNotNull(closedOrder[0].getClosingDate());
+        this.orderRepository.delete(this.order);
+    }
+
+    @Test
+    void testVerifyArticleStock() {
+        OrderDto orderDto = new OrderDto(this.order);
+        OrderDto[] closedOrder = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<OrderDto[]>()).clazz(OrderDto[].class)
+                .path(OrderResource.ORDERS).path(OrderResource.CLOSE)
+                .body(orderDto).post().build();
+
+        OrderLine[] orderCheck = closedOrder[0].getOrderLines();
+        Article article = orderCheck[0].getArticle();
+        Integer stockUpdated = article.getStock() + orderCheck[0].getFinalAmount();
+        Article articleDB = articleRepository.findByCode(article.getCode());
+        assertEquals(articleDB.getStock(), stockUpdated);
+        this.orderRepository.delete(this.order);
+    }
+
+    @Test
+    void testEmptyOrderLine() {
+        OrderLine[] orderLines = {};
+        this.order.setOrderLines(orderLines);
+        OrderDto orderDto = new OrderDto(this.order);
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<OrderDto[]>()).clazz(OrderDto[].class)
+                .path(OrderResource.ORDERS).path(OrderResource.CLOSE)
+                .body(orderDto).post().build());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         this.orderRepository.delete(this.order);
     }
 
