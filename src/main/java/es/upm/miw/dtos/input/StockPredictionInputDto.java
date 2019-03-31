@@ -1,4 +1,4 @@
-package es.upm.miw.dtos.stock_prediction;
+package es.upm.miw.dtos.input;
 
 import es.upm.miw.exceptions.BadRequestException;
 
@@ -13,7 +13,7 @@ public class StockPredictionInputDto {
         this.periodsNumber = periodsNumber;
     }
 
-    public void validate() throws BadRequestException {
+    public void validate() {
         if (!periodicityType.isValidPeriodsNumber(periodsNumber)) {
             throw new BadRequestException(
                     String.format(
@@ -29,24 +29,12 @@ public class StockPredictionInputDto {
         return articleCode;
     }
 
-    public void setArticleCode(String articleCode) {
-        this.articleCode = articleCode;
-    }
-
     public PeriodicityType getPeriodicityType() {
         return periodicityType;
     }
 
-    public void setPeriodicityType(PeriodicityType periodicityType) {
-        this.periodicityType = periodicityType;
-    }
-
     public int getPeriodsNumber() {
         return periodsNumber;
-    }
-
-    public void setPeriodsNumber(int periodsNumber) {
-        this.periodsNumber = periodsNumber;
     }
 
     @Override

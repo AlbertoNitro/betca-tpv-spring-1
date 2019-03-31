@@ -3,7 +3,7 @@ package es.upm.miw.business_controllers.stock_prediction;
 import es.upm.miw.TestConfig;
 import es.upm.miw.data_services.RandomTicketsService;
 import es.upm.miw.documents.Ticket;
-import es.upm.miw.dtos.stock_prediction.PeriodicityType;
+import es.upm.miw.dtos.input.PeriodicityType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

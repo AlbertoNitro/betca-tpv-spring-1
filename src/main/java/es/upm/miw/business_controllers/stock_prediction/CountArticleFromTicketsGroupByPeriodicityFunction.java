@@ -11,6 +11,11 @@ import java.util.Map;
 import static java.util.Arrays.stream;
 
 public class CountArticleFromTicketsGroupByPeriodicityFunction {
+
+    private CountArticleFromTicketsGroupByPeriodicityFunction() {
+        super();
+    }
+
     public static Map<String, Integer> countArticleFromTicketsGroupByPeriodicity(Article article, Map<String, List<Ticket>> ticketsGroupByPeriodicityMap) {
         final Map<String, Integer> articleCountGroupByPeriodMap = new LinkedHashMap<>();
         ticketsGroupByPeriodicityMap.forEach((periodicity, tickets) -> {
@@ -21,4 +26,5 @@ public class CountArticleFromTicketsGroupByPeriodicityFunction {
         });
         return articleCountGroupByPeriodMap;
     }
+
 }

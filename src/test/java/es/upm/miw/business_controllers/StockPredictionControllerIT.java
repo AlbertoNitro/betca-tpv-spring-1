@@ -2,9 +2,9 @@ package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
 import es.upm.miw.data_services.RandomTicketsService;
-import es.upm.miw.dtos.stock_prediction.PeriodicityType;
-import es.upm.miw.dtos.stock_prediction.StockPredictionInputDto;
-import es.upm.miw.dtos.stock_prediction.StockPredictionOutputDto;
+import es.upm.miw.dtos.input.PeriodicityType;
+import es.upm.miw.dtos.input.StockPredictionInputDto;
+import es.upm.miw.dtos.output.StockPredictionOutputDto;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.TicketRepository;
 import org.junit.jupiter.api.Test;
