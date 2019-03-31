@@ -104,4 +104,15 @@ class VoucherResourceIT {
         assertTrue(results.length >= 0);
     }
 
+    @Test
+    void testReadById() {
+        List<Voucher> lvouchers = voucherRepository.findAll();
+        Voucher firstVoucher = lvouchers.get(0);
+        VoucherOutputDto result = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<VoucherOutputDto>().clazz(VoucherOutputDto.class))
+                .path(VoucherResource.VOUCHERS)
+                .path(VoucherResource.ID)
+                .expand(firstVoucher.getId()).get().build();
+    }
+
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -68,6 +69,14 @@ class VoucherRepositoryIT {
         voucherRepository.save(vouch);
         List<Voucher> lvouc2 = voucherRepository.findByCreationDateBetweenAndDateOfUseIsNotNull(dateFrom, dateTo);
         assertTrue(lvouc.size() != lvouc2.size());
+    }
+
+    @Test
+    void findById() {
+        List<Voucher> lvouchers = voucherRepository.findAll();
+        Voucher firstVoucher = lvouchers.get(0);
+        Optional<Voucher> voucherBBDD = voucherRepository.findById(firstVoucher.getId());
+        assertTrue(voucherBBDD.isPresent());
     }
 
 }
