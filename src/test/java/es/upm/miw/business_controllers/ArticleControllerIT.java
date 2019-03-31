@@ -8,7 +8,6 @@ import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,17 +85,31 @@ class ArticleControllerIT {
     @Test
     void testUpdateArticleWithProviderNotFoundException() {
         this.articleDto.setProvider("non exist");
-        assertThrows(NotFoundException.class, () -> this.articleController.update("99999999", articleDto));
+        assertThrows(NotFoundException.class, () -> this.articleController.update(this.article.getCode(), articleDto));
     }
 
     @Test
-    void testDeleteArticleNotExist(){
+    void testUpdateArticle() {
+        this.articleDto.setDescription("miw");
+        ArticleDto article = this.articleController.update(this.article.getCode(), articleDto);
+
+        assertNotNull(article);
+        assertEquals("miw", article.getDescription());
+    }
+
+    @Test
+    void testDeleteArticleNotExist() {
+        List<ArticleSearchOutputDto> articleBeforeDelete = this.articleController.readAll();
         this.articleController.delete("miw");
+        List<ArticleSearchOutputDto> articleAfterDelete = this.articleController.readAll();
+        assertEquals(articleBeforeDelete.size(), articleAfterDelete.size());
     }
 
-    @AfterEach
-    void delete() {
-        this.articleRepository.delete(article);
+    @Test
+    void testDeleteArticleExist() {
+        List<ArticleSearchOutputDto> articleBeforeDelete = this.articleController.readAll();
+        this.articleController.delete(this.article.getCode());
+        List<ArticleSearchOutputDto> articleAfterDelete = this.articleController.readAll();
+        assertTrue(articleBeforeDelete.size() > articleAfterDelete.size());
     }
-
 }
