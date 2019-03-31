@@ -28,10 +28,6 @@ public class OfferInputDto {
         return offername;
     }
 
-    public void setOffername(String offername) {
-        this.offername = offername;
-    }
-
     public LocalDateTime getEndDate() {
         return endDate;
     }
@@ -42,10 +38,6 @@ public class OfferInputDto {
 
     public ArticleLine[] getArticleLine() {
         return articleLine;
-    }
-
-    public void setArticleLine(ArticleLine[] articleLine) {
-        this.articleLine = articleLine;
     }
 
     @Override
