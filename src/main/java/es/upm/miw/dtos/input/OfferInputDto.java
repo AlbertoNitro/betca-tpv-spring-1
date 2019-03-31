@@ -24,6 +24,10 @@ public class OfferInputDto {
         this.articleLine = articleLine;
     }
 
+    public OfferInputDto(){
+
+    }
+
     public String getOffername() {
         return offername;
     }
