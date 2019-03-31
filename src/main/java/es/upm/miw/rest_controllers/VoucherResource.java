@@ -2,6 +2,7 @@ package es.upm.miw.rest_controllers;
 
 
 import es.upm.miw.business_controllers.VoucherController;
+import es.upm.miw.dtos.BudgetDto;
 import es.upm.miw.dtos.input.VoucherInputDto;
 import es.upm.miw.dtos.output.VoucherOutputDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,9 @@ import java.util.List;
 @RequestMapping(VoucherResource.VOUCHERS)
 public class VoucherResource {
     public static final String VOUCHERS = "/vouchers";
-    public static final String CODE_ID = "/{code}";
+    public static final String ID = "/{id}";
     public static final String SEARCH = "/search";
+
     @Autowired
     private VoucherController voucherController;
 
@@ -32,7 +34,7 @@ public class VoucherResource {
         return this.voucherController.readAll();
     }
 
-    @PutMapping(value = CODE_ID)
+    @PutMapping(value = ID)
     public VoucherOutputDto update(@Valid @PathVariable String code) {
         return this.voucherController.update(code);
     }
@@ -50,4 +52,10 @@ public class VoucherResource {
         }
         return dataReturn;
     }
+
+    @GetMapping(value = ID)
+    public VoucherOutputDto readById(@PathVariable String id) {
+        return this.voucherController.readById(id);
+    }
+
 }
