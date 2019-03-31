@@ -31,8 +31,7 @@ public class VoucherController {
         } while (this.voucherRepository.existsById(id));
         Voucher voucher = new Voucher(id, voucherInput.getValue());
         voucherRepository.save(voucher);
-        VoucherOutputDto voucherOutput = new VoucherOutputDto(voucher);
-        return voucherOutput;
+        return new VoucherOutputDto(voucher);
     }
 
     private void validate(Object property, String message) {
@@ -55,8 +54,8 @@ public class VoucherController {
             voucherBBDD.use();
         }
         Voucher v = this.voucherRepository.save(voucherBBDD);
-        VoucherOutputDto voutput = new VoucherOutputDto(v);
-        return voutput;
+
+        return new VoucherOutputDto(v);
     }
 
     private Voucher readVoucher(String code) {
