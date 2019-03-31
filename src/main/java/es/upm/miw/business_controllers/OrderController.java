@@ -32,6 +32,9 @@ public class OrderController {
 
     TicketController ticketController;
 
+    @Autowired
+    EmailServiceImpl emailService;
+
     public Order closeOrder(String orderId, OrderLine[] orderLine) {
         Order closeOrder = orderRepository.findById(orderId).orElse(null);
         if(orderLine.length > 0) {
@@ -71,9 +74,13 @@ public class OrderController {
             articleRepository.save(articleDB);
             for (User user : users) {
                 LogManager.getLogger().debug("Usuarios: " + user.getEmail());
-                //EmailServiceImpl.sendSimpleMessage("miguelcalderon10@gmail.com", "Stock from article", "New stock from article");
+                sendNotificationAvailableStock(user, "Stock available of " + articleDB.getReference());
             }
         }
+    }
+
+    private void sendNotificationAvailableStock(User user, String message) {
+        emailService.sendSimpleMessage("miguelcalderon10@gmail.com", "Notification", message);
     }
 
     private List<OrderSearchDto> orderSearchDtos;
