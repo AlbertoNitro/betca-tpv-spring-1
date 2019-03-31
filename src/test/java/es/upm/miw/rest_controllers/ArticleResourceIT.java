@@ -1,10 +1,12 @@
 package es.upm.miw.rest_controllers;
 
+import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Tax;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.dtos.input.ArticleSearchInputDto;
 import es.upm.miw.dtos.output.ArticleSearchOutputDto;
+import es.upm.miw.repositories.ArticleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +25,23 @@ class ArticleResourceIT {
     @Autowired
     private RestService restService;
 
+    @Autowired
+    private ArticleRepository articleRepository;
+
     private ArticleDto articleDto;
+    private Article article;
 
     @BeforeEach
     void seed() {
         this.articleDto = new ArticleDto("miw-dto", "descrip", "ref", BigDecimal.TEN, null, Tax.SUPER_REDUCED);
+        this.article = new Article();
+        this.article.setCode("99999999");
+        this.articleRepository.save(this.article);
     }
 
     @Test
     void testReadAllArticles(){
-        List<ArticleSearchOutputDto> articles = Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleSearchOutputDto[]>())
-                .clazz(ArticleSearchOutputDto[].class).path(ArticleResource.ARTICLES)
-                .get().build());
+        List<ArticleSearchOutputDto> articles = readAllArticles();
 
         assertNotNull(articles);
         assertTrue(articles.size() > 0);
@@ -132,5 +139,46 @@ class ArticleResourceIT {
                         .path(ArticleResource.ARTICLES).path("/miw").body(this.articleDto).put().build());
 
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    }
+
+    @Test
+    void testUpdateArticleExist() {
+        this.articleDto.setDescription("miw");
+        ArticleDto articleOutputDto = this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleDto>()).clazz(ArticleDto.class)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).expand("99999999").body(this.articleDto).put().build();
+
+        assertEquals(this.articleDto.getDescription(), articleOutputDto.getDescription());
+    }
+
+    @Test
+    void testDeleteArticleExist(){
+        List<ArticleSearchOutputDto> articlesBeforeDelete = readAllArticles();
+
+        this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleDto>()).clazz(ArticleDto.class)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).expand("99999999").delete().build();
+
+        List<ArticleSearchOutputDto> articlesAfterDelete = readAllArticles();
+
+        assertTrue(articlesBeforeDelete.size() > articlesAfterDelete.size());
+
+    }
+
+    @Test
+    void testDeleteArticleNotExist(){
+        List<ArticleSearchOutputDto> articlesBeforeDelete = readAllArticles();
+
+        this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleDto>()).clazz(ArticleDto.class)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).expand("miw").delete().build();
+
+        List<ArticleSearchOutputDto> articlesAfterDelete = readAllArticles();
+
+        assertEquals(articlesBeforeDelete.size(), articlesAfterDelete.size());
+
+    }
+
+    private List<ArticleSearchOutputDto> readAllArticles(){
+        return Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleSearchOutputDto[]>())
+                .clazz(ArticleSearchOutputDto[].class).path(ArticleResource.ARTICLES)
+                .get().build());
     }
 }

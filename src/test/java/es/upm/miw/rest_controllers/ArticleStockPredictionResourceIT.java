@@ -1,6 +1,6 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.dtos.stock_prediction.PeriodicityType;
+import es.upm.miw.dtos.input.PeriodicityType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ class ArticleStockPredictionResourceIT {
     @Test
     void calculateStockPredictionWithoutRequiredRequestParamShouldThrowBadRequest() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin().restBuilder(new RestBuilder<String>()).clazz(String.class)
-                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand(666)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand("8400000000017")
                 .get().build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
@@ -37,7 +37,7 @@ class ArticleStockPredictionResourceIT {
     @Test
     void calculateStockPredictionWithPeriodicityTypeInvalidShouldThrowBadRequest() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin().restBuilder(new RestBuilder<String>()).clazz(String.class)
-                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand(666)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand("8400000000017")
                 .param("periodicityType", "blabla")
                 .param("periodsNumber", "5")
                 .get().build());
@@ -47,7 +47,7 @@ class ArticleStockPredictionResourceIT {
     @Test
     void calculateStockPredictionWithPeriodsNumberAsNotNumberShouldThrowBadRequest() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin().restBuilder(new RestBuilder<String>()).clazz(String.class)
-                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand(666)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand("8400000000017")
                 .param("periodicityType", PeriodicityType.WEEKLY.name())
                 .param("periodsNumber", "blabla")
                 .get().build());
@@ -57,7 +57,7 @@ class ArticleStockPredictionResourceIT {
     @Test
     void calculateStockPredictionWithPeriodsNumberAsNegativeNumberShouldThrowBadRequest() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin().restBuilder(new RestBuilder<String>()).clazz(String.class)
-                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand(666)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand("8400000000017")
                 .param("periodicityType", PeriodicityType.WEEKLY.name())
                 .param("periodsNumber", "-1")
                 .get().build());
@@ -67,7 +67,7 @@ class ArticleStockPredictionResourceIT {
     @Test
     void calculateStockPredictionWithPeriodsNumberAs0ShouldThrowBadRequest() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin().restBuilder(new RestBuilder<String>()).clazz(String.class)
-                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand(666)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand("8400000000017")
                 .param("periodicityType", PeriodicityType.WEEKLY.name())
                 .param("periodsNumber", "0")
                 .get().build());
@@ -77,7 +77,7 @@ class ArticleStockPredictionResourceIT {
     @Test
     void calculateStockPredictionWithPeriodicityTypeAsWeeklyAndPeriodsNumberAs27ShouldThrowBadRequest() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin().restBuilder(new RestBuilder<String>()).clazz(String.class)
-                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand(666)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand("8400000000017")
                 .param("periodicityType", PeriodicityType.WEEKLY.name())
                 .param("periodsNumber", "27")
                 .get().build());
@@ -87,7 +87,7 @@ class ArticleStockPredictionResourceIT {
     @Test
     void calculateStockPredictionWithPeriodicityTypeAsMonthlyAndPeriodsNumberAs13ShouldThrowBadRequest() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin().restBuilder(new RestBuilder<String>()).clazz(String.class)
-                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand(666)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand("8400000000017")
                 .param("periodicityType", PeriodicityType.MONTHLY.name())
                 .param("periodsNumber", "13")
                 .get().build());
@@ -97,7 +97,7 @@ class ArticleStockPredictionResourceIT {
     @Test
     void calculateStockPredictionWithPeriodicityTypeAsYearlyAndPeriodsNumberAs3ShouldThrowBadRequest() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin().restBuilder(new RestBuilder<String>()).clazz(String.class)
-                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand(666)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).path(ArticleResource.STOCK_PREDICTION).expand("8400000000017")
                 .param("periodicityType", PeriodicityType.YEARLY.name())
                 .param("periodsNumber", "3")
                 .get().build());

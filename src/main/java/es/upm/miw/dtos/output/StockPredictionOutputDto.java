@@ -1,4 +1,4 @@
-package es.upm.miw.dtos.stock_prediction;
+package es.upm.miw.dtos.output;
 
 public class StockPredictionOutputDto {
     private PeriodType periodType;
@@ -15,16 +15,8 @@ public class StockPredictionOutputDto {
         return periodType;
     }
 
-    public void setPeriodType(PeriodType periodType) {
-        this.periodType = periodType;
-    }
-
     public int getPeriodNumber() {
         return periodNumber;
-    }
-
-    public void setPeriodNumber(int periodNumber) {
-        this.periodNumber = periodNumber;
     }
 
     public int getStock() {
