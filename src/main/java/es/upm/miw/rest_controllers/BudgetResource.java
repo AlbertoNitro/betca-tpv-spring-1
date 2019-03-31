@@ -19,12 +19,19 @@ public class BudgetResource {
 
     public static final String ID = "/{id}";
 
+    public static final String PDF = "/pdf";
+
     @Autowired
     private BudgetController budgetController;
 
-    @PostMapping()
+    @PostMapping(produces = {"application/pdf"})
     public byte[] createPdf(@Valid @RequestBody ShoppingDto[] shopping) {
         return this.budgetController.createPdf(shopping);
+    }
+
+    @GetMapping(value = PDF + ID, produces = {"application/pdf"})
+    public byte[] createPdfById(@PathVariable String id) {
+        return this.budgetController.createPdfById(id);
     }
 
     @DeleteMapping(value = ID)
