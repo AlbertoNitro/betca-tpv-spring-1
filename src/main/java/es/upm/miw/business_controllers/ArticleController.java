@@ -105,7 +105,7 @@ public class ArticleController {
         }
 
         return Article.builder(code).description(articleDto.getDescription()).retailPrice(articleDto.getRetailPrice())
-                .reference(articleDto.getReference()).stock(stock).provider(provider).build();
+                .reference(articleDto.getReference()).stock(stock).provider(provider).discontinued(articleDto.getDiscontinued()).build();
     }
 
     public void delete(String code) {
