@@ -1,4 +1,6 @@
-package es.upm.miw.dtos.stock_prediction;
+package es.upm.miw.dtos.input;
+
+import es.upm.miw.dtos.output.PeriodType;
 
 import java.time.format.DateTimeFormatter;
 

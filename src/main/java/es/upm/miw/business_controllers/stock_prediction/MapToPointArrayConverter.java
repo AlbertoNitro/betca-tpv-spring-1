@@ -3,6 +3,11 @@ package es.upm.miw.business_controllers.stock_prediction;
 import java.util.Map;
 
 public class MapToPointArrayConverter {
+
+    private MapToPointArrayConverter() {
+        super();
+    }
+
     public static double[][] convertToPointArray(Map<String, Integer> integerMap) {
         int i = 0;
         int rows = integerMap.entrySet().size();
