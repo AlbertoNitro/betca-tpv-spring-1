@@ -15,6 +15,10 @@ public class OfferOutputDto extends OfferInputDto {
         this.id = id;
     }
 
+    public OfferOutputDto(){
+
+    }
+
     public String getId() {
         return id;
     }

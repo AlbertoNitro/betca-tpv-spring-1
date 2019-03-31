@@ -201,19 +201,12 @@ public class DatabaseSeederService {
         this.articlesFamilyRepository.save(c1);
         this.articlesFamilyRepository.save(c2);
         ArticlesFamily c3 = new FamilyComposite(FamilyType.ARTICLES, "c", "cards");
-        ArticlesFamily c3a = new FamilyArticle(this.articleRepository.findById("8400000000085").get());
-        ArticlesFamily c3b = new FamilyArticle(this.articleRepository.findById("8400000000070").get());
-        this.articlesFamilyRepository.save(c3a);
-        this.articlesFamilyRepository.save(c3b);
-
         ArticlesFamily c4 = new FamilyComposite(FamilyType.SIZES, null, "X");
         ArticlesFamily c5 = new FamilyComposite(FamilyType.SIZES, "Zz Falda", "Zarzuela - Falda");
 
         ArticlesFamily c6 = new FamilyArticle(this.articleRepository.findById("8400000000017").get());
         ArticlesFamily c7 = new FamilyArticle(this.articleRepository.findById("8400000000024").get());
 
-        c3.add(c3a);
-        c3.add(c3b);
 
         this.articlesFamilyRepository.save(c3);
         this.articlesFamilyRepository.save(c4);
