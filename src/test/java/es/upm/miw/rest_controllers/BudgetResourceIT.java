@@ -55,10 +55,20 @@ class BudgetResourceIT {
 
     @Test
     void testDelete() {
+        List<BudgetDto> budgetDtoList = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<BudgetDto[]>()).clazz(BudgetDto[].class)
+                .path(BudgetResource.BUDGETS)
+                .get().build());
+        int previousSize = budgetDtoList.size();
         this.restService.loginAdmin().restBuilder(new RestBuilder<BudgetDto>())
                 .clazz(BudgetDto.class).path(BudgetResource.BUDGETS).path(BudgetResource.ID)
                 .expand(this.existentBudget.getId())
                 .delete().build();
+        budgetDtoList = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<BudgetDto[]>()).clazz(BudgetDto[].class)
+                .path(BudgetResource.BUDGETS)
+                .get().build());
+        assertTrue(budgetDtoList.size() < previousSize);
     }
 
     @Test
