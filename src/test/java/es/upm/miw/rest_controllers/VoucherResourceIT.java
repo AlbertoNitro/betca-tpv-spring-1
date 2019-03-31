@@ -7,16 +7,20 @@ import es.upm.miw.dtos.input.VoucherInputDto;
 import es.upm.miw.dtos.output.VoucherOutputDto;
 import es.upm.miw.repositories.VoucherRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ApiTestConfig
@@ -31,10 +35,14 @@ class VoucherResourceIT {
     private VoucherController voucherController;
 
     private List<Voucher> initialVoucherDB;
-
+    private VoucherOutputDto voucherDto;
     @BeforeEach
     void backupVoucherDB() {
+
         initialVoucherDB = this.voucherRepository.findAll();
+        Voucher voucher = new Voucher();
+        Voucher voucherbbdd = voucherRepository.save(voucher);
+        this.voucherDto = new VoucherOutputDto(voucherbbdd);
     }
 
     @AfterEach
@@ -64,10 +72,22 @@ class VoucherResourceIT {
     }
 
     @Test
-    void testUpdate() {
-        String code = "1234567890";
-        VoucherOutputDto result = restUpdateBuilder(code).build();
-        Assertions.assertEquals(code, result.getId());
+    void testUpdateVoucherNotExist() {
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder(new RestBuilder<VoucherOutputDto>()).clazz(VoucherOutputDto.class)
+                        .path(VoucherResource.VOUCHERS).path(VoucherResource.ID).expand("12").put().build());
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+
+    }
+
+    @Test
+    void testUpdateVoucherExist() {
+        VoucherOutputDto voucherOut;
+        voucherOut = this.restService.loginAdmin().restBuilder(new RestBuilder<VoucherOutputDto>()).clazz(VoucherOutputDto.class)
+                .path(VoucherResource.VOUCHERS).path(VoucherResource.ID).expand("0123456789").put().build();
+
+        assertNotNull(voucherOut.getDateOfUse());
 
     }
 
@@ -75,7 +95,7 @@ class VoucherResourceIT {
     private RestBuilder<VoucherOutputDto> restUpdateBuilder(String id) {
         return this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<VoucherOutputDto>()).clazz(VoucherOutputDto.class)
-                .path(VoucherResource.VOUCHERS).path("/" + id)
+                .path(VoucherResource.VOUCHERS).path(VoucherResource.ID).expand(id)
                 .put();
     }
 
@@ -102,6 +122,19 @@ class VoucherResourceIT {
                 .path(VoucherResource.SEARCH)
                 .path("?consumed=false&dateFrom=" + dateFrom + "&dateTo=" + dateTo).get().build();
         assertTrue(results.length >= 0);
+    }
+
+    @Test
+    void testReadById() {
+        List<Voucher> lvouchers = voucherRepository.findAll();
+        Voucher firstVoucher = lvouchers.get(0);
+        VoucherOutputDto result = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<VoucherOutputDto>().clazz(VoucherOutputDto.class))
+                .path(VoucherResource.VOUCHERS)
+                .path(VoucherResource.ID)
+                .expand(firstVoucher.getId()).get().build();
+
+        assertNotNull(result);
     }
 
 }
