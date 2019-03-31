@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -31,7 +33,7 @@ public class RgpdResource {
     private UserRepository userRepository;
 
     @PostMapping(value = PRINTABLE_AGREEMENT)
-    public RgpdDto createPrintableAgreement(@RequestBody RgpdDto rgpdInput) {
+    public RgpdDto createPrintableAgreement(@RequestBody @Valid RgpdDto rgpdInput) {
         return rgpdController.createPrintableAgreement(getAuthenticathedUser(),
                 RgpdAgreementType.getRgpdAgreementType(rgpdInput.getAgreementType()));
     }
@@ -42,7 +44,7 @@ public class RgpdResource {
     }
 
     @PostMapping(value = USER_AGREEMENT)
-    public RgpdDto saveUserAgreement(@RequestBody RgpdDto dto) {
+    public RgpdDto saveUserAgreement(@RequestBody @Valid RgpdDto dto) {
         byte[] agreement = Base64.getDecoder().decode(dto.getPrintableAgreement());
         return this.rgpdController.saveUserAgreement(getAuthenticathedUser(),
                 RgpdAgreementType.getRgpdAgreementType(dto.getAgreementType()), agreement);
