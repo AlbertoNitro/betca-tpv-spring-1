@@ -14,6 +14,9 @@ public class PdfService {
     private static final String[] TABLE_COLUMNS_HEADERS = {" ", "Desc.", "Ud.", "Dto.%", "€", "E."};
     private static final float[] TABLE_COLUMNS_SIZES_TICKETS = {15, 90, 15, 25, 35, 15};
 
+    private static final String[] TABLE_GIFT_TICKET_COLUMNS_HEADERS = {" ", "Desc.", "Ud.", "E."};
+    private static final float[] TABLE_GIFT_TICKET_COLUMNS_SIZES_TICKETS = {15, 150, 15, 15};
+
     @Value("${miw.company.logo}")
     private String logo;
 
@@ -107,6 +110,41 @@ public class PdfService {
     }
 
     public byte[] generateTicket(Ticket ticket) {
+        final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
+        PdfBuilder pdf = new PdfBuilder(path);
+        this.generateCommonHead(pdf);
+        if (ticket.isDebt()) {
+            pdf.paragraphEmphasized("RESERVA");
+            pdf.paragraphEmphasized("Abonado: " + ticket.pay().setScale(2, RoundingMode.HALF_UP) + "€");
+            pdf.paragraphEmphasized("Pendiente: " + ticket.debt().setScale(2, RoundingMode.HALF_UP) + "€");
+        } else {
+            pdf.paragraphEmphasized("TICKET");
+        }
+        pdf.barCode(ticket.getId());
+        pdf.line();
+        pdf.paragraphEmphasized(ticket.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        int notCommitted = 0;
+        PdfTableBuilder table = pdf.table(TABLE_COLUMNS_SIZES_TICKETS).tableColumnsHeader(TABLE_COLUMNS_HEADERS);
+        for (int i = 0; i < ticket.getShoppingList().length; i++) {
+            Shopping shopping = ticket.getShoppingList()[i];
+            notCommitted = this.generateTableCellFromShopping(table, shopping, i, notCommitted);
+        }
+        table.tableColspanRight(ticket.getTotal().setScale(2, RoundingMode.HALF_UP) + "€").build();
+        pdf.paragraph(ticket.getNote());
+        if (notCommitted > 0) {
+            pdf.paragraphEmphasized("Artículos pendientes de entrega: " + notCommitted);
+            if (ticket.getUser() != null) {
+                pdf.paragraph("Teléfono de contacto: " + ticket.getUser().getMobile() + " - " + ticket.getUser().getUsername().substring(0,
+                        (ticket.getUser().getUsername().length() > 10) ? 10 : ticket.getUser().getUsername().length()));
+            }
+            pdf.qrCode(ticket.getReference());
+        }
+        pdf.line().paragraph("Periodo de devolución o cambio: 15 dias a partir de la fecha del ticket");
+        this.generateCommonFooter(pdf);
+        return pdf.build();
+    }
+
+    public byte[] generateGiftTicket(Ticket ticket) {
         final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
         PdfBuilder pdf = new PdfBuilder(path);
         this.generateCommonHead(pdf);
