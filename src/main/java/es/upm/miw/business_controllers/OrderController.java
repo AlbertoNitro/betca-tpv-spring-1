@@ -1,5 +1,6 @@
 package es.upm.miw.business_controllers;
 
+import es.upm.miw.business_services.EmailServiceImpl;
 import es.upm.miw.documents.*;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.ArticleRepository;
@@ -70,6 +71,7 @@ public class OrderController {
             articleRepository.save(articleDB);
             for (User user : users) {
                 LogManager.getLogger().debug("Usuarios: " + user.getEmail());
+                //EmailServiceImpl.sendSimpleMessage("miguelcalderon10@gmail.com", "Stock from article", "New stock from article");
             }
         }
     }
