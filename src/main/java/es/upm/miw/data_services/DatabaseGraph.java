@@ -19,6 +19,7 @@ public class DatabaseGraph {
     private List<TimeClock> timeClockList;
     private List<User> userList;
     private List<Voucher> voucherList;
+    private List<GiftTicket> giftTicketList;
 
     public DatabaseGraph() {
         this.articleList = new ArrayList<>();
@@ -34,6 +35,7 @@ public class DatabaseGraph {
         this.timeClockList = new ArrayList<>();
         this.voucherList = new ArrayList<>();
         this.userList = new ArrayList<>();
+        this.giftTicketList = new ArrayList<>();
     }
 
     public List<Article> getArticleList() {
@@ -138,5 +140,13 @@ public class DatabaseGraph {
 
     public void setVoucherList(List<Voucher> voucherList) {
         this.voucherList = voucherList;
+    }
+
+    public List<GiftTicket> getGiftTicketList() {
+        return giftTicketList;
+    }
+
+    public void setGiftTicketList(List<GiftTicket> giftTicketList) {
+        this.giftTicketList = giftTicketList;
     }
 }

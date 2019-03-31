@@ -35,6 +35,8 @@ public class DatabaseSeederService {
     @Autowired
     public TicketRepository ticketRepository;
     @Autowired
+    public GiftTicketRepository giftTicketRepository;
+    @Autowired
     public InvoiceRepository invoiceRepository;
     @Autowired
     public CashierClosureRepository cashierClosureRepository;
@@ -120,6 +122,7 @@ public class DatabaseSeederService {
         this.ticketRepository.deleteAll();
         this.timeClockRepository.deleteAll();
         this.articleRepository.deleteAll();
+        this.giftTicketRepository.deleteAll();
 
         this.cashierClosureRepository.deleteAll();
         this.providerRepository.deleteAll();
@@ -166,6 +169,7 @@ public class DatabaseSeederService {
         this.tagRepository.saveAll(tpvGraph.getTagList());
         this.ticketRepository.saveAll(tpvGraph.getTicketList());
         this.timeClockRepository.saveAll(tpvGraph.getTimeClockList());
+        this.giftTicketRepository.saveAll(tpvGraph.getGiftTicketList());
 
         this.familyCompositeRepository.saveAll(tpvGraph.getFamilyCompositeList());
         this.invoiceRepository.saveAll(tpvGraph.getInvoiceList());

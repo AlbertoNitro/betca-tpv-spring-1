@@ -14,6 +14,9 @@ public class PdfService {
     private static final String[] TABLE_COLUMNS_HEADERS = {" ", "Desc.", "Ud.", "Dto.%", "€", "E."};
     private static final float[] TABLE_COLUMNS_SIZES_TICKETS = {15, 90, 15, 25, 35, 15};
 
+    private static final String[] TABLE_GIFT_TICKET_COLUMNS_HEADERS = {" ", "Desc.", "Ud.", "E."};
+    private static final float[] TABLE_GIFT_TICKET_COLUMNS_SIZES_TICKETS = {15, 150, 15, 15};
+
     @Value("${miw.company.logo}")
     private String logo;
 
@@ -72,7 +75,7 @@ public class PdfService {
 
     private int generateTableCellFromShopping(PdfTableBuilder table, Shopping shopping, int index, int notCommitted) {
         String state = "";
-        if (shopping.getShoppingState() != ShoppingState.COMMITTED && shopping.getAmount() > 0) {
+        if (isShoppingNotCommitted(shopping)) {
             state = "N";
             notCommitted++;
         }
@@ -139,6 +142,54 @@ public class PdfService {
         pdf.line().paragraph("Periodo de devolución o cambio: 15 dias a partir de la fecha del ticket");
         this.generateCommonFooter(pdf);
         return pdf.build();
+    }
+
+    public byte[] generateGiftTicket(Ticket ticket) {
+        final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
+        PdfBuilder pdf = new PdfBuilder(path);
+        this.generateCommonHead(pdf);
+
+        pdf.paragraphEmphasized("GIFT TICKET");
+
+        pdf.barCode(ticket.getGiftTicket().getId());
+        pdf.line();
+        pdf.paragraphEmphasized("Fecha de emisión: " + ticket.getGiftTicket().getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        pdf.paragraphEmphasized("Fecha de expiración: " + ticket.getGiftTicket().getExpirationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+        int notCommitted = 0;
+
+        PdfTableBuilder table = pdf.table(TABLE_GIFT_TICKET_COLUMNS_SIZES_TICKETS).tableColumnsHeader(TABLE_GIFT_TICKET_COLUMNS_HEADERS);
+        for (int i = 0; i < ticket.getShoppingList().length; i++) {
+            Shopping shopping = ticket.getShoppingList()[i];
+            String state = "";
+            if (isShoppingNotCommitted(shopping)) {
+                state = "N";
+                notCommitted++;
+            }
+            table.tableCell(String.valueOf(i + 1), shopping.getDescription(), "" + shopping.getAmount(), state);
+        }
+        pdf.paragraph(ticket.getGiftTicket().getNote());
+
+        if (notCommitted > 0) {
+            pdf.paragraphEmphasized("Artículos pendientes de entrega: " + notCommitted);
+            if (ticket.getUser() != null) {
+                addContactData(pdf, ticket.getUser());
+            }
+            pdf.qrCode(ticket.getReference());
+        }
+
+        pdf.line().paragraph("Periodo de devolución o cambio: 15 dias a partir de la fecha del ticket");
+        this.generateCommonFooter(pdf);
+        return pdf.build();
+    }
+
+    private boolean isShoppingNotCommitted(Shopping shopping){
+        return shopping.getShoppingState() != ShoppingState.COMMITTED && shopping.getAmount() > 0;
+    }
+
+    public void addContactData (PdfBuilder pdf, User user){
+        pdf.paragraph("Teléfono de contacto: " + user.getMobile() + " - " + user.getUsername().substring(0,
+                (user.getUsername().length() > 10) ? 10 : user.getUsername().length()));
     }
 
     public byte[] generatePrintableRgpdAgreement(User user, RgpdAgreementType type) {
