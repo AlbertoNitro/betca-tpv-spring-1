@@ -1,10 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.OrderController;
-import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Order;
-import es.upm.miw.documents.OrderLine;
-import es.upm.miw.documents.Provider;
+import es.upm.miw.documents.*;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
 import es.upm.miw.repositories.ProviderRepository;
@@ -54,7 +51,7 @@ public class OrderResourceIT {
 
     @BeforeEach
     void before() {
-        this.article = this.articleRepository.findAll().get(0);
+        this.article = this.articleRepository.findAll().get(1);
         this.provider = this.providerRepository.findAll().get(0);
         OrderLine orderLine = new OrderLine(article, 10);
         OrderLine[] orderLines = {orderLine};
@@ -70,22 +67,6 @@ public class OrderResourceIT {
                 .path(OrderResource.ORDERS).path(OrderResource.CLOSE)
                 .body(orderDto).post().build();
         assertNotNull(closedOrder[0].getClosingDate());
-        this.orderRepository.delete(this.order);
-    }
-
-    @Test
-    void testVerifyArticleStock() {
-        OrderDto orderDto = new OrderDto(this.order);
-        OrderDto[] closedOrder = this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<OrderDto[]>()).clazz(OrderDto[].class)
-                .path(OrderResource.ORDERS).path(OrderResource.CLOSE)
-                .body(orderDto).post().build();
-
-        OrderLine[] orderCheck = closedOrder[0].getOrderLines();
-        Article article = orderCheck[0].getArticle();
-        Integer stockUpdated = article.getStock() + orderCheck[0].getFinalAmount();
-        Article articleDB = articleRepository.findByCode(article.getCode());
-        assertEquals(articleDB.getStock(), stockUpdated);
         this.orderRepository.delete(this.order);
     }
 
