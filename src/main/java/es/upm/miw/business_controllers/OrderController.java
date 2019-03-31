@@ -42,8 +42,6 @@ public class OrderController {
             throw new BadRequestException("orderLine is empty");
         }
 
-        sendArticlesFromOrderLine(orderLine);
-
         return closeOrder;
     }
 
@@ -61,17 +59,17 @@ public class OrderController {
 
     private void updateArticleStock(@NotNull Order order) {
         
-        OrderLine[] orderLine = order.getOrderLines(); 
-                
+        OrderLine[] orderLine = order.getOrderLines();
+        List<User> users = new ArrayList<>();
+
         for (OrderLine orderLineSingle : orderLine) {
             Article article = orderLineSingle.getArticle();
             Article articleDB = this.articleRepository.findById(article.getCode()).get();
-
-            if(article.getStock() < 0) {
-                // TODO: Notification all tickets 3/30/2019
-            } else {
-                articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
-                articleRepository.save(articleDB);
+            users = getUsersWithNotCommittedTickets(article.getCode());
+            articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
+            articleRepository.save(articleDB);
+            for (User user : users) {
+                LogManager.getLogger().debug("Usuarios: " + user.getEmail());
             }
         }
     }

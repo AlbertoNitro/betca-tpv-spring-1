@@ -158,7 +158,7 @@ articleList:
     reference: Zz Falda T4
     description: Zarzuela - Falda T4
     retailPrice: 27.8
-    stock: 5
+    stock: 0
     tax: FREE
     discontinued: false
     provider: *pr1
