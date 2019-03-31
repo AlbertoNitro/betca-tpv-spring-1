@@ -1,24 +1,21 @@
 package es.upm.miw.business_controllers;
 
-import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Order;
+import es.upm.miw.documents.*;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
+import es.upm.miw.repositories.TicketRepository;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.Map;
-import es.upm.miw.documents.OrderLine;
+
+import java.util.*;
+
 import es.upm.miw.dtos.OrderDto;
 import es.upm.miw.dtos.OrderSearchDto;
 import org.springframework.stereotype.Controller;
 
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class OrderController {
@@ -29,9 +26,13 @@ public class OrderController {
     @Autowired
     ArticleRepository articleRepository;
 
+    @Autowired
+    TicketRepository ticketRepository;
+
+    TicketController ticketController;
+
     public Order closeOrder(String orderId, OrderLine[] orderLine) {
         Order closeOrder = orderRepository.findById(orderId).orElse(null);
-        LogManager.getLogger().debug("Length: " + orderLine.length);
         if(orderLine.length > 0) {
             closeOrder.close();
             closeOrder.setOrderLines(orderLine);
@@ -41,7 +42,21 @@ public class OrderController {
             throw new BadRequestException("orderLine is empty");
         }
 
+        sendArticlesFromOrderLine(orderLine);
+
         return closeOrder;
+    }
+
+    public List<User> sendArticlesFromOrderLine(OrderLine[] orderLine) {
+        List<User> users = new ArrayList<>();
+        for(OrderLine orderLineSingle : orderLine) {
+            LogManager.getLogger().debug("Probando");
+            users = getUsersWithNotCommittedTickets(orderLineSingle.getArticle().getCode());
+            for (User user : users) {
+                LogManager.getLogger().debug("Usuarios: " + user.getEmail());
+            }
+        }
+        return users;
     }
 
     private void updateArticleStock(@NotNull Order order) {
@@ -102,5 +117,19 @@ public class OrderController {
         OrderSearchDto orderSearchDto;
         orderSearchDto = new OrderSearchDto(dto.getDescription(), orderLine.getArticle().getDescription(), orderLine.getRequiredAmount(), orderLine.getFinalAmount(), dto.getOpeningDate(), dto.getClosingDate());
         orderSearchDtos.add(orderSearchDto);
+    }
+
+    private List<User> getUsersWithNotCommittedTickets(String code) {
+        List<Ticket> Tickets = this.ticketRepository.findByShoppingListArticle(code);
+        List<User> user = new ArrayList<>();
+        for(Ticket item: Tickets) {
+            LogManager.getLogger().debug("Articulo nombre " + item.getUser());
+            for(Shopping article : item.getShoppingList()) {
+                if(article.getShoppingState() == ShoppingState.NOT_COMMITTED) {
+                    user.add(item.getUser());
+                }
+            }
+        }
+        return user;
     }
 }
