@@ -40,6 +40,15 @@ public class BudgetController {
         return this.pdfService.generateBudget(this.create(shoppingsDto));
     }
 
+    public byte[] createPdfById(String id) {
+        Optional<Budget> budget = this.budgetRepository.findById(id);
+        if (budget.isPresent()) {
+            return this.pdfService.generateBudget(budget.get());
+        } else {
+            return null;
+        }
+    }
+
     public void delete(String id) {
         Optional<Budget> budget = this.budgetRepository.findById(id);
         if (budget.isPresent()) {
