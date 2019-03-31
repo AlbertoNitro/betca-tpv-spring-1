@@ -43,7 +43,7 @@ public class RgpdResourceIT {
         Optional<User> userOptional = userRepository.findByMobile(restService.loginAdmin().getAdminMobile());
         assertTrue(userOptional.isPresent());
         User user = userOptional.get();
-        this.rgpdAgreement.setAgreement(pdfService.generatePrintableRgpdAgreement(user.getUsername()));
+        this.rgpdAgreement.setAgreement(pdfService.generatePrintableRgpdAgreement(user, rgpdAgreement.getType()));
         this.rgpdAgreement.setAssignee(user);
         this.rgpdAgreementRepository.save(this.rgpdAgreement);
     }
@@ -100,10 +100,11 @@ public class RgpdResourceIT {
 
     @Test
     void testSaveUserAgreement() {
-        deleteUserAgreement(getUser(this.restService.loginAdmin().getAdminMobile()));
+        User user = getUser(this.restService.loginAdmin().getAdminMobile());
+        deleteUserAgreement(user);
         RgpdDto dtoInput = new RgpdDto();
         dtoInput.setAgreementType("2");
-        byte[] agreement = pdfService.generatePrintableRgpdAgreement("Print for user tests");
+        byte[] agreement = pdfService.generatePrintableRgpdAgreement(user, RgpdAgreementType.MEDIUM);
         dtoInput.setPrintableAgreement(Base64.getEncoder().encodeToString(agreement));
         RgpdDto results = this.restService.loginAdmin().
                 restBuilder(new RestBuilder<RgpdDto>()).clazz(RgpdDto.class).

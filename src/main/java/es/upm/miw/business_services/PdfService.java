@@ -1,9 +1,6 @@
 package es.upm.miw.business_services;
 
-import es.upm.miw.documents.Budget;
-import es.upm.miw.documents.Shopping;
-import es.upm.miw.documents.ShoppingState;
-import es.upm.miw.documents.Ticket;
+import es.upm.miw.documents.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +34,30 @@ public class PdfService {
 
     @Value("${miw.company.web}")
     private String web;
+
+    @Value("${miw.rgpd.clause1}")
+    private String clause1;
+
+    @Value("${miw.rgpd.clause2}")
+    private String clause2;
+
+    @Value("${miw.rgpd.clause3}")
+    private String clause3;
+
+    @Value("${miw.rgpd.dpd}")
+    private String dpd;
+
+    @Value("${miw.rgpd.basic}")
+    private String basic;
+
+    @Value("${miw.rgpd.medium}")
+    private String medium;
+
+    @Value("${miw.rgpd.advance}")
+    private String advance;
+
+    @Value("${miw.rgpd.cancel}")
+    private String cancel;
 
     private void generateCommonHead(PdfBuilder pdf) {
         pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
@@ -120,29 +141,33 @@ public class PdfService {
         return pdf.build();
     }
 
-    public byte[] generatePrintableRgpdAgreement(String userName) {
-        final String path = "/rgpd-pdfs/printable/agreement-" + userName;
+    public byte[] generatePrintableRgpdAgreement(User user, RgpdAgreementType type) {
+        final String path = "/rgpd-pdfs/printable/agreement-" + user.getId();
         PdfBuilder pdf = new PdfBuilder(path, PdfBuilder.PAGE_SIZE_A4);
-        pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
-                .paragraph("NIF: " + this.nif + "   -   " + this.address)
-                .paragraph("Email: " + this.email + "  -  " + "Web: " + this.web);
-        pdf.line();
-
+        this.generateCommonHead(pdf);
         pdf.paragraphEmphasized("Contrato de proteccion de datos.");
-        pdf.paragraphEmphasized(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         pdf.line();
-        pdf.paragraphEmphasized("Otorgante: " + userName);
+        pdf.paragraphEmphasized("Otorgante: " + user.getUsername());
+        pdf.paragraphEmphasized("DNI Otorgante: " + user.getDni());
+        pdf.paragraphEmphasized("Fecha contrato: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         pdf.line();
-        pdf.paragraphEmphasized("Tal: ");
-        pdf.paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mollis neque commodo urna tristique rhoncus. Etiam varius leo et velit posuere, a molestie ex consectetur. Duis sit amet nulla in massa sagittis porttitor commodo vitae quam. Vivamus viverra libero id risus porttitor bibendum. Morbi et facilisis sapien. Nullam vitae rhoncus ligula. Cras accumsan cursus ipsum, vitae commodo quam ullamcorper in. Ut tincidunt mi eget lectus mattis bibendum.");
-        pdf.paragraph("Quisque vulputate nunc sit amet ligula pretium malesuada. Fusce imperdiet ante id elementum eleifend. Suspendisse massa libero, egestas interdum imperdiet quis, lacinia ut elit. Etiam velit nisi, placerat sit amet facilisis eget, euismod a ipsum. Fusce malesuada quis justo ac ultrices. Nunc quis rhoncus neque. Integer condimentum, leo aliquet pulvinar molestie, tortor nulla consectetur elit, a rhoncus risus sapien in augue. Mauris vel nisl eu risus varius cursus et vitae lorem. Donec molestie venenatis feugiat. Proin quis turpis leo. Nulla eu dolor vitae arcu suscipit tincidunt eget id arcu. Ut dictum nisi in risus porta, nec maximus felis scelerisque. In aliquet diam nibh, ac pulvinar arcu eleifend vel. Sed in convallis nulla. Donec fermentum, sapien at facilisis lacinia, neque sapien condimentum nunc, ut efficitur est lectus a arcu.");
-
-        pdf.paragraph("Etiam est felis, tristique ut tristique id, dapibus a orci. Mauris rutrum velit at lectus tristique, a congue ex lobortis. Praesent orci nulla, scelerisque ut maximus quis, ullamcorper non leo. Integer laoreet ex vel odio dignissim lobortis. In at lorem dolor. Maecenas quis diam nec leo consectetur commodo in in enim. Mauris sit amet ligula vitae magna tincidunt sagittis. Quisque ac massa nibh. Proin hendrerit rutrum augue et lacinia. Nam ullamcorper mi a felis euismod malesuada. Cras pharetra ligula a tempor porta. Nunc sed volutpat purus. Curabitur eget accumsan arcu. Integer lobortis sem libero, luctus interdum sapien cursus sed. Duis quis rhoncus nibh, eu gravida massa. Proin vel neque egestas erat pellentesque ultricies.");
-
-        pdf.paragraph("Curabitur commodo metus a vestibulum gravida. Nunc efficitur aliquam tristique. Maecenas accumsan erat nibh, et elementum risus dictum posuere. Sed ut mauris vel ligula pretium molestie. Proin fringilla ut nunc sit amet viverra. Suspendisse tristique augue sed dui congue pulvinar. Etiam ex tortor, vulputate at faucibus sit amet, egestas id libero. Praesent sodales vel ante at ultrices. Cras condimentum convallis arcu, vel tincidunt neque tincidunt id. Fusce nisl tortor, posuere facilisis lectus a, mollis viverra massa.");
-
-        pdf.paragraph("Morbi lorem elit, fringilla sed lorem quis, tempor tempus sapien. Mauris placerat justo ultrices, porta diam venenatis, laoreet orci. Cras elementum mi ut lacus elementum, eget sodales turpis pellentesque. Fusce quis consectetur justo. Curabitur quis lobortis risus. Duis in eros vel lorem tempus elementum. Vestibulum orci orci, semper in urna iaculis, tincidunt semper orci. Phasellus non rhoncus odio. Nullam nibh urna, porttitor a mattis nec, tincidunt eget orci. Quisque pharetra hendrerit ante. In nunc ex, suscipit id placerat vitae, faucibus ut orci.");
-        pdf.paragraphEmphasized("Gracias por su visita").paragraphEmphasized(" ").line();
+        pdf.paragraph(this.clause1);
+        pdf.paragraph(this.clause2);
+        pdf.paragraph(this.clause3);
+        pdf.line();
+        pdf.paragraph(this.dpd);
+        pdf.line();
+        pdf.paragraphEmphasized(this.basic);
+        if (type.equals(RgpdAgreementType.MEDIUM) || type.equals(RgpdAgreementType.ADVANCE)) {
+            pdf.line();
+            pdf.paragraphEmphasized(this.medium);
+        }
+        if (type.equals(RgpdAgreementType.ADVANCE)) {
+            pdf.line();
+            pdf.paragraphEmphasized(this.advance);
+        }
+        pdf.line();
+        pdf.paragraph(this.cancel);
         return pdf.build();
     }
 }

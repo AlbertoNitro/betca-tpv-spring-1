@@ -1,7 +1,10 @@
 package es.upm.miw.business_services;
 
 import es.upm.miw.TestConfig;
+import es.upm.miw.documents.RgpdAgreementType;
+import es.upm.miw.documents.User;
 import es.upm.miw.repositories.TicketRepository;
+import es.upm.miw.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,6 +26,8 @@ public class PdfServiceIT {
 
     @Test
     void testPdfGeneratePrintableRgpdAgreement() {
-        assertNotNull(this.pdfService.generatePrintableRgpdAgreement("6"));
+        User user = new User("999777666", "123445", "666001110", "123445",
+                "C/ TPV, 100, 1A, 28000 Madrid", "user2@gmail.com");
+        assertNotNull(this.pdfService.generatePrintableRgpdAgreement(user, RgpdAgreementType.MEDIUM));
     }
 }
