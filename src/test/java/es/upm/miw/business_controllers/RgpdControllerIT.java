@@ -75,7 +75,7 @@ public class RgpdControllerIT {
         this.deleteUserAgreements(this.user);
         RgpdDto results = this.rgpdController.getUserAgreement(this.user);
         assertNull(results.getPrintableAgreement());
-        assertNull(results.getAgreementType());
+        assertEquals(RgpdAgreementType.BASIC.toString(), results.getAgreementType());
         assertFalse(results.isAccepted());
     }
 
@@ -95,7 +95,7 @@ public class RgpdControllerIT {
         this.rgpdController.deleteUserAgreement(this.user);
         RgpdDto result = this.rgpdController.getUserAgreement(this.user);
         assertFalse(result.isAccepted());
-        assertNull(result.getAgreementType());
+        assertEquals(RgpdAgreementType.BASIC.toString(), result.getAgreementType());
         assertNull(result.getPrintableAgreement());
     }
 
