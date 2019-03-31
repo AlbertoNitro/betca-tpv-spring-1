@@ -50,7 +50,6 @@ public class BudgetDto {
         this.shoppingList = shoppingList;
     }
 
-
     @Override
     public String toString() {
         return "BudgetDto{" +

@@ -4,12 +4,15 @@ import es.upm.miw.documents.TimeClock;
 import es.upm.miw.documents.User;
 import es.upm.miw.dtos.input.TimeClockSearchInputDto;
 import es.upm.miw.dtos.output.TimeClockOutputDto;
+import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.TimeClockRepository;
 import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Controller
@@ -20,21 +23,48 @@ public class TimeClockController {
     @Autowired
     private UserRepository userRepository;
 
+    private static final LocalDateTime DEFAULT_LOCAL_DATE_TIME = LocalDateTime.now().minusYears(1);
+
     public TimeClockOutputDto[] readAll() {
         return convertResultDomainModelToDto(this.timeClockRepository.findAll());
     }
 
     public TimeClockOutputDto[] searchByDateRangeAndUserMobile(TimeClockSearchInputDto timeClockSearchInputDto) {
-        User user = getUserTimeClockByMobile(timeClockSearchInputDto.getUserMobile());
-        return convertResultDomainModelToDto(this.timeClockRepository.findAll());
+        TimeClockOutputDto[] timeClockOutputDtos;
+        if (timeClockSearchInputDto.empty()) {
+            timeClockOutputDtos = readAll();
+        } else {
+            LocalDateTime dateFrom = timeClockSearchInputDto.getDateFrom() == null ? DEFAULT_LOCAL_DATE_TIME : timeClockSearchInputDto.getDateFrom();
+            LocalDateTime dateTo = timeClockSearchInputDto.getDateTo() == null ? getCurrentLocalDateTime() : timeClockSearchInputDto.getDateTo();
+            User user = timeClockSearchInputDto.getUserMobile() == null ? null : getUserTimeClockByMobile(timeClockSearchInputDto.getUserMobile());
+            if (user != null) {
+                timeClockOutputDtos = convertResultDomainModelToDto(this.timeClockRepository.findByClockinDateBetweenAndUserOrderByClockinDateDesc(dateFrom, dateTo, user.getId()));
+            } else {
+                timeClockOutputDtos = convertResultDomainModelToDto(this.timeClockRepository.findByClockinDateBetweenOrderByClockinDateDesc(dateFrom, dateTo));
+            }
+        }
+        return timeClockOutputDtos;
     }
 
     public TimeClock insertTimeClock(TimeClock timeClock) {
         return this.timeClockRepository.save(timeClock);
     }
 
-    private boolean sameDay(LocalDateTime clockinDate, LocalDateTime clockoutDate) {
-        return clockinDate.toLocalDate().isEqual(clockoutDate.toLocalDate());
+    public TimeClock updateTimeClock(TimeClock timeClock) {
+        return this.timeClockRepository.save(timeClock);
+    }
+
+    public User getUserTimeClockByMobile(String mobile) {
+        return this.userRepository.findByMobile(mobile)
+                .orElseThrow(() -> new NotFoundException("User mobile:" + mobile));
+    }
+
+    public TimeClock getLastTimeClockByUser(String userId) {
+        return this.timeClockRepository.findFirst1ByUserOrderByClockinDateDesc(userId).orElse(null);
+    }
+
+    private LocalDateTime getCurrentLocalDateTime() {
+        return Instant.ofEpochMilli(Instant.now().toEpochMilli()).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
     private TimeClockOutputDto[] convertResultDomainModelToDto(List<TimeClock> all) {
@@ -47,7 +77,4 @@ public class TimeClockController {
         return timeClockOutputDtos;
     }
 
-    public User getUserTimeClockByMobile(String mobile) {
-        return this.userRepository.findByMobile(mobile).orElse(null);
-    }
 }

@@ -16,6 +16,8 @@ public class ArticleLine {
         this.percentage = percentage;
     }
 
+    public ArticleLine(){}
+
     public String getIdArticle() {
         return idArticle;
     }

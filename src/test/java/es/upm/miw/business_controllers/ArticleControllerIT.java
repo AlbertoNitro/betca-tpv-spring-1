@@ -38,6 +38,13 @@ class ArticleControllerIT {
     }
 
     @Test
+    void testReadAllArticles() {
+        List<ArticleSearchOutputDto> articles = this.articleController.readAll();
+        assertNotNull(articles);
+        assertTrue(articles.size() > 0);
+    }
+
+    @Test
     void testReadArticles() {
         List<ArticleSearchOutputDto> articles = articleController.readArticles("d", null, null, null);
         assertTrue(articles.size() > 0);
@@ -70,4 +77,39 @@ class ArticleControllerIT {
         this.articleRepository.deleteById(this.articleDto.getCode());
     }
 
+    @Test
+    void testUpdateArticleNotFoundException() {
+        assertThrows(NotFoundException.class, () -> this.articleController.update("miw", articleDto));
+    }
+
+    @Test
+    void testUpdateArticleWithProviderNotFoundException() {
+        this.articleDto.setProvider("non exist");
+        assertThrows(NotFoundException.class, () -> this.articleController.update(this.article.getCode(), articleDto));
+    }
+
+    @Test
+    void testUpdateArticle() {
+        this.articleDto.setDescription("miw");
+        ArticleDto article = this.articleController.update(this.article.getCode(), articleDto);
+
+        assertNotNull(article);
+        assertEquals("miw", article.getDescription());
+    }
+
+    @Test
+    void testDeleteArticleNotExist() {
+        List<ArticleSearchOutputDto> articleBeforeDelete = this.articleController.readAll();
+        this.articleController.delete("miw");
+        List<ArticleSearchOutputDto> articleAfterDelete = this.articleController.readAll();
+        assertEquals(articleBeforeDelete.size(), articleAfterDelete.size());
+    }
+
+    @Test
+    void testDeleteArticleExist() {
+        List<ArticleSearchOutputDto> articleBeforeDelete = this.articleController.readAll();
+        this.articleController.delete(this.article.getCode());
+        List<ArticleSearchOutputDto> articleAfterDelete = this.articleController.readAll();
+        assertTrue(articleBeforeDelete.size() > articleAfterDelete.size());
+    }
 }

@@ -2,6 +2,7 @@ package es.upm.miw.data_services;
 
 import es.upm.miw.business_services.Barcode;
 import es.upm.miw.documents.*;
+import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.repositories.*;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,6 @@ public class DatabaseSeederService {
     public CashierClosureRepository cashierClosureRepository;
     @Autowired
     private Environment environment;
-
-    @Autowired
-    private Barcode barcode;
 
     @Value("${miw.admin.mobile}")
     private String mobile;
@@ -188,10 +186,10 @@ public class DatabaseSeederService {
         }
 
         if (nextCodeWithoutRedundancy > LAST_CODE_ARTICLE) {
-            throw new RuntimeException("There is not next code EAN");
+            throw new ConflictException("There is not next code EAN");
         }
 
-        return this.barcode.generateEan13code(nextCodeWithoutRedundancy);
+        return new Barcode().generateEan13code(nextCodeWithoutRedundancy);
     }
 
     private void seedDatabaseWithArticlesFamilyForView() {
@@ -203,15 +201,38 @@ public class DatabaseSeederService {
         this.articlesFamilyRepository.save(c1);
         this.articlesFamilyRepository.save(c2);
         ArticlesFamily c3 = new FamilyComposite(FamilyType.ARTICLES, "c", "cards");
+        ArticlesFamily c3a = new FamilyArticle(this.articleRepository.findById("8400000000085").get());
+        ArticlesFamily c3b = new FamilyArticle(this.articleRepository.findById("8400000000070").get());
+        this.articlesFamilyRepository.save(c3a);
+        this.articlesFamilyRepository.save(c3b);
+
         ArticlesFamily c4 = new FamilyComposite(FamilyType.SIZES, null, "X");
+        ArticlesFamily c5 = new FamilyComposite(FamilyType.SIZES, "Zz Falda", "Zarzuela - Falda");
+
+        ArticlesFamily c6 = new FamilyArticle(this.articleRepository.findById("8400000000017").get());
+        ArticlesFamily c7 = new FamilyArticle(this.articleRepository.findById("8400000000024").get());
+
+        c3.add(c3a);
+        c3.add(c3b);
+
         this.articlesFamilyRepository.save(c3);
         this.articlesFamilyRepository.save(c4);
+        this.articlesFamilyRepository.save(c5);
+        this.articlesFamilyRepository.save(c6);
+        this.articlesFamilyRepository.save(c7);
 
         root.add(c1);
         root.add(c2);
         root.add(c3);
         root.add(c4);
+        root.add(c5);
+
+        c5.add(c6);
+        c5.add(c7);
+
         this.articlesFamilyRepository.save(root);
+        this.articlesFamilyRepository.save(c5);
+
     }
 
 }

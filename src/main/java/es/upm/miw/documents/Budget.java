@@ -69,4 +69,5 @@ Budget {
                 ", shoppingList=" + Arrays.toString(shoppingList) +
                 '}';
     }
+
 }

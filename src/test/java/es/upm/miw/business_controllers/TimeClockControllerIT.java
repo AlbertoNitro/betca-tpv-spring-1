@@ -5,7 +5,7 @@ import es.upm.miw.documents.TimeClock;
 import es.upm.miw.documents.User;
 import es.upm.miw.dtos.input.TimeClockSearchInputDto;
 import es.upm.miw.dtos.output.TimeClockOutputDto;
-import org.apache.logging.log4j.LogManager;
+import es.upm.miw.exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,17 +40,56 @@ public class TimeClockControllerIT {
     @Test
     void testReadAll() {
         TimeClockOutputDto[] timeClocksOutput = this.timeClockController.readAll();
-        assertTrue(timeClocksOutput.length >= 0);
+        assertNotNull(timeClocksOutput);
     }
 
     @Test
     void testSearchByDateRangeAndUserMobile() {
-        Long dateFromMs = Instant.now().toEpochMilli();
+        Long dateFromMs = Instant.now().minus(2, ChronoUnit.DAYS).toEpochMilli();
         Long dateToMs = Instant.now().plus(8, ChronoUnit.HOURS).toEpochMilli();
         String mobile = "666666000";
         TimeClockSearchInputDto timeClockSearchInputDto = new TimeClockSearchInputDto(dateFromMs, dateToMs, mobile);
         TimeClockOutputDto[] timeClocksOutput = this.timeClockController.searchByDateRangeAndUserMobile(timeClockSearchInputDto);
+        assertNotNull(timeClocksOutput);
+    }
+
+    @Test
+    void testSearchWithoutDateRangeAndWithUserMobile() {
+        Long dateFromMs = null;
+        Long dateToMs = null;
+        String mobile = "666666000";
+        TimeClockSearchInputDto timeClockSearchInputDto = new TimeClockSearchInputDto(dateFromMs, dateToMs, mobile);
+        TimeClockOutputDto[] timeClocksOutput = this.timeClockController.searchByDateRangeAndUserMobile(timeClockSearchInputDto);
+        assertNotNull(timeClocksOutput);
+    }
+
+    @Test
+    void testSearchWithoutDateRangeAndWithoutUserMobile() {
+        Long dateFromMs = null;
+        Long dateToMs = null;
+        String mobile = null;
+        TimeClockSearchInputDto timeClockSearchInputDto = new TimeClockSearchInputDto(dateFromMs, dateToMs, mobile);
+        TimeClockOutputDto[] timeClocksOutput = this.timeClockController.searchByDateRangeAndUserMobile(timeClockSearchInputDto);
+        assertNotNull(timeClocksOutput);
+    }
+
+    @Test
+    void testSearchDateRangeAndWithoutUserMobile() {
+        Long dateFromMs = Instant.now().minus(2, ChronoUnit.DAYS).toEpochMilli();
+        Long dateToMs = Instant.now().plus(8, ChronoUnit.HOURS).toEpochMilli();
+        String mobile = null;
+        TimeClockSearchInputDto timeClockSearchInputDto = new TimeClockSearchInputDto(dateFromMs, dateToMs, mobile);
+        TimeClockOutputDto[] timeClocksOutput = this.timeClockController.searchByDateRangeAndUserMobile(timeClockSearchInputDto);
         assertTrue(timeClocksOutput.length >= 0);
+    }
+
+    @Test
+    void testSearchByDateRangeAndWrongUserMobile() {
+        Long dateFromMs = Instant.now().minus(2, ChronoUnit.DAYS).toEpochMilli();
+        Long dateToMs = Instant.now().plus(8, ChronoUnit.HOURS).toEpochMilli();
+        String mobile = "876666009";
+        TimeClockSearchInputDto timeClockSearchInputDto = new TimeClockSearchInputDto(dateFromMs, dateToMs, mobile);
+        assertThrows(NotFoundException.class, () -> this.timeClockController.searchByDateRangeAndUserMobile(timeClockSearchInputDto));
     }
 
     @Test
@@ -59,12 +98,29 @@ public class TimeClockControllerIT {
         assertEquals(timeClockCreated.getUser(), timeClock1.getUser());
         assertNotNull(timeClockCreated.getClockinDate());
         assertNotNull(timeClockCreated.getTotalHours());
-        LogManager.getLogger().debug(">>>>> TimeClock clockin: " + timeClockCreated.getClockinDate() + " total hours: " + timeClockCreated.getTotalHours());
 
         timeClockCreated = this.timeClockController.insertTimeClock(timeClock2);
         assertEquals(timeClockCreated.getUser(), timeClock2.getUser());
         assertNotNull(timeClockCreated.getClockinDate());
         assertNotNull(timeClockCreated.getTotalHours());
-        LogManager.getLogger().debug(">>>>> TimeClock clockin: " + timeClockCreated.getClockinDate() + " total hours: " + timeClockCreated.getTotalHours());
     }
+
+    @Test
+    void testUpdateTimeClock() {
+        TimeClock timeClockCreated = this.timeClockController.insertTimeClock(timeClock3);
+        assertEquals(timeClockCreated.getUser(), timeClock3.getUser());
+        assertNotNull(timeClockCreated.getClockinDate());
+        assertNotNull(timeClockCreated.getTotalHours());
+
+        User user = this.timeClockController.getUserTimeClockByMobile(timeClockCreated.getUser().getMobile());
+        TimeClock timeClockToUpdate = this.timeClockController.getLastTimeClockByUser(user.getId());
+        assertNotNull(timeClockToUpdate);
+        timeClockToUpdate.clockout();
+        TimeClock timeClockUpdated = this.timeClockController.updateTimeClock(timeClockToUpdate);
+        assertEquals(timeClockUpdated.getUser(), timeClockCreated.getUser());
+        assertEquals(timeClockUpdated.getId(), timeClockCreated.getId());
+        assertEquals(timeClockUpdated.getClockinDate(), timeClockCreated.getClockinDate());
+        assertNotEquals(timeClockUpdated.getClockoutDate(), timeClockCreated.getClockoutDate());
+    }
+
 }

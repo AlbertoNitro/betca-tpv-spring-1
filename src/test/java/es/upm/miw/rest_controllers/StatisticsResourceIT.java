@@ -21,8 +21,8 @@ class StatisticsResourceIT {
 
     @Test
     void testGetTotalSalesPerDay() {
-        LocalDateTime dateFrom = LocalDateTime.of(2019, 3, 1, 0, 0, 0);
-        LocalDateTime dateTo = LocalDateTime.of(2019, 3, 30, 23, 59, 59);
+        LocalDateTime dateFrom = LocalDateTime.now().minusDays(1).withNano(0);
+        LocalDateTime dateTo = LocalDateTime.now().plusDays(1).withNano(0);
 
         StatisticDtoOutput[] results = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<StatisticDtoOutput[]>().clazz(StatisticDtoOutput[].class))
@@ -37,8 +37,8 @@ class StatisticsResourceIT {
 
     @Test
     void testGetAverageDailyExpense() {
-        LocalDateTime dateFrom = LocalDateTime.of(2019, 3, 1, 0, 0, 0);
-        LocalDateTime dateTo = LocalDateTime.of(2019, 3, 30, 23, 59, 59);
+        LocalDateTime dateFrom = LocalDateTime.now().minusDays(1).withNano(0);
+        LocalDateTime dateTo = LocalDateTime.now().plusDays(1).withNano(0);
 
         StatisticDtoOutput[] results = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<StatisticDtoOutput[]>().clazz(StatisticDtoOutput[].class))
