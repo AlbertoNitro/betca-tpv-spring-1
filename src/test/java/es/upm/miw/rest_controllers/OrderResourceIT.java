@@ -52,6 +52,7 @@ public class OrderResourceIT {
     @BeforeEach
     void before() {
         this.article = this.articleRepository.findAll().get(1);
+        this.article.setStock(0);
         this.provider = this.providerRepository.findAll().get(0);
         OrderLine orderLine = new OrderLine(article, 10);
         OrderLine[] orderLines = {orderLine};
