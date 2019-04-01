@@ -110,10 +110,6 @@ public class PdfService {
     }
 
     public byte[] generateTicket(Ticket ticket) {
-        //TODO
-        System.out.println("PdfService generateTicket: " + ticket);
-
-
         final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
         PdfBuilder pdf = new PdfBuilder(path);
         this.generateCommonHead(pdf);
@@ -150,13 +146,9 @@ public class PdfService {
 
     public byte[] generateGiftTicket(Ticket ticket) {
 
-        //TODO
-        System.out.println("PdfService generateGiftTicket: " + ticket);
-
         final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
         PdfBuilder pdf = new PdfBuilder(path);
         this.generateCommonHead(pdf);
-
         pdf.paragraphEmphasized("GIFT TICKET");
 
         pdf.barCode(ticket.getGiftTicket().getId());

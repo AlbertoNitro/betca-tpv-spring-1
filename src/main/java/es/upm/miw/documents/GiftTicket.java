@@ -60,6 +60,10 @@ public class GiftTicket {
         this.note = note;
     }
 
+    public boolean isGiftTicketExpired(){
+        return expirationDate.isBefore(LocalDate.now());
+    }
+
     @Override
     public String toString() {
         return "GiftTicket{" +

@@ -564,7 +564,7 @@ class TicketResourceIT {
     @Test
     void testUpdateModifiedTicketAndPdf() {
         Ticket ticket = ticketController.readTicketById("201901121");
-        TicketModificationStateOrAmountDto modifiedTicket = new TicketModificationStateOrAmountDto(ticket);
+        TicketModificationStateOrAmountDto modifiedTicket = new TicketModificationStateOrAmountDto(ticket, false);
         byte[] pdf = restService.loginAdmin()
                 .restBuilder(new RestBuilder<byte[]>())
                 .clazz(byte[].class)

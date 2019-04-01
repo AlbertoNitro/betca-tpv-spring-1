@@ -303,7 +303,16 @@ public class TicketController {
     }
 
     public TicketModificationStateOrAmountDto obtainTicketModifiedById(String id) {
-        return new TicketModificationStateOrAmountDto(this.readTicketById(id));
+        boolean isGiftTicket = false;
+
+        Ticket ticket = this.ticketRepository.findById(id).orElse(new Ticket());
+
+        if(ticket.getId()==null || ticket.getId().isEmpty() || "null".equals(ticket.getId())){
+            isGiftTicket = true;
+            ticket = this.ticketRepository.findByGiftTicket(id).orElseThrow(() -> new NotFoundException("Ticket id (" + id + ")"));
+        }
+
+        return new TicketModificationStateOrAmountDto(ticket, isGiftTicket&&ticket.getGiftTicket().isGiftTicketExpired());
     }
 
     public Ticket readTicketById(String id) {
