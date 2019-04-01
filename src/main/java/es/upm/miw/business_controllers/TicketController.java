@@ -27,6 +27,9 @@ public class TicketController {
     private TicketRepository ticketRepository;
 
     @Autowired
+    private GiftTicketRepository giftTicketRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -72,6 +75,12 @@ public class TicketController {
         Ticket ticket = new Ticket(this.nextId(), ticketCreationDto.getVoucher(), ticketCreationDto.getCard(),
                 ticketCreationDto.getCash(), shoppingList.toArray(new Shopping[0]), user);
         ticket.setNote(ticketCreationDto.getNote());
+
+        GiftTicket giftTicket = new GiftTicket ("TR" + LocalDateTime.now().toString(),ticketCreationDto.getGiftNote());
+        this.giftTicketRepository.save(giftTicket);
+
+        ticket.setGiftTicket(giftTicket);
+
         this.ticketRepository.save(ticket);
         CashierClosure cashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
         cashierClosure.voucher(ticketCreationDto.getVoucher());
@@ -197,14 +206,9 @@ public class TicketController {
     }
 
     public byte[] generateGiftTicketController(String id) {
-
-        System.out.println("generateGiftTicketController");
-
-        if (id.isEmpty()){
-            System.out.println("generateGiftTicketController ID: null");
-            return pdfService.generateTicket(this.ticketRepository.findFirstByOrderByCreationDateDescIdDesc());
+        if (id == null || id.isEmpty()){
+            return pdfService.generateGiftTicket(this.ticketRepository.findFirstByOrderByCreationDateDescIdDesc());
         }else{
-            System.out.println("generateGiftTicketController ID: " + id);
             return pdfService.generateGiftTicket(readTicketById(id));
         }
     }

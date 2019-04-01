@@ -20,12 +20,12 @@ public class GiftTicket {
     public GiftTicket() {
         this.creationDate = LocalDate.now();
         this.expirationDate = creationDate.plusDays(14);
-        this.note = "";
     }
 
     public GiftTicket(String id, String note) {
         this();
-        this.id = "GT" + id;
+        this.id = id;
+        this.note = "" + note;
     }
 
     public String getId() {
