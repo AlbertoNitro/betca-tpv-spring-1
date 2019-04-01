@@ -73,6 +73,31 @@ class TicketResourceIT {
     }
 
     @Test
+    void testCreateGiftTicketWithNullId() {
+        byte[] pdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).path(TicketResource.GIFT).param("id", null)
+                .get().build();
+        assertNotNull(pdf);
+    }
+
+    @Test
+    void testCreateGiftTicketNotFoundId() {
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder().path(TicketResource.TICKETS)
+                        .path(TicketResource.GIFT).param("id", "invalid id")
+                        .get().build());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    }
+
+    @Test
+    void testCreateGiftTicketWithId() {
+        byte[] pdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).path(TicketResource.GIFT).param("id", "201901121")
+                .get().build();
+        assertNotNull(pdf);
+    }
+
+    @Test
     void testCreateReserve() {
         ShoppingDto shoppingDto =
                 new ShoppingDto("1", "", new BigDecimal("100.00"), 1, BigDecimal.ZERO,
