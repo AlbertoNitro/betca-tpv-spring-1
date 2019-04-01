@@ -196,6 +196,19 @@ public class TicketController {
         return pdfService.generateTicket(this.createTicket(ticketCreationDto));
     }
 
+    public byte[] generateGiftTicketController(String id) {
+
+        System.out.println("generateGiftTicketController");
+
+        if (id.isEmpty()){
+            System.out.println("generateGiftTicketController ID: null");
+            return pdfService.generateTicket(this.ticketRepository.findFirstByOrderByCreationDateDescIdDesc());
+        }else{
+            System.out.println("generateGiftTicketController ID: " + id);
+            return pdfService.generateGiftTicket(readTicketById(id));
+        }
+    }
+
     public Ticket createTicketForTests(TicketCreationInputDto ticketCreationDto) {
         return this.createTicket(ticketCreationDto);
     }

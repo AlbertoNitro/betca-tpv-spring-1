@@ -17,6 +17,7 @@ import java.util.List;
 @RequestMapping(TicketResource.TICKETS)
 public class TicketResource {
     public static final String TICKETS = "/tickets";
+    public static final String GIFT = "/gift";
     public static final String QUERY = "/query";
     public static final String ORDER_ID = "/orderId";
     public static final String TICKET_ID = "/{id}";
@@ -49,5 +50,10 @@ public class TicketResource {
             @PathVariable String id
             , @Valid @RequestBody TicketModificationStateOrAmountDto modifiedTicket) {
         return ticketController.updateModifiedTicketAndPdf(id, modifiedTicket);
+    }
+
+    @GetMapping(value = GIFT, produces = {"application/pdf", "application/json"})
+    public byte[] generateGiftTicketResource(@Valid @RequestParam(required = false) String id) {
+        return ticketController.generateGiftTicketController(id);
     }
 }
