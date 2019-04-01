@@ -14,11 +14,13 @@ public class TicketModificationStateOrAmountDto {
 
     private List<ShoppingModificationStateOrAmountDto> shoppingList;
 
+    boolean isGiftTicketExpired;
+
     public TicketModificationStateOrAmountDto(){
         //Empty for framework
     }
 
-    public TicketModificationStateOrAmountDto(Ticket ticket) {
+    public TicketModificationStateOrAmountDto(Ticket ticket, boolean isGiftTicketExpired) {
         this.id = ticket.getId();
         this.shoppingList = this.initializeShoppingTicket(ticket.getShoppingList());
     }
@@ -47,12 +49,20 @@ public class TicketModificationStateOrAmountDto {
         this.shoppingList = shoppingList;
     }
 
+    public boolean isGiftTicketExpired() {
+        return isGiftTicketExpired;
+    }
+
+    public void setGiftTicketExpired(boolean giftTicketExpired) {
+        isGiftTicketExpired = giftTicketExpired;
+    }
 
     @Override
     public String toString() {
         return "TicketModificationStateOrAmountDto{" +
-                "id=" + id +
-                "shoppingList=" + shoppingList.toString() +
+                "id='" + id + '\'' +
+                ", shoppingList=" + shoppingList +
+                ", isGiftTicketExpired=" + isGiftTicketExpired +
                 '}';
     }
 }

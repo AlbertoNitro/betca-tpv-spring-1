@@ -145,10 +145,10 @@ public class PdfService {
     }
 
     public byte[] generateGiftTicket(Ticket ticket) {
+
         final String path = "/tpv-pdfs/tickets/ticket-" + ticket.getId();
         PdfBuilder pdf = new PdfBuilder(path);
         this.generateCommonHead(pdf);
-
         pdf.paragraphEmphasized("GIFT TICKET");
 
         pdf.barCode(ticket.getGiftTicket().getId());
@@ -168,7 +168,12 @@ public class PdfService {
             }
             table.tableCell(String.valueOf(i + 1), shopping.getDescription(), "" + shopping.getAmount(), state);
         }
-        pdf.paragraph(ticket.getGiftTicket().getNote());
+
+        table.build();
+
+        if (ticket.getGiftTicket().getNote()!= null && !ticket.getGiftTicket().getNote().isEmpty() && !"null".equals(ticket.getGiftTicket().getNote())){
+            pdf.paragraph("" + ticket.getGiftTicket().getNote());
+        }
 
         if (notCommitted > 0) {
             pdf.paragraphEmphasized("Artículos pendientes de entrega: " + notCommitted);
