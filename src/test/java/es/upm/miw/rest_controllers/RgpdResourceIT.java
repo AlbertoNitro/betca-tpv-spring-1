@@ -133,6 +133,7 @@ public class RgpdResourceIT {
     @Test
     void testCreatePrintableAgreementWithBadType() {
         RgpdDto dtoInput = new RgpdDto();
+        dtoInput.setAgreementType(null);
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 this.restService.loginAdmin().
                         restBuilder(new RestBuilder<RgpdDto>()).clazz(RgpdDto.class).
