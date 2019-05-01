@@ -8,6 +8,7 @@ import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
+import es.upm.miw.repositories.ProviderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ class ArticleControllerIT {
 
     private ArticleDto articleDto;
     private Article article;
+
+    private ProviderRepository providerRepository;
 
     @BeforeEach
     void seed() {
@@ -70,4 +73,8 @@ class ArticleControllerIT {
         this.articleRepository.deleteById(this.articleDto.getCode());
     }
 
+    @Test
+    void findArticlesProvider(){
+        System.out.println(".........." + articleController.findArticleByprovider("5c9fe57b8f8e3f5f344caf8f"));
+    }
 }

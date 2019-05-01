@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestConfig
@@ -63,6 +65,18 @@ class OrderRepositoryIT {
     @Test
     void readAllOrders() {
         assertTrue(orderRepository.findAllOrders().size() >= 0);
+    }
+
+    @Test
+    void readById() {
+        System.out.println(orderRepository.findByDescription("OrderDescrip_8400000000024").toString());
+        //assertTrue(orderRepository.findById("5c9e55078f8e3f19fc6d9ab0"). >= 0);
+    }
+
+    @Test
+    void testFindById() {
+        Optional<Order> order = this.orderRepository.findByDescription("OrderDescrip_8400000000024");
+        assertTrue(order.isPresent());
     }
 
 }

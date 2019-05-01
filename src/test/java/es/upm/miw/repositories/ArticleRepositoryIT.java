@@ -104,4 +104,11 @@ class ArticleRepositoryIT {
                 ("zaR", 7, "2", "21");
         assertEquals(1, articleList.size());
     }
+
+    @Test
+    void testFindArticleByProvider() {
+       // System.out.println("TestArticleByProvider" + articleRepository.findAllByProvider("dede"));
+    }
+
+
 }

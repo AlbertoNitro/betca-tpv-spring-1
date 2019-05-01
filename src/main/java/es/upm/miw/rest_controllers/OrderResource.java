@@ -1,6 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.OrderController;
+import es.upm.miw.dtos.OrderDto;
 import es.upm.miw.dtos.OrderSearchDto;
 import es.upm.miw.dtos.OrderSearchInputDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,16 @@ public class OrderResource {
         String descriptionArticles = orderSearchInputDto.getDescriptionArticles();
         Boolean onlyClosingDate = orderSearchInputDto.isOnlyClosingDate();
         return this.orderController.searchOrder(descriptionOrders, descriptionArticles, onlyClosingDate);
+    }
+
+    @PostMapping
+    public OrderDto create(@Valid @RequestBody String descriptionOrder, String providerId, String[] idArticles, Integer[] requiredAmount) {
+        return this.orderController.create(descriptionOrder, providerId, idArticles, requiredAmount);
+    }
+
+    @GetMapping(value = ID)
+    public List<OrderSearchDto> read(@PathVariable String id) {
+        return this.orderController.findById(id);
     }
 }
 

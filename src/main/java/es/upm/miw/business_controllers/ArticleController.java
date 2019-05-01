@@ -143,4 +143,13 @@ public class ArticleController {
         return new FamilySizeInputDto(familyComposite);
     }
 
+    //public List<ArticleDto> findArticleByprovider(String idProvider){
+    //    System.out.println("ArticuloByController: " + articleRepository.findAllByProvider(idProvider));
+    //    return articleRepository.findAllByProvider(idProvider);
+    //}
+
+    public List<Article> findArticleByprovider(String id){
+        Optional<Provider> provider = providerRepository.findById(id);
+        return (List<Article>) this.articleRepository.findAllByProvider(provider);
+    }
 }

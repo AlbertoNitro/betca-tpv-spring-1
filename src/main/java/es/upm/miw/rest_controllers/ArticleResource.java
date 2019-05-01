@@ -2,6 +2,8 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.ArticleController;
 import es.upm.miw.business_controllers.StockPredictionController;
+import es.upm.miw.documents.Article;
+import es.upm.miw.documents.Provider;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.dtos.input.ArticleSearchInputDto;
@@ -29,6 +31,7 @@ public class ArticleResource {
     public static final String SEARCH = "/search";
     public static final String PARTIALLY_DEFINED = "/partially-defined";
     static final String STOCK_PREDICTION = "/stock-prediction";
+    public static final String PROVIDER = "/provider";
 
     @Autowired
     private ArticleController articleController;
@@ -88,5 +91,10 @@ public class ArticleResource {
         return this.stockPredictionController.calculateStockPrediction(input);
     }
 
-
+    @PostMapping(value = PROVIDER)
+    public List<Article> findByProvider(@Valid @RequestBody Provider provider) {
+        System.out.println( "Provider: " + provider);
+        System.out.println( "FindByProvider: " + this.articleController.findArticleByprovider(provider.getId()));
+        return this.articleController.findArticleByprovider(provider.getId());
+    }
 }
