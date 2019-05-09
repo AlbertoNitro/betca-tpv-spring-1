@@ -4,10 +4,11 @@ import es.upm.miw.documents.Invoice;
 import es.upm.miw.dtos.output.InvoiceUpdateDto;
 import es.upm.miw.repositories.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Controller
 public class InvoiceUpdateController {
     @Autowired
     private InvoiceRepository invoiceRepository;
