@@ -72,8 +72,8 @@ class VoucherControllerIT {
 
     @Test
     void testFindVouchersByDateWithinConsumed() {
-        LocalDateTime dateFrom = LocalDateTime.now().minusDays(1).withNano(0);
-        LocalDateTime dateTo = LocalDateTime.now().plusDays(1).withNano(0);
+        LocalDateTime dateFrom = LocalDateTime.now().minusDays(10).withNano(0);
+        LocalDateTime dateTo = LocalDateTime.now().plusDays(10).withNano(0);
         List<VoucherOutputDto> voucherDtoOutputList = this.voucherController
                 .findVouchersByDateWithinConsumed(dateFrom.toString(), dateTo.toString());
         assertTrue(voucherDtoOutputList.size() > 0);

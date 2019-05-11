@@ -47,8 +47,8 @@ class VoucherRepositoryIT {
 
     @Test
     void findByCreationDateBetweenAndDateOfUseIsNull() {
-        LocalDateTime dateFrom = LocalDateTime.of(2019, 3, 1, 0, 0, 0);
-        LocalDateTime dateTo = LocalDateTime.of(2019, 4, 30, 23, 59, 59);
+        LocalDateTime dateFrom = LocalDateTime.of(2019, 5, 1, 0, 0, 0);
+        LocalDateTime dateTo = LocalDateTime.of(2019, 6, 30, 23, 59, 59);
         List<Voucher> lvouc = voucherRepository.findByCreationDateBetweenAndDateOfUseIsNull(dateFrom, dateTo);
         Voucher vouch = lvouc.get(0);
         vouch.use();
@@ -60,8 +60,8 @@ class VoucherRepositoryIT {
 
     @Test
     void findByCreationDateBetweenAndDateOfUseIsNotNull() {
-        LocalDateTime dateFrom = LocalDateTime.of(2019, 3, 1, 0, 0, 0);
-        LocalDateTime dateTo = LocalDateTime.of(2019, 4, 30, 23, 59, 59);
+        LocalDateTime dateFrom = LocalDateTime.of(2019, 5, 1, 0, 0, 0);
+        LocalDateTime dateTo = LocalDateTime.of(2019, 6, 30, 23, 59, 59);
         List<Voucher> lvouc = voucherRepository.findByCreationDateBetweenAndDateOfUseIsNotNull(dateFrom, dateTo);
         assertFalse(lvouc.isEmpty());
         Voucher vouch = new Voucher();
