@@ -342,3 +342,14 @@ familyCompositeList:
     familyType: ARTICLES
     reference: "Gm"
     description: "Games"
+
+#Invoice
+invoiceList:
+  - &in1
+    baseTax: 10
+    tax: 20
+    ticket: *ti1
+  - &in2
+    baseTax: 10
+    tax: 15
+    ticket: *ti2

@@ -30,7 +30,7 @@ public class InvoiceUpdateController {
 
     public List<InvoiceUpdateDto> getAll() {
         List<Invoice> invoices;
-        return convertInvoiceToInvoiceUpdateDto(invoiceRepository.findAll());
+        return convertInvoiceToInvoiceUpdateDto( this.invoiceRepository.findAll());
     }
 
 }

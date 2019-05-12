@@ -20,7 +20,8 @@ public class InvoiceUpdateResource {
     public static final String INVOICEUPDATE = "/invoice-update";
     @GetMapping()
     public List<InvoiceUpdateDto> getAll() {
-        return null;
+
+        return invoiceUpdateController.getAll();
     }
 
 }
