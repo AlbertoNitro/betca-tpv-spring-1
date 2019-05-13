@@ -22,7 +22,7 @@ class ArticleStockPredictionResourceIT {
                 .param("periodicityType", PeriodicityType.WEEKLY.name())
                 .param("periodsNumber", "5")
                 .get().build();
-        System.out.print(json);
+        //System.out.print(json);
         assertNotNull(json);
     }
 
