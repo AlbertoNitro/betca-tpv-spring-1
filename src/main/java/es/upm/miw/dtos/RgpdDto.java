@@ -3,6 +3,7 @@ package es.upm.miw.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.upm.miw.documents.RgpdAgreement;
 import es.upm.miw.documents.RgpdAgreementType;
+
 import javax.validation.constraints.NotNull;
 import java.util.Base64;
 
@@ -40,12 +41,12 @@ public class RgpdDto {
         return printableAgreement;
     }
 
-    public void setPrintableAgreement(String printableAgreement) {
-        this.printableAgreement = printableAgreement;
-    }
-
     public void setPrintableAgreement(byte[] printableAgreement) {
         this.printableAgreement = Base64.getEncoder().encodeToString(printableAgreement);
+    }
+
+    public void setPrintableAgreement(String printableAgreement) {
+        this.printableAgreement = printableAgreement;
     }
 
     public boolean isAccepted() {
@@ -58,9 +59,14 @@ public class RgpdDto {
 
     @Override
     public String toString() {
+        String printableAgreementShort = "" + printableAgreement;
+        if (printableAgreementShort.length() > 100) {
+            printableAgreementShort = printableAgreementShort.substring(0, 100) +
+                    ".... (+" + printableAgreementShort.length() + " characters)";
+        }
         return "RgpdDto{" +
                 "agreementType='" + agreementType + '\'' +
-                ", printableAgreement='" + printableAgreement + '\'' +
+                ", printableAgreement='" + printableAgreementShort + '\'' +
                 '}';
     }
 }

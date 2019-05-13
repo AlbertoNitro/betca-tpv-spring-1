@@ -32,7 +32,7 @@ class CountArticleFromTicketsGroupByPeriodicityFunctionIT {
                 groupTicketsByPeriodicity(
                         randomTicketsService.randomTickets(LocalDateTime.now().minusMonths(12), 514),
                         PeriodicityType.MONTHLY));
-        System.out.print("countArticleFromTicketsGroupByPeriodicity...\n" + countArticleFromTicketsGroupByPeriodicity);
+        //System.out.print("countArticleFromTicketsGroupByPeriodicity...\n" + countArticleFromTicketsGroupByPeriodicity);
 
         int countArticles = countArticleFromTicketsGroupByPeriodicity.entrySet().stream().mapToInt(entry -> entry.getValue()).sum();
         assertThat(countArticles, is(1028));
