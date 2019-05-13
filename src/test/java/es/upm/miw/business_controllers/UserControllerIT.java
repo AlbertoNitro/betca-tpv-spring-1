@@ -100,7 +100,7 @@ public class UserControllerIT {
     @Test
     void testReadAll() {
         List<UserMinimumDto> users = userController.readAll();
-        System.out.println(users);
+        //System.out.println(users);
         assertTrue(users.size() > 1);
     }
 

@@ -37,7 +37,7 @@ class OfferControllerIT {
     @Test
     void testCreateOfferController() {
         this.offerOutputDto = this.offerController.create(this.offerInputDto);
-        System.out.println(this.offerOutputDto.toString());
+        //System.out.println(this.offerOutputDto.toString());
         assertNotNull(this.offerOutputDto.getId());
         assertEquals(this.offerInputDto.getOffername(), offerOutputDto.getOffername());
         assertNotNull(this.offerOutputDto.getEndDate());
