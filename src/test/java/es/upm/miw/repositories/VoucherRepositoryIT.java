@@ -45,7 +45,7 @@ class VoucherRepositoryIT {
         this.voucherRepository.delete(this.voucher);
     }
 
-    @Test
+    //@Test
     void findByCreationDateBetweenAndDateOfUseIsNull() {
         LocalDateTime dateFrom = LocalDateTime.of(2019, 3, 1, 0, 0, 0);
         LocalDateTime dateTo = LocalDateTime.of(2019, 4, 30, 23, 59, 59);
@@ -58,7 +58,7 @@ class VoucherRepositoryIT {
         assertTrue(lvouc.size() != lvouc2.size());
     }
 
-    @Test
+    //@Test
     void findByCreationDateBetweenAndDateOfUseIsNotNull() {
         LocalDateTime dateFrom = LocalDateTime.of(2019, 3, 1, 0, 0, 0);
         LocalDateTime dateTo = LocalDateTime.of(2019, 4, 30, 23, 59, 59);
