@@ -55,7 +55,7 @@ public class BudgetControllerIT {
     @Test
     void testReadAll() {
         List<BudgetDto> budgets = budgetController.readAll();
-        System.out.println(budgets);
+        //System.out.println(budgets);
         assertTrue(budgets.size() > 0);
     }
 

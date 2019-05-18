@@ -26,7 +26,7 @@ class GroupTicketsByPeriodicityFunctionIT {
         Map<String, List<Ticket>> groupTicketsByPeriodicity = groupTicketsByPeriodicity(
                 randomTicketsService.randomTickets(LocalDateTime.now().minusMonths(1), 514),
                 PeriodicityType.WEEKLY);
-        System.out.print("groupTicketsByPeriodicity..." + groupTicketsByPeriodicity);
+        //System.out.print("groupTicketsByPeriodicity..." + groupTicketsByPeriodicity);
 
         int countTickets = groupTicketsByPeriodicity.entrySet().stream().mapToInt(entry -> entry.getValue().size()).sum();
         assertThat(countTickets, is(514));

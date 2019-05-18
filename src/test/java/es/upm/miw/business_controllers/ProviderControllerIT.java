@@ -23,7 +23,7 @@ public class ProviderControllerIT {
     @Test
     void testReadAll() {
         List<ProviderMinimunDto> providers = providerController.readAll();
-        System.out.println(providers);
+        //System.out.println(providers);
         assertTrue(providers.size() > 1);
     }
 
