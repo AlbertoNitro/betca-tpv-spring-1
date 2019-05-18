@@ -35,7 +35,7 @@ class InvoiceRepositoryIT {
         assertEquals(5, bdInvoice.simpleId());
         assertEquals(LocalDate.now().getYear() + "5", invoice.getId());
         assertNotNull(bdInvoice.getCreationDated());
-        // this.invoiceRepository.deleteById(invoice.getId());
+        this.invoiceRepository.deleteById(invoice.getId());
     }
 
     @Test
