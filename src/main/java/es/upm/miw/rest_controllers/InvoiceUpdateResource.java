@@ -20,10 +20,12 @@ public class InvoiceUpdateResource {
     private InvoiceUpdateController invoiceUpdateController;
 
     public static final String INVOICEUPDATE = "/invoice-update";
+
     @GetMapping()
     public List<InvoiceUpdateDto> getAll() {
         return invoiceUpdateController.getAll();
     }
+
     @GetMapping(value = MOBILEID)
     public List<InvoiceUpdateDto> getInvoicesByMobile(@PathVariable String mobile) {
         return invoiceUpdateController.getInvoiceByMobile(mobile);
