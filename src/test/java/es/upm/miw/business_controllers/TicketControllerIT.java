@@ -46,7 +46,7 @@ public class TicketControllerIT {
         this.ticket.setId("1395");
         this.ticket.setShoppingList(this.shoppings);
         this.ticketRepository.save(this.ticket);
-        this.ticketModificationStateOrAmountDto = new TicketModificationStateOrAmountDto(this.ticket);
+        this.ticketModificationStateOrAmountDto = new TicketModificationStateOrAmountDto(this.ticket, false);
         this.ticketModificationStateOrAmountDto.setId("1395");
         this.modifiedShopping = new ShoppingModificationStateOrAmountDto(this.shoppings[0]);
         this.modifiedShoppings = new ArrayList<>();

@@ -65,10 +65,42 @@ class TicketResourceIT {
                 new ShoppingDto("1", "", new BigDecimal("100.00"), 1, BigDecimal.ZERO,
                         new BigDecimal("100.00"), true);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(null, new BigDecimal("100.00")
-                , BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto), "Nota del ticket...");
+                , BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto), "Nota del ticket...", "Nota Regalo");
         byte[] pdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
                 .path(TicketResource.TICKETS).body(ticketCreationInputDto)
                 .post().build();
+        assertNotNull(pdf);
+    }
+
+    @Test
+    void testCreateGiftTicketWithNullId() {
+        byte[] pdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).path(TicketResource.GIFT).param("id", null)
+                .get().build();
+        assertNotNull(pdf);
+    }
+
+    @Test
+    void testCreateGiftTicketNull() {
+        byte[] pdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).path(TicketResource.GIFT).get().build();
+        assertNotNull(pdf);
+    }
+
+    @Test
+    void testCreateGiftTicketNotFoundId() {
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                this.restService.loginAdmin().restBuilder().path(TicketResource.TICKETS)
+                        .path(TicketResource.GIFT).param("id", "invalid id")
+                        .get().build());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    }
+
+    @Test
+    void testCreateGiftTicketWithId() {
+        byte[] pdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(TicketResource.TICKETS).path(TicketResource.GIFT).param("id", "201901121")
+                .get().build();
         assertNotNull(pdf);
     }
 
@@ -79,7 +111,7 @@ class TicketResourceIT {
                         new BigDecimal("100.00"), false);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto("666666004",
                 BigDecimal.TEN, BigDecimal.TEN, BigDecimal.TEN, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo");
         byte[] pdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
                 .path(TicketResource.TICKETS).body(ticketCreationInputDto)
                 .post().build();
@@ -96,7 +128,7 @@ class TicketResourceIT {
                         new BigDecimal("100.00"), false);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto("666666004",
                 new BigDecimal("20.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 this.restService.loginAdmin().restBuilder().path(TicketResource.TICKETS)
                         .body(ticketCreationInputDto).post().build()
@@ -112,7 +144,7 @@ class TicketResourceIT {
                 BigDecimal.ZERO, new BigDecimal("100.00"), true);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile,
                 new BigDecimal("100.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
                 .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
         //Search setup
@@ -162,7 +194,7 @@ class TicketResourceIT {
                 BigDecimal.ZERO, new BigDecimal("100.00"), true);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(null,
                 new BigDecimal("100.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         Ticket ticket1 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         Ticket ticket2 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         Ticket ticket3 = this.ticketController.createTicketForTests(ticketCreationInputDto);
@@ -196,7 +228,7 @@ class TicketResourceIT {
                 BigDecimal.ZERO, new BigDecimal("100.00"), true);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
                 new BigDecimal("100.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         Ticket ticket1 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         Ticket ticket3 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto.setUserMobile(userMobile2);
@@ -225,19 +257,19 @@ class TicketResourceIT {
                 BigDecimal.ZERO, new BigDecimal("100.00"), true);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto("666666005",
                 new BigDecimal("100.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         Ticket ticket1 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto("666666005",
                 new BigDecimal("200.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         Ticket ticket2 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto("666666005",
                 new BigDecimal("300.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto,
-                shoppingDto),"Nota del ticket...");
+                shoppingDto),"Nota del ticket...", "Nota Regalo...");
         Ticket ticket3 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto("666666005",
                 new BigDecimal("400.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto,
-                shoppingDto, shoppingDto),"Nota del ticket...");
+                shoppingDto, shoppingDto),"Nota del ticket...", "Nota Regalo...");
         Ticket ticket4 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         this.ticketRepository.save(ticket1);
         this.ticketRepository.save(ticket2);
@@ -253,7 +285,7 @@ class TicketResourceIT {
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(2, results.length);
         for(TicketQueryOutputDto result: results){
-            LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
+           // LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
         }
     }
 
@@ -265,19 +297,19 @@ class TicketResourceIT {
                 BigDecimal.ZERO, new BigDecimal("100.00"), true);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
                 new BigDecimal("100.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         Ticket ticket1 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
                 new BigDecimal("200.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         Ticket ticket2 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile2,
                 new BigDecimal("300.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto,
-                shoppingDto),"Nota del ticket...");
+                shoppingDto),"Nota del ticket...", "Nota Regalo...");
         Ticket ticket3 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile2,
                 new BigDecimal("400.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto,
-                shoppingDto, shoppingDto),"Nota del ticket...");
+                shoppingDto, shoppingDto),"Nota del ticket...", "Nota Regalo...");
         Ticket ticket4 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         this.ticketRepository.save(ticket1);
         this.ticketRepository.save(ticket2);
@@ -293,9 +325,9 @@ class TicketResourceIT {
                 .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(1, results.length);
-        for(TicketQueryOutputDto result: results){
-            LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
-        }
+        //for(TicketQueryOutputDto result: results){
+            //LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
+        //}
     }
 
     @Test
@@ -311,19 +343,19 @@ class TicketResourceIT {
                 BigDecimal.ZERO, new BigDecimal("100.00"), true);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
                 new BigDecimal("100.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         Ticket ticket1 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
                 new BigDecimal("200.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         Ticket ticket2 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile2,
                 new BigDecimal("300.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto,
-                shoppingDto),"Nota del ticket...");
+                shoppingDto),"Nota del ticket...", "Nota Regalo...");
         Ticket ticket3 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile2,
                 new BigDecimal("400.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto,
-                shoppingDto, shoppingDto),"Nota del ticket...");
+                shoppingDto, shoppingDto),"Nota del ticket...", "Nota Regalo...");
         Ticket ticket4 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticket1.setCreationDate(ticket1Date);
         ticket2.setCreationDate(ticket2Date);
@@ -345,7 +377,7 @@ class TicketResourceIT {
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(2, results.length);
         for(TicketQueryOutputDto result: results){
-            LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
+            //LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
         }
     }
 
@@ -362,19 +394,19 @@ class TicketResourceIT {
                 BigDecimal.ZERO, new BigDecimal("100.00"), true);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
                 new BigDecimal("100.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         Ticket ticket1 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
                 new BigDecimal("200.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         Ticket ticket2 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile2,
                 new BigDecimal("300.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto,
-                shoppingDto),"Nota del ticket...");
+                shoppingDto),"Nota del ticket...", "Nota Regalo...");
         Ticket ticket3 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile2,
                 new BigDecimal("400.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto,
-                shoppingDto, shoppingDto),"Nota del ticket...");
+                shoppingDto, shoppingDto),"Nota del ticket...", "Nota Regalo...");
         Ticket ticket4 = this.ticketController.createTicketForTests(ticketCreationInputDto);
         ticket1.setCreationDate(ticket1Date);
         ticket2.setCreationDate(ticket2Date);
@@ -397,7 +429,7 @@ class TicketResourceIT {
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(1, results.length);
         for(TicketQueryOutputDto result: results){
-            LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
+            //LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
         }
     }
 
@@ -410,7 +442,7 @@ class TicketResourceIT {
                         new BigDecimal("100.00"), false);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile,
                 BigDecimal.TEN, BigDecimal.TEN, BigDecimal.TEN, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
                 .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
         this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
@@ -420,7 +452,7 @@ class TicketResourceIT {
                         new BigDecimal("200.00"), true);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile,
                 new BigDecimal("200.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
                 .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
         TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
@@ -440,12 +472,12 @@ class TicketResourceIT {
                 BigDecimal.ZERO, new BigDecimal("100.00"), false);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
                 new BigDecimal("100.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
                 .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
         ticketCreationInputDto = new TicketCreationInputDto(userMobile2,
                 new BigDecimal("200.00"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto, shoppingDto),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
                 .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
         //Search by Total Range AND User Mobile
@@ -460,7 +492,7 @@ class TicketResourceIT {
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
         assertEquals(1, results.length);
         for(TicketQueryOutputDto result: results){
-            LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
+            //LogManager.getLogger().debug(">>>>> Ticket ID " + result.getId() + " TOTAL: " + result.getTotal());
         }
     }
 
@@ -482,14 +514,14 @@ class TicketResourceIT {
                 BigDecimal.ZERO, new BigDecimal("27.80"), false);
         TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
                 new BigDecimal("127.80"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto1, shoppingDto2),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
                 .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
         ShoppingDto shoppingDto3 = new ShoppingDto(articleId, "", new BigDecimal("27.80"), 1,
                 BigDecimal.ZERO, new BigDecimal("27.80"), true);
         ticketCreationInputDto = new TicketCreationInputDto(userMobile1,
                 new BigDecimal("27.80"), BigDecimal.ZERO, BigDecimal.ZERO, Arrays.asList(shoppingDto3),
-                "Nota del ticket...");
+                "Nota del ticket...", "Nota Regalo...");
         this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
                 .path(TicketResource.TICKETS).body(ticketCreationInputDto).post().build();
         //Setup Search
@@ -532,7 +564,7 @@ class TicketResourceIT {
     @Test
     void testUpdateModifiedTicketAndPdf() {
         Ticket ticket = ticketController.readTicketById("201901121");
-        TicketModificationStateOrAmountDto modifiedTicket = new TicketModificationStateOrAmountDto(ticket);
+        TicketModificationStateOrAmountDto modifiedTicket = new TicketModificationStateOrAmountDto(ticket, false);
         byte[] pdf = restService.loginAdmin()
                 .restBuilder(new RestBuilder<byte[]>())
                 .clazz(byte[].class)

@@ -70,7 +70,7 @@ public class TimeClockResourceIT {
         String dateFromMs = "" + Instant.now().plus(8, ChronoUnit.HOURS).toEpochMilli();
         String dateToMs = "" + Instant.now().toEpochMilli();
         String mobile = "666666000";
-        LogManager.getLogger().debug(">>>>> DateFrom : " + dateFromMs + " DateTo: " + dateToMs + " userMobile: " + mobile);
+        //LogManager.getLogger().debug(">>>>> DateFrom : " + dateFromMs + " DateTo: " + dateToMs + " userMobile: " + mobile);
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<TimeClockOutputDto[]>()).clazz(TimeClockOutputDto[].class)
                 .path(TimeClockResource.TIMECLOCK).path(TimeClockResource.SEARCH)
@@ -86,7 +86,7 @@ public class TimeClockResourceIT {
         String dateFromMs = "" + Instant.now().toEpochMilli();
         String dateToMs = "" + Instant.now().plus(8, ChronoUnit.HOURS).toEpochMilli();
         String mobile = "666000";
-        LogManager.getLogger().debug(">>>>> DateFrom : " + dateFromMs + " DateTo: " + dateToMs + " userMobile: " + mobile);
+        //LogManager.getLogger().debug(">>>>> DateFrom : " + dateFromMs + " DateTo: " + dateToMs + " userMobile: " + mobile);
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<TimeClockOutputDto[]>()).clazz(TimeClockOutputDto[].class)
                 .path(TimeClockResource.TIMECLOCK).path(TimeClockResource.SEARCH)

@@ -25,9 +25,6 @@ public interface ArticleRepository extends MongoRepository<Article, String> {
 
     List<ArticleSearchOutputDto> findByReferenceNullAndProviderNull();
 
-    //findFirstByOrderByRegistrationDateDescCodeDesc
-    //findByCodeStartingWithOrderByRegistrationDateDescCodeDesc
-    //findFirstByOrderByRegistrationDateDescCodeDescStartingWith
     Article findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(String prefix);
 
     //@Query(value = "{'provider.id':?0}", fields = "{'_id':0,'code':1}")

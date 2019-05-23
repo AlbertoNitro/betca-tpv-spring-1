@@ -34,6 +34,9 @@ public class Ticket {
 
     private String note;
 
+    @DBRef(lazy = true)
+    private GiftTicket giftTicket;
+
     @DBRef
     private User user;
 
@@ -151,6 +154,14 @@ public class Ticket {
         this.note = note;
     }
 
+    public GiftTicket getGiftTicket() {
+        return giftTicket;
+    }
+
+    public void setGiftTicket(GiftTicket giftTicket) {
+        this.giftTicket = giftTicket;
+    }
+
     public BigDecimal getTotal() {
         BigDecimal total = new BigDecimal(0);
         for (Shopping shopping : shoppingList) {
@@ -190,6 +201,7 @@ public class Ticket {
                 ", card=" + card +
                 ", voucher=" + voucher +
                 ", note='" + note + '\'' +
+                ", giftTicket=" + giftTicket +
                 ", user=" + user +
                 '}';
     }

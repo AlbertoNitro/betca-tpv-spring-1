@@ -59,7 +59,7 @@ public class TimeClock {
     }
 
     public Long getTotalHours() {
-        return totalHours = Duration.between(this.clockoutDate, this.clockinDate).toHours();
+        return totalHours;
     }
 
     public void setTotalHours(Long totalHours) {
@@ -80,11 +80,12 @@ public class TimeClock {
 
     public void clockout() {
         this.clockoutDate = LocalDateTime.now();
+        this.totalHours = Duration.between(this.clockinDate, this.clockoutDate).toHours();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {

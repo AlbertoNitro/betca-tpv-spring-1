@@ -1,5 +1,9 @@
 package es.upm.miw.business_controllers;
 
+import es.upm.miw.business_services.EmailServiceImpl;
+import es.upm.miw.documents.*;
+import es.upm.miw.exceptions.BadRequestException;
+import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Order;
 import es.upm.miw.documents.OrderLine;
@@ -8,11 +12,19 @@ import es.upm.miw.dtos.OrderDto;
 import es.upm.miw.dtos.OrderSearchDto;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
+import es.upm.miw.repositories.TicketRepository;
+import org.apache.logging.log4j.LogManager;
 import es.upm.miw.repositories.ProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
+
+import es.upm.miw.dtos.OrderDto;
+import es.upm.miw.dtos.OrderSearchDto;
 import org.springframework.stereotype.Controller;
 
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,12 +36,68 @@ public class OrderController {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    ArticleRepository articleRepository;
+
+    @Autowired
+    TicketRepository ticketRepository;
+
+    TicketController ticketController;
+
+    @Autowired
+    EmailServiceImpl emailService;
+
+    public Order closeOrder(String orderId, OrderLine[] orderLine) {
+        Order closeOrder = orderRepository.findById(orderId).orElse(null);
+        if(orderLine.length > 0) {
+            closeOrder.close();
+            closeOrder.setOrderLines(orderLine);
+            updateArticleStock(closeOrder);
+            closeOrder = orderRepository.save(closeOrder);
+        } else {
+            throw new BadRequestException("orderLine is empty");
+        }
+
+        return closeOrder;
+    }
+
+    public List<User> sendArticlesFromOrderLine(OrderLine[] orderLine) {
+        List<User> users = new ArrayList<>();
+        for(OrderLine orderLineSingle : orderLine) {
+            LogManager.getLogger().debug("Probando");
+            users = getUsersWithNotCommittedTickets(orderLineSingle.getArticle().getCode());
+            for (User user : users) {
+                LogManager.getLogger().debug("Usuarios: " + user.getEmail());
+            }
+        }
+        return users;
+    }
+
+    private void updateArticleStock(@NotNull Order order) {
+
+        OrderLine[] orderLine = order.getOrderLines();
+        List<User> users = new ArrayList<>();
+
+        for (OrderLine orderLineSingle : orderLine) {
+            Article article = orderLineSingle.getArticle();
+            Article articleDB = this.articleRepository.findById(article.getCode()).get();
+            users = getUsersWithNotCommittedTickets(article.getCode());
+            articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
+            articleRepository.save(articleDB);
+            for (User user : users) {
+                //LogManager.getLogger().debug("Usuarios: " + user.getEmail());
+                sendNotificationAvailableStock(user, "Stock available of " + articleDB.getReference());
+            }
+        }
+    }
+
+    private void sendNotificationAvailableStock(User user, String message) {
+        emailService.sendSimpleMessage(user.getEmail(), "Notification", message);
+    }
+
     private List<OrderSearchDto> orderSearchDtos;
 
 
-
-    @Autowired
-    private ArticleRepository articleRepository;
 
     @Autowired
     private ProviderRepository providerRepository;
@@ -107,5 +175,19 @@ public class OrderController {
         OrderSearchDto orderSearchDto;
         orderSearchDto = new OrderSearchDto(dto.getDescription(), orderLine.getArticle().getDescription(), orderLine.getRequiredAmount(), orderLine.getFinalAmount(), dto.getOpeningDate(), dto.getClosingDate());
         orderSearchDtos.add(orderSearchDto);
+    }
+
+    private List<User> getUsersWithNotCommittedTickets(String code) {
+        List<Ticket> Tickets = this.ticketRepository.findByShoppingListArticle(code);
+        List<User> user = new ArrayList<>();
+        for(Ticket item: Tickets) {
+            //LogManager.getLogger().debug("Articulo nombre " + item.getUser());
+            for(Shopping article : item.getShoppingList()) {
+                if(article.getShoppingState() == ShoppingState.NOT_COMMITTED) {
+                    user.add(item.getUser());
+                }
+            }
+        }
+        return user;
     }
 }

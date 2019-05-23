@@ -100,7 +100,7 @@ public class UserControllerIT {
     @Test
     void testReadAll() {
         List<UserMinimumDto> users = userController.readAll();
-        System.out.println(users);
+        //System.out.println(users);
         assertTrue(users.size() > 1);
     }
 
@@ -159,6 +159,37 @@ public class UserControllerIT {
     void testreadAllOnlyCustomer() {
         List<UserMinimumDto> users = userController.readAllByUsernameDniAddressRoles("","","","",this.user.getRoles());
         assertEquals(this.user.getUsername(), users.get(0).getUsername());
+    }
+
+    @Test
+    void testValidatorPassword() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile(this.user.getMobile());
+        userProfileDto.setPassword("666001110");
+        Boolean result = this.userController.validatorPassword(userProfileDto.getMobile(), userProfileDto);
+        assertEquals(true, result);
+    }
+
+    @Test
+    void testValidatorIncorrectPassword() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile(this.user.getMobile());
+        userProfileDto.setPassword("");
+        Boolean result = this.userController.validatorPassword(userProfileDto.getMobile(), userProfileDto);
+        assertEquals(false, result);
+    }
+
+    @Test
+    void testValidatorPasswordNotFoundMobile() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile("no-existent-mobile-user");
+        assertThrows(NotFoundException.class, () -> this.userController.validatorPassword(userProfileDto.getMobile(), userProfileDto));
+    }
+
+    @Test
+    void testValidatorPasswordNoMobile() {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        assertThrows(BadRequestException.class, () -> this.userController.validatorPassword(null, userProfileDto));
     }
 
     @AfterEach

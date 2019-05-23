@@ -42,6 +42,18 @@ public class Invoice {
         this.ticket = ticket;
     }
 
+    public void setBaseTax(BigDecimal baseTax) {
+        this.baseTax = baseTax;
+    }
+
+    public void setTax(BigDecimal tax) {
+        this.tax = tax;
+    }
+
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
+    }
+
     public String getId() {
         return id;
     }

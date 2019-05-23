@@ -1,15 +1,31 @@
 package es.upm.miw.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import es.upm.miw.documents.RgpdAgreement;
+import es.upm.miw.documents.RgpdAgreementType;
+
+import javax.validation.constraints.NotNull;
+import java.util.Base64;
+
 public class RgpdDto {
 
+    @NotNull
     private String agreementType;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String printableAgreement;
 
     private boolean accepted;
 
     public RgpdDto() {
-        // Empty for framework
+        this.agreementType = RgpdAgreementType.BASIC.toString();
+        this.accepted = false;
+    }
+
+    public RgpdDto(RgpdAgreement rgpd) {
+        this.printableAgreement = Base64.getEncoder().encodeToString(rgpd.getAgreement());
+        this.accepted = true;
+        this.setAgreementType(rgpd.getType().toString());
     }
 
     public String getAgreementType() {
@@ -20,8 +36,13 @@ public class RgpdDto {
         this.agreementType = agreementType;
     }
 
+
     public String getPrintableAgreement() {
         return printableAgreement;
+    }
+
+    public void setPrintableAgreement(byte[] printableAgreement) {
+        this.printableAgreement = Base64.getEncoder().encodeToString(printableAgreement);
     }
 
     public void setPrintableAgreement(String printableAgreement) {
@@ -38,9 +59,14 @@ public class RgpdDto {
 
     @Override
     public String toString() {
+        String printableAgreementShort = "" + printableAgreement;
+        if (printableAgreementShort.length() > 100) {
+            printableAgreementShort = printableAgreementShort.substring(0, 100) +
+                    ".... (+" + printableAgreementShort.length() + " characters)";
+        }
         return "RgpdDto{" +
                 "agreementType='" + agreementType + '\'' +
-                ", printableAgreement='" + printableAgreement + '\'' +
+                ", printableAgreement='" + printableAgreementShort + '\'' +
                 '}';
     }
 }

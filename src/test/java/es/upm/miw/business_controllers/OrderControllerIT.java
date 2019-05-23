@@ -5,11 +5,15 @@ import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Order;
 import es.upm.miw.documents.OrderLine;
 import es.upm.miw.dtos.OrderDto;
+import es.upm.miw.documents.User;
+import es.upm.miw.dtos.OrderDto;
 import es.upm.miw.dtos.OrderSearchDto;
 import es.upm.miw.dtos.ProviderDto;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
+import es.upm.miw.rest_controllers.OrderResource;
+import es.upm.miw.rest_controllers.RestBuilder;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,10 +24,13 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestConfig
 public class OrderControllerIT {
+
+    private Order order;
 
     @Autowired
     private OrderController orderController;
@@ -42,7 +49,7 @@ public class OrderControllerIT {
                 Article article = this.articleRepository.findById(articlesId[i]).get();
                 OrderLine[] orderLines = Arrays.array(new OrderLine(article, 4), new OrderLine(article, 5));
                 Order order = new Order("OrderDescrip_" + articlesId[i], article.getProvider(), orderLines);
-                this.orderRepository.save(order);
+                this.order = this.orderRepository.save(order);
             }
         }
     }
@@ -73,5 +80,12 @@ public class OrderControllerIT {
         List<OrderSearchDto> order = orderController.findById("OrderDescrip_8400000000024");
         System.out.println("orderRead: "+ order);
         assertNotNull(order.size() >=0);
+    }
+
+    @Test
+    void testUsersWithArticleReserved() {
+        List<User> users = this.orderController.sendArticlesFromOrderLine(this.order.getOrderLines());
+        assertTrue(users.size() > 0);
+        this.orderRepository.delete(this.order);
     }
 }

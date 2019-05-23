@@ -2,6 +2,7 @@ package es.upm.miw.data_services;
 
 import es.upm.miw.business_services.Barcode;
 import es.upm.miw.documents.*;
+import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.repositories.*;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,13 @@ public class DatabaseSeederService {
     @Autowired
     public TicketRepository ticketRepository;
     @Autowired
+    public GiftTicketRepository giftTicketRepository;
+    @Autowired
     public InvoiceRepository invoiceRepository;
     @Autowired
     public CashierClosureRepository cashierClosureRepository;
     @Autowired
     private Environment environment;
-
-    @Autowired
-    private Barcode barcode;
 
     @Value("${miw.admin.mobile}")
     private String mobile;
@@ -122,6 +122,7 @@ public class DatabaseSeederService {
         this.ticketRepository.deleteAll();
         this.timeClockRepository.deleteAll();
         this.articleRepository.deleteAll();
+        this.giftTicketRepository.deleteAll();
 
         this.cashierClosureRepository.deleteAll();
         this.providerRepository.deleteAll();
@@ -168,6 +169,7 @@ public class DatabaseSeederService {
         this.tagRepository.saveAll(tpvGraph.getTagList());
         this.ticketRepository.saveAll(tpvGraph.getTicketList());
         this.timeClockRepository.saveAll(tpvGraph.getTimeClockList());
+        this.giftTicketRepository.saveAll(tpvGraph.getGiftTicketList());
 
         this.familyCompositeRepository.saveAll(tpvGraph.getFamilyCompositeList());
         this.invoiceRepository.saveAll(tpvGraph.getInvoiceList());
@@ -188,10 +190,10 @@ public class DatabaseSeederService {
         }
 
         if (nextCodeWithoutRedundancy > LAST_CODE_ARTICLE) {
-            throw new RuntimeException("There is not next code EAN");
+            throw new ConflictException("There is not next code EAN");
         }
 
-        return this.barcode.generateEan13code(nextCodeWithoutRedundancy);
+        return new Barcode().generateEan13code(nextCodeWithoutRedundancy);
     }
 
     private void seedDatabaseWithArticlesFamilyForView() {
@@ -208,6 +210,8 @@ public class DatabaseSeederService {
 
         ArticlesFamily c6 = new FamilyArticle(this.articleRepository.findById("8400000000017").get());
         ArticlesFamily c7 = new FamilyArticle(this.articleRepository.findById("8400000000024").get());
+
+
         this.articlesFamilyRepository.save(c3);
         this.articlesFamilyRepository.save(c4);
         this.articlesFamilyRepository.save(c5);

@@ -27,6 +27,9 @@ public class TicketController {
     private TicketRepository ticketRepository;
 
     @Autowired
+    private GiftTicketRepository giftTicketRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -72,6 +75,12 @@ public class TicketController {
         Ticket ticket = new Ticket(this.nextId(), ticketCreationDto.getVoucher(), ticketCreationDto.getCard(),
                 ticketCreationDto.getCash(), shoppingList.toArray(new Shopping[0]), user);
         ticket.setNote(ticketCreationDto.getNote());
+
+        GiftTicket giftTicket = new GiftTicket ("TR" + LocalDateTime.now().toString(),ticketCreationDto.getGiftNote());
+        this.giftTicketRepository.save(giftTicket);
+
+        ticket.setGiftTicket(giftTicket);
+
         this.ticketRepository.save(ticket);
         CashierClosure cashierClosure = this.cashierClosureRepository.findFirstByOrderByOpeningDateDesc();
         cashierClosure.voucher(ticketCreationDto.getVoucher());
@@ -105,9 +114,9 @@ public class TicketController {
         ticketsFoundByDateRange = this.findTicketsByDateRange(dateStart, dateEnd);
         ticketsFoundByTotalRange = this.findTicketsByTotalRange(totalMin, totalMax);
 
-        LogManager.getLogger().debug("ticketsFoundByMobile: >>>>> " + ticketsFoundByMobile.size());
-        LogManager.getLogger().debug("ticketsFoundByDateRange: >>>>> " + ticketsFoundByDateRange.size());
-        LogManager.getLogger().debug("ticketsFoundByTotalRange: >>>>> " + ticketsFoundByTotalRange.size());
+        //LogManager.getLogger().debug("ticketsFoundByMobile: >>>>> " + ticketsFoundByMobile.size());
+        //LogManager.getLogger().debug("ticketsFoundByDateRange: >>>>> " + ticketsFoundByDateRange.size());
+        //LogManager.getLogger().debug("ticketsFoundByTotalRange: >>>>> " + ticketsFoundByTotalRange.size());
 
         ticketResults = processTicketResults(ticketsFoundByMobile, ticketsFoundByDateRange, ticketsFoundByTotalRange,
                 findByTotalRange, findByUserMobile, findByDateRange);
@@ -194,6 +203,14 @@ public class TicketController {
 
     public byte[] createTicketAndPdf(TicketCreationInputDto ticketCreationDto) {
         return pdfService.generateTicket(this.createTicket(ticketCreationDto));
+    }
+
+    public byte[] generateGiftTicketController(String id) {
+        if (id == null || id.isEmpty()){
+            return pdfService.generateGiftTicket(this.ticketRepository.findFirstByOrderByCreationDateDescIdDesc());
+        }else{
+            return pdfService.generateGiftTicket(readTicketById(id));
+        }
     }
 
     public Ticket createTicketForTests(TicketCreationInputDto ticketCreationDto) {
@@ -286,7 +303,16 @@ public class TicketController {
     }
 
     public TicketModificationStateOrAmountDto obtainTicketModifiedById(String id) {
-        return new TicketModificationStateOrAmountDto(this.readTicketById(id));
+        boolean isGiftTicket = false;
+
+        Ticket ticket = this.ticketRepository.findById(id).orElse(new Ticket());
+
+        if(ticket.getId()==null || ticket.getId().isEmpty() || "null".equals(ticket.getId())){
+            isGiftTicket = true;
+            ticket = this.ticketRepository.findByGiftTicket(id).orElseThrow(() -> new NotFoundException("Ticket id (" + id + ")"));
+        }
+
+        return new TicketModificationStateOrAmountDto(ticket, isGiftTicket&&ticket.getGiftTicket().isGiftTicketExpired());
     }
 
     public Ticket readTicketById(String id) {

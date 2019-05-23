@@ -28,30 +28,34 @@ public class BudgetControllerIT {
     private BudgetRepository budgetRepository;
 
     private Budget budget;
-
-    private ShoppingDto[] createShoppingListDto() {
-        ShoppingDto[] shoppings = new ShoppingDto[2];
-        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20").build());
-        Shopping shopping2 = new Shopping(2, new BigDecimal(1), Article.builder("2").retailPrice("5").build());
-
-        ShoppingDto shoppingDto = new ShoppingDto(shopping);
-        ShoppingDto shoppingDto2 = new ShoppingDto(shopping2);
-        shoppings[0] = shoppingDto;
-        shoppings[1] = shoppingDto2;
-
-        return shoppings;
-    }
+    private ShoppingDto[] shoppingsDto;
+    private Shopping[] shoppings;
 
     @BeforeEach
     void seedDb() {
-        this.budget = new Budget();
+        this.shoppings = new Shopping[2];
+        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20")
+                .description("Varios").build());
+        Shopping shopping2 = new Shopping(2, new BigDecimal(1), Article.builder("1").retailPrice("5")
+                .description("Varios2").build());
+        this.shoppings[0] = shopping;
+        this.shoppings[1] = shopping2;
+
+        this.shoppingsDto = new ShoppingDto[2];
+        ShoppingDto shoppingDto = new ShoppingDto(shopping);
+        ShoppingDto shoppingDto2 = new ShoppingDto(shopping2);
+        this.shoppingsDto[0] = shoppingDto;
+        this.shoppingsDto[1] = shoppingDto2;
+
+        this.budget = new Budget(this.shoppings);
+
         this.budgetRepository.save(budget);
     }
 
     @Test
     void testReadAll() {
         List<BudgetDto> budgets = budgetController.readAll();
-        System.out.println(budgets);
+        //System.out.println(budgets);
         assertTrue(budgets.size() > 0);
     }
 
@@ -64,12 +68,15 @@ public class BudgetControllerIT {
     }
 
     @Test
-    void testCreate() {
-        ShoppingDto[] shoppings = this.createShoppingListDto();
-        BudgetDto budget = budgetController.create(shoppings);
-        System.out.println(budget);
-        assertNotNull(budget);
-        assertNotNull(budget.getId());
+    void testCreatePdf() {
+        byte[] budgetPdf = budgetController.createPdf(this.shoppingsDto);
+        assertNotNull(budgetPdf);
+    }
+
+    @Test
+    void testCreatePdfById() {
+        byte[] budgetPdf = budgetController.createPdfById(this.budget.getId());
+        assertNotNull(budgetPdf);
     }
 
     @Test

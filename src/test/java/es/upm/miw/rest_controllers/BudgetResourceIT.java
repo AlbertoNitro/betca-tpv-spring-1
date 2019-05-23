@@ -33,24 +33,42 @@ class BudgetResourceIT {
     }
 
     @Test
-    void testCreate() {
+    void testCreatePdf() {
         ShoppingDto[] shoppings = new ShoppingDto[1];
-        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20").build());
+        Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20").
+                description("Varios").build());
         ShoppingDto shoppingDto = new ShoppingDto(shopping);
         shoppings[0] = shoppingDto;
 
-        BudgetDto budgetDto = this.restService.loginAdmin().restBuilder(new RestBuilder<BudgetDto>())
-                .clazz(BudgetDto.class).path(BudgetResource.BUDGETS).body(shoppings).post().build();
-        assertNotNull(budgetDto);
-        assertNotNull(budgetDto.getId());
+        byte[] budgetPdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>())
+                .clazz(byte[].class).path(BudgetResource.BUDGETS).body(shoppings).post().build();
+        assertNotNull(budgetPdf);
+    }
+
+    @Test
+    void testCreatePdfById() {
+        byte[] budgetPdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>())
+                .clazz(byte[].class).path(BudgetResource.BUDGETS+BudgetResource.PDF).path(BudgetResource.ID)
+                .expand(this.existentBudget.getId()).get().build();
+        assertNotNull(budgetPdf);
     }
 
     @Test
     void testDelete() {
+        List<BudgetDto> budgetDtoList = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<BudgetDto[]>()).clazz(BudgetDto[].class)
+                .path(BudgetResource.BUDGETS)
+                .get().build());
+        int previousSize = budgetDtoList.size();
         this.restService.loginAdmin().restBuilder(new RestBuilder<BudgetDto>())
                 .clazz(BudgetDto.class).path(BudgetResource.BUDGETS).path(BudgetResource.ID)
                 .expand(this.existentBudget.getId())
                 .delete().build();
+        budgetDtoList = Arrays.asList(this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<BudgetDto[]>()).clazz(BudgetDto[].class)
+                .path(BudgetResource.BUDGETS)
+                .get().build());
+        assertTrue(budgetDtoList.size() < previousSize);
     }
 
     @Test

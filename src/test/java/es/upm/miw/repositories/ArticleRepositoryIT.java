@@ -111,4 +111,10 @@ class ArticleRepositoryIT {
     }
 
 
+
+    @Test
+    void testFindFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(){
+        Article article = articleRepository.findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc("84");
+        assertEquals("8400000000085", article.getCode());
+    }
 }

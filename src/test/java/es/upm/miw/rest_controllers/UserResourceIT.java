@@ -126,7 +126,7 @@ class UserResourceIT {
         Role[] rolesUpdate= new Role[]{Role.MANAGER};
         userRolesDto.setRoles(rolesUpdate);
         UserDto result = restUpdateRolesBuilder(existentUser.getMobile(), userRolesDto).build();
-       System.out.println(result);
+       //System.out.println(result);
         assertEquals(rolesUpdate.length, result.getRoles().length);
     }
 
@@ -146,7 +146,7 @@ class UserResourceIT {
                 .restBuilder(new RestBuilder<UserMinimumDto[]>()).clazz(UserMinimumDto[].class)
                 .path(UserResource.USERS).path(UserResource.QUERY)
                 .body(userQueryInputDto).post().build());
-        System.out.println(userMinimumDtoList);
+        //System.out.println(userMinimumDtoList);
         assertTrue(userMinimumDtoList.size() > 1);
     }
 
@@ -182,7 +182,7 @@ class UserResourceIT {
                 .restBuilder(new RestBuilder<UserMinimumDto[]>()).clazz(UserMinimumDto[].class)
                 .path(UserResource.USERS).path(UserResource.QUERY)
                 .body(userQueryInputDto).post().build());
-        System.out.println(userMinimumDtoList.size());
+        //System.out.println(userMinimumDtoList.size());
         assertTrue(userMinimumDtoList.size() > 1);
     }
     @Test
@@ -256,7 +256,7 @@ class UserResourceIT {
                 .restBuilder(new RestBuilder<UserMinimumDto[]>()).clazz(UserMinimumDto[].class)
                 .path(UserResource.USERS).path(UserResource.QUERY)
                 .body(userQueryInputDto).post().build());
-        System.out.println(userMinimumDtoList);
+        //System.out.println(userMinimumDtoList);
         assertEquals(4,userMinimumDtoList.size());
     }
 
@@ -271,7 +271,7 @@ class UserResourceIT {
                 .restBuilder(new RestBuilder<UserMinimumDto[]>()).clazz(UserMinimumDto[].class)
                 .path(UserResource.USERS).path(UserResource.QUERY)
                 .body(userQueryInputDto).post().build());
-        System.out.println(userMinimumDtoList);
+        //System.out.println(userMinimumDtoList);
         assertEquals(2,userMinimumDtoList.size());
     }
 
@@ -397,5 +397,35 @@ class UserResourceIT {
         userProfileDto.setPassword("nuevoPassword");
         UserProfileDto result = restUpdateProfileBuilder(existentUser.getMobile(), userProfileDto).build();
 
+    }
+
+    private RestBuilder<Boolean> restvalidatorBuilder(String mobile, UserProfileDto userProfileDto) {
+        return this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<Boolean>()).clazz(Boolean.class)
+                .path(UserResource.USERS).path(UserResource.PROFILES).path(UserResource.VALIDATORS).path("/" + mobile)
+                .body(userProfileDto)
+                .put();
+    }
+
+    @Test
+    void testValidatorPassword() {
+
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile(this.existentUser.getMobile());
+        //System.out.println(this.existentUser.getMobile());
+        userProfileDto.setPassword("pprueba");
+        boolean result = restvalidatorBuilder(existentUser.getMobile(), userProfileDto).build();
+
+    }
+
+    @Test
+    void testValidatorIncorrectPassword() {
+
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setMobile(this.existentUser.getMobile());
+        //System.out.println(this.existentUser.getMobile());
+        userProfileDto.setPassword("");
+        boolean result = restvalidatorBuilder(existentUser.getMobile(), userProfileDto).build();
+        assertEquals(false, result);
     }
 }

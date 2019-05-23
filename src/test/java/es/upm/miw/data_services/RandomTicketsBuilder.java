@@ -17,18 +17,29 @@ import java.util.List;
 import java.util.Map;
 
 public class RandomTicketsBuilder {
+    private ArticleRepository articleRepository;
     private Map<Article, Integer> articles = new HashMap<>();
     private LocalDateTime fromDate;
     private LocalDateTime toDate = LocalDateTime.now();
     private int numberOfTickets = 10;
 
-    public static List<Ticket> randomTickets(ArticleRepository articleRepository) {
-        return new RandomTicketsBuilder().
-                fromDate(LocalDateTime.now().minusMonths(1))
-                .numberOfTickets(5)
-                .addTicketArticle(articleRepository.findById("8400000000017").orElse(null), 3)
-                .addTicketArticle(articleRepository.findById("8400000000024").orElse(null), 2)
-                .build();
+    public RandomTicketsBuilder() {
+        super();
+    }
+
+    public RandomTicketsBuilder(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
+
+    public RandomTicketsBuilder randomTickets(LocalDateTime fromDate, int numberOfTickets, Map<String, Integer> mapArticleAmount) {
+        this.fromDate(fromDate).numberOfTickets(numberOfTickets);
+        mapArticleAmount.forEach((articleCode, amount) -> {
+            Article article = articleRepository.findById(articleCode).orElse(null);
+            if (article != null) {
+                this.addTicketArticle(article, amount);
+            }
+        });
+        return this;
     }
 
     public RandomTicketsBuilder numberOfTickets(int numberOfTickets) {

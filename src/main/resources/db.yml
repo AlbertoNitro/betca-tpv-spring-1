@@ -274,6 +274,19 @@ shoppingList:
     discount: 10
     article: *ar1
 
+giftTicketList:
+  - &gtil1
+    id: gt201901121
+    note: "gift ticket"
+
+  - &gtil2
+    id: gt201901122
+    note: "gift ticket"
+
+  - &gtil3
+    id: gt201901123
+    note: "gift ticket"
+
 ticketList:
   - &ti1
     id: 201901121
@@ -284,6 +297,8 @@ ticketList:
       - *sh1
       - *sh2
     user: *us4
+    giftTicket: *gtil1
+
   - &ti2
     id: 201901122
     reference: 6P0ISee_twnCisFmYGRFd5sGQqE
@@ -291,6 +306,8 @@ ticketList:
     shoppingList:
       - *sh3
     user: *us4
+    giftTicket: *gtil2
+
   - &ti3
     id: 201901123
     reference: 6P0ISee_twnGEzf8qA1BdAsGQqE
@@ -299,6 +316,7 @@ ticketList:
     shoppingList:
       - *sh4
       - *sh5
+    giftTicket: *gtil3
 
 # Budget
 budgetList:
@@ -324,3 +342,16 @@ familyCompositeList:
     familyType: ARTICLES
     reference: "Gm"
     description: "Games"
+
+#Invoice
+invoiceList:
+  - &in1
+    baseTax: 10
+    tax: 20
+    ticket: *ti1
+    user: *us4
+  - &in2
+    baseTax: 10
+    tax: 15
+    ticket: *ti2
+    user: *us4

@@ -1,4 +1,4 @@
-package es.upm.miw.dtos.stock_prediction;
+package es.upm.miw.dtos.output;
 
 public enum PeriodType {
     WEEK,
