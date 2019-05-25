@@ -1,6 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.TicketController;
+import es.upm.miw.documents.Article;
 import es.upm.miw.dtos.TicketModificationStateOrAmountDto;
 import es.upm.miw.dtos.input.TicketCreationInputDto;
 import es.upm.miw.dtos.input.TicketQueryInputDto;
@@ -21,6 +22,7 @@ public class TicketResource {
     public static final String QUERY = "/query";
     public static final String ORDER_ID = "/orderId";
     public static final String TICKET_ID = "/{id}";
+    public static final String DATE_SOLD = "/datesold/{datesold}";
 
     @Autowired
     private TicketController ticketController;
@@ -56,4 +58,10 @@ public class TicketResource {
     public byte[] generateGiftTicketResource(@Valid @RequestParam(required = false) String id) {
         return ticketController.generateGiftTicketController(id);
     }
+
+    @GetMapping(value = DATE_SOLD)
+    public List<Article> getDateSold(@PathVariable String datesold) {
+        return this.ticketController.getDateSold(datesold);
+    }
+
 }
