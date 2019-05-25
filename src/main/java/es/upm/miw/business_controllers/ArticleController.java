@@ -23,6 +23,9 @@ import java.util.stream.Collectors;
 @Controller
 public class ArticleController {
 
+    private static final Integer ZERO = 0;
+    private static final Integer ONE = 1;
+
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -52,7 +55,7 @@ public class ArticleController {
     }
 
     public List<ArticleDto> readArticlesMinimumStock(Integer minimumStock){
-        List<Article> articles = articleRepository.findByStockBetween(new Integer ( 0), minimumStock);
+        List<Article> articles = articleRepository.findByStockBetween(ZERO, minimumStock);
         List<ArticleDto> articleDtos = new ArrayList<>();
         for(Article article : articles){
             articleDtos.add(new ArticleDto(article));
@@ -61,7 +64,7 @@ public class ArticleController {
     }
 
     public List<ArticleDto> readArticlesReservation(){
-        List<Article> articles = articleRepository.findByStockLessThan(new Integer ( 1));
+        List<Article> articles = articleRepository.findByStockLessThan(ONE);
         List<ArticleDto> articleDtos = new ArrayList<>();
         for(Article article : articles){
             articleDtos.add(new ArticleDto(article));
