@@ -63,4 +63,14 @@ public class InvoiceUpdateController {
                                             convertStringToLocalDateTime(beforeDate));
         return convertInvoiceToInvoiceUpdateDto(invoices);
     }
+    public List<InvoiceUpdateDto> getInvoiceByMobileAndCreationDateBetween(String mobile,
+                                                                           String afterDate,
+                                                                           String beforeDate) {
+        Optional<User> userOptional = userRepository.findByMobile(mobile);
+        User user = userOptional.get();
+        List<Invoice> invoices = invoiceRepository
+                .findByUserAndCreationDateBetween(user, convertStringToLocalDateTime(afterDate),
+                        convertStringToLocalDateTime(beforeDate));
+        return convertInvoiceToInvoiceUpdateDto(invoices);
+    }
 }

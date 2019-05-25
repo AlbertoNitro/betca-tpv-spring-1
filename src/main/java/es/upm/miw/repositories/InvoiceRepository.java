@@ -13,4 +13,5 @@ public interface InvoiceRepository extends MongoRepository<Invoice, String> {
     public List<Invoice> findByUser(User user);
     public List<Invoice> findByCreationDateAfter(LocalDateTime afterDate);
     public List<Invoice> findByCreationDateBetween(LocalDateTime afterDate, LocalDateTime beforeDate);
+    public List<Invoice> findByUserAndCreationDateBetween(User user, LocalDateTime afterDate, LocalDateTime beforeDate);
 }
