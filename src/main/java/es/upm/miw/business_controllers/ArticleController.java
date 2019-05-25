@@ -51,6 +51,24 @@ public class ArticleController {
         return dtos;
     }
 
+    public List<ArticleDto> readArticlesMinimumStock(Integer minimumStock){
+        List<Article> articles = articleRepository.findByStockBetween(new Integer ( 0), minimumStock);
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        for(Article article : articles){
+            articleDtos.add(new ArticleDto(article));
+        }
+        return articleDtos;
+    }
+
+    public List<ArticleDto> readArticlesReservation(){
+        List<Article> articles = articleRepository.findByStockLessThan(new Integer ( 1));
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        for(Article article : articles){
+            articleDtos.add(new ArticleDto(article));
+        }
+        return articleDtos;
+    }
+
     public ArticleDto readArticle(String code) {
         return new ArticleDto(this.articleRepository.findById(code)
                 .orElseThrow(() -> new NotFoundException("Article code (" + code + ")")));
