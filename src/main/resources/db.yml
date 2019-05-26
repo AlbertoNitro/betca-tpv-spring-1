@@ -316,6 +316,7 @@ ticketList:
     shoppingList:
       - *sh4
       - *sh5
+    user: *us5
     giftTicket: *gtil3
 
 # Budget
@@ -355,3 +356,8 @@ invoiceList:
     tax: 15
     ticket: *ti2
     user: *us4
+  - &in3
+    baseTax: 10
+    tax: 21
+    ticket:
+    user: *us5

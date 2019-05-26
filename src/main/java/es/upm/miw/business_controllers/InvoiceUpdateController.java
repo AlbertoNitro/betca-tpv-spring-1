@@ -9,8 +9,11 @@ import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +42,18 @@ public class InvoiceUpdateController {
     }
     private LocalDateTime convertStringToLocalDateTime(String date) {
         System.out.println("Fecha: "+date);
-        return LocalDateTime.parse(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        Date convertedDate = null;
+        try{
+            convertedDate = simpleDateFormat.parse(date);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return convertedDate.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+
     }
     public List<InvoiceUpdateDto> getAll() {
         List<Invoice> invoices;

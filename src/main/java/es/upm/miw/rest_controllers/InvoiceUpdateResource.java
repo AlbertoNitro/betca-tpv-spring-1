@@ -17,8 +17,8 @@ import java.util.List;
 public class InvoiceUpdateResource {
     public static final String MOBILEID = "/mobile/{mobile}";
     public static final String FROMDATE = "/{fromdate}";
-    public static final String BETWEENDATES = "/{fromdate}/{untildate}";
-    public static final String MOBILEIDBETWEENDATES = "/mobile/{fromdate}/{untildate}";
+    public static final String BETWEENDATES = "/{afterDate}/{beforeDate}";
+    public static final String MOBILEIDBETWEENDATES = "/{mobile}/{afterDate}/{beforeDate}";
     @Autowired
     private InvoiceUpdateController invoiceUpdateController;
 
@@ -42,7 +42,7 @@ public class InvoiceUpdateResource {
             return invoiceUpdateController.getInvoiceByCreationDateBetween(afterDate, beforeDate);
     }
     @GetMapping(value = MOBILEIDBETWEENDATES)
-    public List<InvoiceUpdateDto> getInvoicesByCreationDateBetween(@PathVariable String mobile,
+    public List<InvoiceUpdateDto> getInvoicesByMobileAndCreationDateBetween(@PathVariable String mobile,
                                                                    @PathVariable String afterDate,
                                                                    @PathVariable String beforeDate) {
         return invoiceUpdateController.getInvoiceByMobileAndCreationDateBetween(mobile,
