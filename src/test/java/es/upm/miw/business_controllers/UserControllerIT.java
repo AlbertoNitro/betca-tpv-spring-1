@@ -33,7 +33,7 @@ public class UserControllerIT {
     @BeforeEach
     void seedDb() {
 
-        this.user = new User("123445", "123445", "666001110","123445","C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com");
+        this.user = new User("123445", "123445", "666001110","123445", "10", "C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com");
         this.user2 = new User("987654321", "987654", "111");
         this.userRepository.save(user);
         this.userRepository.save(user2);
@@ -57,7 +57,7 @@ public class UserControllerIT {
     @Test
     void testCreateUser() {
         UserDto userInputDto = new UserDto(new User("666547892", "user", "puser",
-                "123445","C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com"));
+                "123445","10","C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com"));
         UserDto userOutputDto = userController.create(userInputDto);
         assertEquals(userOutputDto.getMobile(), userInputDto.getMobile());
     }
@@ -152,12 +152,12 @@ public class UserControllerIT {
 
     @Test
     void testreadAllByUsernameDniAddressRoleCustomer() {
-        List<UserMinimumDto> users = userController.readAllByUsernameDniAddressRoles(this.user.getMobile(),this.user.getUsername(),this.user.getDni(),this.user.getAddress(),this.user.getRoles());
+        List<UserMinimumDto> users = userController.readAllByUsernameDniDiscountAddressRoles(this.user.getMobile(),this.user.getUsername(),this.user.getDni(),this.user.getDiscount(),this.user.getAddress(),this.user.getRoles());
         assertEquals(this.user.getUsername(), users.get(0).getUsername());
     }
     @Test
     void testreadAllOnlyCustomer() {
-        List<UserMinimumDto> users = userController.readAllByUsernameDniAddressRoles("","","","",this.user.getRoles());
+        List<UserMinimumDto> users = userController.readAllByUsernameDniDiscountAddressRoles("","","","", "",this.user.getRoles());
         assertEquals(this.user.getUsername(), users.get(0).getUsername());
     }
 
