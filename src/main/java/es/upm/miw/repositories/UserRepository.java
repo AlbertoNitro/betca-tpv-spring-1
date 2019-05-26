@@ -20,10 +20,11 @@ public interface UserRepository extends MongoRepository<User, String> {
             + "?#{ [0] == null ? { $where : 'true'} : { mobile : {$regex:[0], $options: 'i'} } },"
             + "?#{ [1] == null ? { $where : 'true'} : { username : {$regex:[1], $options: 'i'} } },"
             + "?#{ [2] == null ? { $where : 'true'} : { dni : {$regex:[2], $options: 'i'} } },"
-            + "?#{ [3] == null ? { $where : 'true'} : { address : {$regex:[3], $options: 'i'} } },"
+            + "?#{ [3] == null ? { $where : 'true'} : { discount : {$regex:[3], $options: 'i'} } },"
+            + "?#{ [4] == null ? { $where : 'true'} : { address : {$regex:[4], $options: 'i'} } },"
             + "{'roles':{$in:?4}}"
             + "] }")
-    List<UserMinimumDto> findByMobileUsernameDniAddressLikeNullSafeandRoles(String mobile, String username, String dni, String address, Role[]roles);
+    List<UserMinimumDto> findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles(String mobile, String username, String dni, String discount, String address, Role[]roles);
 
 
 }

@@ -8,6 +8,8 @@ public class UserQueryDto {
 
     private String dni;
 
+    private String discount;
+
     private String address;
 
     private boolean onlyCustomer;
@@ -16,10 +18,11 @@ public class UserQueryDto {
 
     }
 
-    public UserQueryDto(String username, String mobile, String dni, String address, boolean onlyCustomer) {
+    public UserQueryDto(String username, String mobile, String dni, String discount, String address, boolean onlyCustomer) {
         this.username = username;
         this.mobile = mobile;
         this.dni = dni;
+        this.discount = discount;
         this.address = address;
         this.onlyCustomer = onlyCustomer;
     }
@@ -49,6 +52,10 @@ public class UserQueryDto {
         this.dni = dni;
     }
 
+    public String getDiscount() { return discount; }
+
+    public void setDiscount(String discount) { this.discount = discount; }
+
     public String getAddress() {
         return address;
     }
@@ -56,7 +63,6 @@ public class UserQueryDto {
     public void setAddress(String address) {
         this.address = address;
     }
-
 
     public boolean isOnlyCustomer() {
         return onlyCustomer;
@@ -72,8 +78,10 @@ public class UserQueryDto {
                 "username='" + username + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", dni='" + dni + '\'' +
+                ", discount='" + discount + '\'' +
                 ", address='" + address + '\'' +
                 ", onlyCustomer=" + onlyCustomer +
                 '}';
     }
+
 }

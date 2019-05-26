@@ -32,6 +32,8 @@ public class User {
 
     private String dni;
 
+    private String discount;
+
     private String address;
 
     private Role[] roles;
@@ -41,11 +43,12 @@ public class User {
         this.active = true;
     }
 
-    public User(String mobile, String username, String password, String dni, String address, String email) {
+    public User(String mobile, String username, String password, String dni, String discount, String address, String email) {
         this();
         this.mobile = mobile;
         this.username = username;
         this.dni = dni;
+        this.discount = discount;
         this.address = address;
         this.email = email;
         this.setPassword(password);
@@ -56,25 +59,27 @@ public class User {
         this(mobile, username, password, null, null, null);
     }
 
-    public User(String id,String username,String dni,String email, String address,String password,UserRolesDto userRolesDto) {
+    public User(String id,String username,String dni,String discount,String email, String address,String password,UserRolesDto userRolesDto) {
         this.id=id;
         this.mobile=userRolesDto.getMobile();
         this.roles=userRolesDto.getRoles();
         this.setUsername(username);
         this.setDni(dni);
+        this.setDiscount(discount);
         this.setEmail(email);
         this.setAddress(address);
         this.setPassword(password);
 
 
     }
-    public User(String id, String username, String dni, String email, String address, Role[] roles, UserProfileDto userProfileDto) {
+    public User(String id, String username, String dni, String discount, String email, String address, Role[] roles, UserProfileDto userProfileDto) {
         this.id=id;
         this.mobile=userProfileDto.getMobile();
         this.password=userProfileDto.getPassword();
         this.setPassword(this.password);
         this.setUsername(username);
         this.setDni(dni);
+        this.setDiscount(discount);
         this.setEmail(email);
         this.setAddress(address);
         this.setRoles(roles);
@@ -145,6 +150,14 @@ public class User {
         this.dni = dni;
     }
 
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -182,10 +195,12 @@ public class User {
                 ", active=" + active +
                 ", email='" + email + '\'' +
                 ", dni='" + dni + '\'' +
+                ", discount='" + discount + '\'' +
                 ", address='" + address + '\'' +
                 ", roles=" + Arrays.toString(roles) +
                 '}';
     }
+
 
     public static class Builder {
         private User user;
@@ -230,6 +245,11 @@ public class User {
 
         public Builder dni(String dni) {
             this.user.dni = dni;
+            return this;
+        }
+
+        public Builder discount(String discount) {
+            this.user.discount = discount;
             return this;
         }
 
