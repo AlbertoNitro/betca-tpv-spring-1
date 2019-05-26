@@ -56,7 +56,9 @@ public class User {
     }
 
     public User(String mobile, String username, String password) {
-        this(mobile, username, password, null, null, null);
+        this.mobile = mobile;
+        this.username = username;
+        this.password = password;
     }
 
     public User(String id,String username,String dni,String discount,String email, String address,String password,UserRolesDto userRolesDto) {
