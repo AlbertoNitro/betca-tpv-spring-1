@@ -38,7 +38,7 @@ public class RgpdControllerIT {
 
     @BeforeEach
     void seedDb() {
-        this.user = new User("123445", "123445", "666001110", "123445", "C/ TPV, 100, 1A, 28000 Madrid", "user2@gmail.com");
+        this.user = new User("123445", "123445", "666001110", "123445", "20","C/ TPV, 100, 1A, 28000 Madrid", "user2@gmail.com");
         this.userRepository.save(user);
         this.rgpdAgreement = new RgpdAgreement();
         this.rgpdAgreement.setType(RgpdAgreementType.MEDIUM);
