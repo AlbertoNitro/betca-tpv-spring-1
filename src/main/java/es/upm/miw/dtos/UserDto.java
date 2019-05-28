@@ -17,6 +17,8 @@ public class UserDto extends UserMinimumDto {
 
     private String dni;
 
+    private String discount;
+
     private String address;
 
     private Boolean active;
@@ -33,6 +35,7 @@ public class UserDto extends UserMinimumDto {
         super(user.getMobile(), user.getUsername());
         this.email = user.getEmail();
         this.dni = user.getDni();
+        this.discount = user.getDiscount();
         this.address = user.getAddress();
         this.active = user.isActive();
         this.roles = user.getRoles();
@@ -45,6 +48,10 @@ public class UserDto extends UserMinimumDto {
 
     public String getDni() {
         return dni;
+    }
+
+    public String getDiscount() {
+        return discount;
     }
 
     public String getAddress() {
@@ -70,6 +77,7 @@ public class UserDto extends UserMinimumDto {
                 ", username='" + this.getUsername() + '\'' +
                 ", email='" + email + '\'' +
                 ", dni='" + dni + '\'' +
+                ", discount='" + discount + '\'' +
                 ", address='" + address + '\'' +
                 ", active=" + active +
                 ", roles=" + Arrays.toString(roles) +

@@ -1,9 +1,36 @@
 package es.upm.miw.data_services;
 
 import es.upm.miw.business_services.Barcode;
-import es.upm.miw.documents.*;
+import es.upm.miw.documents.Article;
+import es.upm.miw.documents.ArticlesFamily;
+import es.upm.miw.documents.CashierClosure;
+import es.upm.miw.documents.FamilyArticle;
+import es.upm.miw.documents.FamilyComposite;
+import es.upm.miw.documents.FamilyType;
+import es.upm.miw.documents.Provider;
+import es.upm.miw.documents.Role;
+import es.upm.miw.documents.User;
 import es.upm.miw.exceptions.ConflictException;
-import es.upm.miw.repositories.*;
+import es.upm.miw.repositories.ArticleRepository;
+import es.upm.miw.repositories.ArticlesFamilyRepository;
+import es.upm.miw.repositories.BudgetRepository;
+import es.upm.miw.repositories.CashierClosureRepository;
+import es.upm.miw.repositories.FamilyArticleRepository;
+import es.upm.miw.repositories.FamilyCompositeRepository;
+import es.upm.miw.repositories.GiftTicketRepository;
+import es.upm.miw.repositories.InvoiceRepository;
+import es.upm.miw.repositories.OrderRepository;
+import es.upm.miw.repositories.ProviderRepository;
+import es.upm.miw.repositories.TagRepository;
+import es.upm.miw.repositories.TicketRepository;
+import es.upm.miw.repositories.TimeClockRepository;
+import es.upm.miw.repositories.UserRepository;
+import es.upm.miw.repositories.VoucherRepository;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,12 +39,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.Arrays;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class DatabaseSeederService {
@@ -75,6 +97,8 @@ public class DatabaseSeederService {
     private TagRepository tagRepository;
     @Autowired
     private TimeClockRepository timeClockRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void constructor() {
@@ -89,7 +113,7 @@ public class DatabaseSeederService {
     private void initialize() {
         if (!this.userRepository.findByMobile(this.mobile).isPresent()) {
             LogManager.getLogger(this.getClass()).warn("------- Create Admin -----------");
-            User user = new User(this.mobile, this.username, this.password);
+            User user = new User(this.mobile, this.username, this.passwordEncoder.encode(this.password));
             user.setRoles(new Role[]{Role.ADMIN});
             this.userRepository.save(user);
         }
