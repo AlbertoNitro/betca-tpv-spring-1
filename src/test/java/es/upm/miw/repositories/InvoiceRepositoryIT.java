@@ -34,7 +34,7 @@ class InvoiceRepositoryIT {
         System.out.println(bdInvoice.simpleId());
         assertEquals(5, bdInvoice.simpleId());
         assertEquals(LocalDate.now().getYear() + "5", invoice.getId());
-        assertNotNull(bdInvoice.getCreationDated());
+        assertNotNull(bdInvoice.getCreationDate());
         this.invoiceRepository.deleteById(invoice.getId());
     }
 

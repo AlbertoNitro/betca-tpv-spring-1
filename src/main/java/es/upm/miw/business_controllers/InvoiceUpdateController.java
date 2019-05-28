@@ -1,6 +1,8 @@
 package es.upm.miw.business_controllers;
 
+import es.upm.miw.business_services.PdfService;
 import es.upm.miw.documents.Invoice;
+import es.upm.miw.documents.Ticket;
 import es.upm.miw.documents.User;
 import es.upm.miw.dtos.output.InvoiceUpdateDto;
 import es.upm.miw.repositories.InvoiceRepository;
@@ -25,6 +27,8 @@ public class InvoiceUpdateController {
     private UserRepository userRepository;
     @Autowired
     private TicketRepository ticketRepository;
+    @Autowired
+    private PdfService pdfService;
 
     private List<InvoiceUpdateDto> convertInvoiceToInvoiceUpdateDto(List<Invoice> invoices) {
         InvoiceUpdateDto invoiceUpdateDto;
@@ -32,7 +36,7 @@ public class InvoiceUpdateController {
         for (Invoice invoice : invoices) {
             invoiceUpdateDto = new InvoiceUpdateDto(
                     invoice.getId(),
-                    invoice.getCreationDated().toString(),
+                    invoice.getCreationDate().toString(),
                     Float.parseFloat(invoice.getBaseTax().toString()),
                     Float.parseFloat(invoice.getTax().toString())
             );
@@ -86,5 +90,10 @@ public class InvoiceUpdateController {
                 .findByUserAndCreationDateBetween(user, convertStringToLocalDateTime(afterDate),
                         convertStringToLocalDateTime(beforeDate));
         return convertInvoiceToInvoiceUpdateDto(invoices);
+    }
+    public byte[] generatePdf(String id) {
+        Optional<Invoice> invoice = invoiceRepository.findById(id);
+        Optional<Ticket> ticket = ticketRepository.findById(invoice.get().getTicket().getId());
+        return this.pdfService.generateInvoice(invoice.get(), ticket.get());
     }
 }

@@ -19,6 +19,7 @@ public class InvoiceUpdateResource {
     public static final String FROMDATE = "/{fromdate}";
     public static final String BETWEENDATES = "/{afterDate}/{beforeDate}";
     public static final String MOBILEIDBETWEENDATES = "/{mobile}/{afterDate}/{beforeDate}";
+    public static final String INVOICEPDF = "/pdf/{id}";
     @Autowired
     private InvoiceUpdateController invoiceUpdateController;
 
@@ -48,5 +49,9 @@ public class InvoiceUpdateResource {
         return invoiceUpdateController.getInvoiceByMobileAndCreationDateBetween(mobile,
                                                                                 afterDate,
                                                                                 beforeDate);
+    }
+    @GetMapping(value = INVOICEPDF)
+    public byte[] getInvoicePDF(@PathVariable String id){
+        return invoiceUpdateController.generatePdf(id);
     }
 }
