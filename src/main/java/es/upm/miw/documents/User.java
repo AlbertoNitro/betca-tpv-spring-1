@@ -61,7 +61,7 @@ public class User {
         this.password = password;
     }
 
-    public User(String id,String username,String dni,String discount,String email, String address,String password,UserRolesDto userRolesDto) {
+    public User(String id,String username,String password,String dni,String discount,String address,String email,UserRolesDto userRolesDto) {
         this.id=id;
         this.mobile=userRolesDto.getMobile();
         this.roles=userRolesDto.getRoles();
