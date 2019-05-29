@@ -229,7 +229,7 @@ public class PdfService {
         return pdf.build();
     }
     public byte[] generateInvoice(Invoice invoice, Ticket ticket){
-        final String path = "/invoice-" + invoice.getId();
+        final String path = "/tpv-pdfs/invoices/invoice-" + invoice.getId();
         PdfBuilder pdf = new PdfBuilder(path, PdfBuilder.PAGE_SIZE_A4);
         this.generateCommonHead(pdf);
         BigDecimal total = new BigDecimal(0);
