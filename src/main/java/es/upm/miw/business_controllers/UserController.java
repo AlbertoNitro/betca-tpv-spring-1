@@ -95,7 +95,7 @@ public class UserController {
                 .orElseThrow(() -> new NotFoundException("User mobile (" + userDto.getMobile() + ") is not found."));
 
         User saved = User.builder().id(userFound.getId()).username(userDto.getUsername()).password(userFound.getPassword())
-                .mobile(userDto.getMobile()).roles(userFound.getRoles()).dni(userDto.getDni()).discount(userDto.getDni()).address(userDto.getAddress())
+                .mobile(userDto.getMobile()).roles(userFound.getRoles()).dni(userDto.getDni()).discount(userDto.getDiscount()).address(userDto.getAddress())
                 .email(userDto.getEmail()).registrationDate(userDto.getRegistrationDate()).active(userDto.isActive()).build();
 
         this.userRepository.save(saved);
