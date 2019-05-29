@@ -233,6 +233,7 @@ public class PdfService {
         PdfBuilder pdf = new PdfBuilder(path, PdfBuilder.PAGE_SIZE_A4);
         this.generateCommonHead(pdf);
         BigDecimal total = new BigDecimal(0);
+        BigDecimal tax = new BigDecimal(0);
         pdf.paragraphEmphasized("INVOICE");
         pdf.line();
         Shopping[] shoppingList = ticket.getShoppingList();
@@ -240,12 +241,15 @@ public class PdfService {
         PdfTableBuilder table = pdf.table(TABLE_COLUMNS_SIZES_TICKETS).tableColumnsHeader(TABLE_COLUMNS_HEADERS);
         for (int i = 0; i < shoppingList.length; i++) {
             Shopping shopping = shoppingList[i];
-            System.out.println("Retail Price " + i + " --- " + shopping.getRetailPrice().toString());
             total = total.add(shopping.getRetailPrice().multiply(new BigDecimal(shopping.getAmount())));
+            tax = total.multiply(invoice.getBaseTax().add(invoice.getTax())).divide(new BigDecimal(100));
             this.generateTableCellFromShopping(table, shopping, i, 0);
         }
         table.build();
-        pdf.paragraphEmphasized("Total: " + total.toString());
+        pdf.paragraphEmphasized("Total before Tax: " + total.toString());
+        pdf.paragraphEmphasized("Base tax: " + invoice.getBaseTax().toString() + "% --- Added tax: "
+                +  invoice.getTax().toString() + "% --- Total tax: " + tax.toString());
+        pdf.paragraphEmphasized("Total plus tax: " + total.add(tax).toString());
         pdf.paragraph("ID Invoice: " + invoice.getId());
         pdf.line();
         this.generateCommonFooter(pdf);
