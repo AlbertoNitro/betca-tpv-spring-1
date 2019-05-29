@@ -154,12 +154,12 @@ class TicketResourceIT {
         TicketQueryOutputDto[] results = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
-        assertEquals(1, results.length);
+        assertEquals(2, results.length);
     }
 
     @Test
     void testFindTicketByUserMobileTicketsNotFoundException() {
-        String userMobile = "666666005";
+        String userMobile = "123456789";
         TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
         searchTicketDto.setUserMobile(userMobile);
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->

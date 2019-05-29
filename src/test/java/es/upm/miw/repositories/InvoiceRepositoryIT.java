@@ -41,7 +41,7 @@ class InvoiceRepositoryIT {
     @Test
     void testFindAll(){
         List<Invoice> invoices = this.invoiceRepository.findAll();
-        assertEquals(2, invoices.size());
+        assertEquals(3, invoices.size());
     }
 
 }
