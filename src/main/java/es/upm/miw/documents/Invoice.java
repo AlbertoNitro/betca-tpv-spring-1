@@ -62,7 +62,7 @@ public class Invoice {
         return ticket;
     }
 
-    public LocalDateTime getCreationDated() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
