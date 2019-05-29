@@ -241,7 +241,8 @@ public class PdfService {
         PdfTableBuilder table = pdf.table(TABLE_COLUMNS_SIZES_TICKETS).tableColumnsHeader(TABLE_COLUMNS_HEADERS);
         for (int i = 0; i < shoppingList.length; i++) {
             Shopping shopping = shoppingList[i];
-            total = total.add(shopping.getRetailPrice().multiply(new BigDecimal(shopping.getAmount())));
+            // total = total.add(shopping.getRetailPrice().multiply(new BigDecimal(shopping.getAmount())));
+            total = total.add(ticket.getCard().add(ticket.getCash()));
             tax = total.multiply(invoice.getBaseTax().add(invoice.getTax())).divide(new BigDecimal(100));
             this.generateTableCellFromShopping(table, shopping, i, 0);
         }
@@ -251,6 +252,7 @@ public class PdfService {
                 +  invoice.getTax().toString() + "% --- Total tax: " + tax.toString());
         pdf.paragraphEmphasized("Total plus tax: " + total.add(tax).toString());
         pdf.paragraph("ID Invoice: " + invoice.getId());
+        pdf.barCode(invoice.getId());
         pdf.line();
         this.generateCommonFooter(pdf);
         return pdf.build();
