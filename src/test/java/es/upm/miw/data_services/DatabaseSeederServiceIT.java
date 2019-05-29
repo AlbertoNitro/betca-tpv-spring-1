@@ -31,7 +31,6 @@ class DatabaseSeederServiceIT {
         assertEquals("u001", user.getUsername());
         assertEquals("u001@gmail.com", user.getEmail());
         assertEquals("66666600L", user.getDni());
-        assertEquals("10", user.getDiscount());
         assertTrue(user.getRoles().length >= 1);
     }
 

@@ -36,10 +36,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class DatabaseSeederService {
@@ -64,6 +64,8 @@ public class DatabaseSeederService {
     public CashierClosureRepository cashierClosureRepository;
     @Autowired
     private Environment environment;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Value("${miw.admin.mobile}")
     private String mobile;
@@ -97,8 +99,6 @@ public class DatabaseSeederService {
     private TagRepository tagRepository;
     @Autowired
     private TimeClockRepository timeClockRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void constructor() {

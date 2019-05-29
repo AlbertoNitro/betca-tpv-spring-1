@@ -95,7 +95,7 @@ public class UserController {
                 .orElseThrow(() -> new NotFoundException("User mobile (" + userDto.getMobile() + ") is not found."));
 
         User saved = User.builder().id(userFound.getId()).username(userDto.getUsername()).password(userFound.getPassword())
-                .mobile(userDto.getMobile()).roles(userFound.getRoles()).dni(userDto.getDni()).discount(userDto.getDiscount()).address(userDto.getAddress())
+                .mobile(userDto.getMobile()).roles(userFound.getRoles()).dni(userDto.getDni()).discount(userDto.getDni()).address(userDto.getAddress())
                 .email(userDto.getEmail()).registrationDate(userDto.getRegistrationDate()).active(userDto.isActive()).build();
 
         this.userRepository.save(saved);
@@ -108,7 +108,7 @@ public class UserController {
             throw new BadRequestException("User mobile (" + userRolesDto.getMobile() + ")");
 
         User user = this.userRepository.findByMobile(mobile).orElseThrow(() -> new NotFoundException("User mobile (" + mobile + ")"));;
-        User result = this.userRepository.save(new User(user.getId(),user.getUsername(),user.getDni(),user.getDiscount(),user.getEmail(),user.getAddress(),user.getPassword(),userRolesDto));
+        User result = this.userRepository.save(new User(user.getId(),user.getUsername(),user.getDni(),user.getEmail(),user.getDiscount(),user.getAddress(),user.getPassword(),userRolesDto));
         return new UserDto(result);
     }
 
@@ -118,7 +118,7 @@ public class UserController {
             throw new BadRequestException("User mobile (" + userProfileDto.getMobile() + ")");
 
         User user = this.userRepository.findByMobile(mobile).orElseThrow(() -> new NotFoundException("User mobile (" + mobile + ")"));;
-        User result = this.userRepository.save(new User(user.getId(),user.getUsername(),user.getDni(),user.getDiscount(),user.getEmail(),user.getAddress(),user.getRoles(),userProfileDto));
+        User result = this.userRepository.save(new User(user.getId(),user.getUsername(),user.getDni(),user.getDiscount(),user.getAddress(),user.getEmail(),user.getRoles(),userProfileDto));
         return new UserProfileDto(result);
     }
 
@@ -133,5 +133,4 @@ public class UserController {
         User user = this.userRepository.findByMobile(mobile).orElseThrow(() -> new NotFoundException("User mobile (" + mobile + ")"));;
         return new BCryptPasswordEncoder().matches(userProfileDto.getPassword(),user.getPassword());
     }
-
 }

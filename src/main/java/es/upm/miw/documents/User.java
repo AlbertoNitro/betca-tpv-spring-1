@@ -74,7 +74,7 @@ public class User {
 
 
     }
-    public User(String id, String username, String dni, String discount, String email, String address, Role[] roles, UserProfileDto userProfileDto) {
+    public User(String id, String username, String dni, String discount,String address, String email, Role[] roles, UserProfileDto userProfileDto) {
         this.id=id;
         this.mobile=userProfileDto.getMobile();
         this.password=userProfileDto.getPassword();
@@ -152,13 +152,9 @@ public class User {
         this.dni = dni;
     }
 
-    public String getDiscount() {
-        return discount;
-    }
+    public String getDiscount() { return discount; }
 
-    public void setDiscount(String discount) {
-        this.discount = discount;
-    }
+    public void setDiscount(String discount) { this.discount = discount; }
 
     public String getAddress() {
         return address;
@@ -202,6 +198,7 @@ public class User {
                 ", roles=" + Arrays.toString(roles) +
                 '}';
     }
+
 
 
     public static class Builder {

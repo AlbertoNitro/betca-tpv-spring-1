@@ -36,8 +36,7 @@ class UserResourceIT {
 
     @BeforeEach
     void before() {
-        userDb = this.userRepository.save(new User("999777666", "123445", "666001110","123445", "10",
-                "C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com"));
+        userDb = this.userRepository.save(new User("999777666", "123445", "666001110","123445","10","C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com"));
         List<UserRolesDto> users = Arrays.asList(this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<UserRolesDto[]>()).clazz(UserRolesDto[].class)
                 .path(UserResource.USERS)
@@ -226,6 +225,7 @@ class UserResourceIT {
         userQueryInputDto.setMobile(userDto.getMobile());
         userQueryInputDto.setUsername(userDto.getUsername());
         userQueryInputDto.setDni(userDto.getDni());
+        userQueryInputDto.setDiscount(userDto.getDiscount());
 
         List<UserMinimumDto> userMinimumDtoList = Arrays.asList(this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<UserMinimumDto[]>()).clazz(UserMinimumDto[].class)

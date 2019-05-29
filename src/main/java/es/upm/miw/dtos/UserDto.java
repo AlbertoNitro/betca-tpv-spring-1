@@ -50,9 +50,7 @@ public class UserDto extends UserMinimumDto {
         return dni;
     }
 
-    public String getDiscount() {
-        return discount;
-    }
+    public String getDiscount() { return discount; }
 
     public String getAddress() {
         return address;
@@ -84,4 +82,5 @@ public class UserDto extends UserMinimumDto {
                 ", registrationDate=" + registrationDate +
                 '}';
     }
+
 }

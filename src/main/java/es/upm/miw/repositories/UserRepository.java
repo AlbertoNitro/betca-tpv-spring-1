@@ -2,7 +2,7 @@ package es.upm.miw.repositories;
 
 import es.upm.miw.documents.Role;
 import es.upm.miw.documents.User;
-import es.upm.miw.dtos.*;
+import es.upm.miw.dtos.UserMinimumDto;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -24,7 +24,9 @@ public interface UserRepository extends MongoRepository<User, String> {
             + "?#{ [4] == null ? { $where : 'true'} : { address : {$regex:[4], $options: 'i'} } },"
             + "{'roles':{$in:?5}}"
             + "] }")
+
     List<UserMinimumDto> findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles(String mobile, String username, String dni, String discount, String address, Role[] roles);
+
 
 
 }

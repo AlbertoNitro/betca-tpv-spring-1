@@ -30,9 +30,9 @@ class UserRepositoryIT {
         this.user = new User("666001000", "666001000", "666001000");
         this.userRepository.save(user);
 
-        this.user2 = new User("123445", "123445", "666001110","123445", "5", "C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com");
+        this.user2 = new User("123445", "123445", "666001110","123445","10","C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com");
         this.userRepository.save(user2);
-        this.user3 = new User("1234457", "1234457", "666001111","1234457","4","C/ TPV, 100, 1A, 28000 Madrid","user3@gmail.com");
+        this.user3 = new User("1234457", "1234457", "666001111","1234457","10","C/ TPV, 100, 1A, 28000 Madrid","user3@gmail.com");
         this.userRepository.save(user3);
     }
 
@@ -51,18 +51,18 @@ class UserRepositoryIT {
 
     @Test
     void testfindByOnlyCustomer() {
-        List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles("","","","","", this.user.getRoles());
-        assertEquals(6, userList.size());
+        List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles("","","","","",this.user.getRoles());
+        assertEquals(2, userList.size());
     }
     @Test
     void testfindByAdressAndOnlyCustomer() {
-        List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles("","","","", this.user2.getAddress(),this.user2.getRoles());
+        List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles("","","",this.user2.getDiscount(),this.user2.getAddress(),this.user2.getRoles());
         assertEquals(2, userList.size());
     }
 
     @Test
     void testfindByMobileLikeNullSafeAndOnlyCustomer() {
-        List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles(this.user2.getMobile(),"","", "","",this.user2.getRoles());
+        List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles(this.user2.getMobile(),"","","","",this.user2.getRoles());
         assertEquals(2, userList.size());
     }
     @Test
@@ -71,8 +71,8 @@ class UserRepositoryIT {
         assertEquals(2, userList.size());
     }
     @Test
-    void testfindByMobileUsernameDniDiscountLikeNullSafeAndRoles() {
-        List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles(this.user2.getMobile(),this.user2.getUsername(),this.user2.getDni(),"","", this.user2.getRoles());
+    void testfindByMobileUsernameDniLikeNullSafeAndRoles() {
+        List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles(this.user2.getMobile(),this.user2.getUsername(),this.user2.getDni(),this.user2.getDiscount(),this.user2.getAddress(),this.user2.getRoles());
         assertEquals(2, userList.size());
     }
     @Test
@@ -118,7 +118,7 @@ class UserRepositoryIT {
     @Test
     void testfindByMobileUsernameilLikeNullSafeOperator() {
         User userBd = userRepository.findByMobile("666666003").get();
-        List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles("666","u00","","","",userBd.getRoles());
+        List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles("666","u00","", "","",userBd.getRoles());
         assertEquals(2, userList.size());
     }
     @AfterEach

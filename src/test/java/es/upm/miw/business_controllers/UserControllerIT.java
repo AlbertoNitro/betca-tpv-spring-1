@@ -33,8 +33,8 @@ public class UserControllerIT {
     @BeforeEach
     void seedDb() {
 
-        this.user = new User("123445", "123445", "666001110","123445", "10", "C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com");
-        this.user2 = new User("987654321", "987654", "111");
+        this.user = new User("333666555", "juan", "666001110","123445","10","C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com");
+        this.user2 = new User("987654321", "maria", "111");
         this.userRepository.save(user);
         this.userRepository.save(user2);
 
@@ -56,7 +56,7 @@ public class UserControllerIT {
 
     @Test
     void testCreateUser() {
-        UserDto userInputDto = new UserDto(new User("666547892", "user", "puser",
+        UserDto userInputDto = new UserDto(new User("666547892", "user", "1244",
                 "123445","10","C/ TPV, 100, 1A, 28000 Madrid","user2@gmail.com"));
         UserDto userOutputDto = userController.create(userInputDto);
         assertEquals(userOutputDto.getMobile(), userInputDto.getMobile());
@@ -72,7 +72,7 @@ public class UserControllerIT {
     @Test
     void testUpdateUser() {
         UserDto userInputDto = new UserDto(this.user2);
-        userInputDto.setUsername("differenteUserName");
+        userInputDto.setUsername("differentUserName");
 
         UserDto userOutputDto = userController.update(userInputDto.getMobile(), userInputDto);
         assertFalse(userOutputDto.getUsername().equals(this.user2.getUsername()));
@@ -157,7 +157,7 @@ public class UserControllerIT {
     }
     @Test
     void testreadAllOnlyCustomer() {
-        List<UserMinimumDto> users = userController.readAllByUsernameDniDiscountAddressRoles("","","","", "",this.user.getRoles());
+        List<UserMinimumDto> users = userController.readAllByUsernameDniDiscountAddressRoles("","","","","",this.user.getRoles());
         assertEquals(this.user.getUsername(), users.get(0).getUsername());
     }
 

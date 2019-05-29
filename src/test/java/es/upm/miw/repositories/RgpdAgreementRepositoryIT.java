@@ -42,7 +42,7 @@ public class RgpdAgreementRepositoryIT {
         this.agreement2 = new RgpdAgreement(RgpdAgreementType.MEDIUM, null, this.user2);
         this.rgpdAgreementRepository.save(this.agreement2);
 
-        this.user3 = new User("1234457", "1234457", "666001111", "1234457", "20", "C/ TPV, 100, 1A, 28000 Madrid", "user3@gmail.com");
+        this.user3 = new User("1234457", "1234457", "666001111", "1234457", "10", "C/ TPV, 100, 1A, 28000 Madrid", "user3@gmail.com");
         this.userRepository.save(user3);
         this.agreement3 = new RgpdAgreement(RgpdAgreementType.ADVANCE, null, this.user3);
         this.rgpdAgreementRepository.save(this.agreement3);

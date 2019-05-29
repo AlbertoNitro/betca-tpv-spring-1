@@ -52,9 +52,7 @@ public class UserQueryDto {
         this.dni = dni;
     }
 
-    public String getDiscount() {
-        return discount;
-    }
+    public String getDiscount() { return dni; }
 
     public void setDiscount(String discount) { this.discount = discount; }
 
@@ -85,5 +83,6 @@ public class UserQueryDto {
                 ", onlyCustomer=" + onlyCustomer +
                 '}';
     }
+
 
 }
