@@ -4,26 +4,25 @@ import es.upm.miw.business_controllers.InvoiceUpdateController;
 import es.upm.miw.dtos.output.InvoiceUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @PreAuthorize("hasRole ('ADMIN') or hasRole('MANAGER') or hasRole('OPERATOR')")
 @RestController
 @RequestMapping(InvoiceUpdateResource.INVOICEUPDATE)
 public class InvoiceUpdateResource {
     public static final String MOBILEID = "/mobile/{mobile}";
-    public static final String FROMDATE = "/{fromdate}";
-    public static final String BETWEENDATES = "/{afterDate}/{beforeDate}";
-    public static final String MOBILEIDBETWEENDATES = "/{mobile}/{afterDate}/{beforeDate}";
-    public static final String INVOICEPDF = "/pdf/{id}";
+    public static final String FROMDATE = "/dates/{fromdate}";
+    public static final String BETWEENDATES = "/dates/{afterDate}/{beforeDate}";
+    public static final String MOBILEIDBETWEENDATES = "/dates/{mobile}/{afterDate}/{beforeDate}";
+    public static final String INVOICEUPDATE = "/invoice-update";
+    public static final String PDF = "/pdf/{id}";
     @Autowired
     private InvoiceUpdateController invoiceUpdateController;
-
-    public static final String INVOICEUPDATE = "/invoice-update";
 
     @GetMapping()
     public List<InvoiceUpdateDto> getAll() {
@@ -33,6 +32,11 @@ public class InvoiceUpdateResource {
     @GetMapping(value = MOBILEID)
     public List<InvoiceUpdateDto> getInvoicesByMobile(@PathVariable String mobile) {
         return invoiceUpdateController.getInvoiceByMobile(mobile);
+    }
+    @RequestMapping(value = PDF, produces = {"application/pdf"}, method=GET)
+    public byte[] getInvoicePDF(@PathVariable String id){
+        byte[] response = invoiceUpdateController.generatePdf(id);
+        return response;
     }
     @GetMapping(value = FROMDATE)
     public List<InvoiceUpdateDto> getInvoicesByCreationDateAfter(@PathVariable String afterDate) {
@@ -50,8 +54,5 @@ public class InvoiceUpdateResource {
                                                                                 afterDate,
                                                                                 beforeDate);
     }
-    @GetMapping(value = INVOICEPDF)
-    public byte[] getInvoicePDF(@PathVariable String id){
-        return invoiceUpdateController.generatePdf(id);
-    }
+
 }

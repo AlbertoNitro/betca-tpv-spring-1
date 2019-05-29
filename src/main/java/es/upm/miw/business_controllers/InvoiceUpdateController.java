@@ -60,10 +60,8 @@ public class InvoiceUpdateController {
 
     }
     public List<InvoiceUpdateDto> getAll() {
-        List<Invoice> invoices;
         return convertInvoiceToInvoiceUpdateDto(this.invoiceRepository.findAll());
     }
-
     public List<InvoiceUpdateDto> getInvoiceByMobile(String mobile) {
         Optional<User> userOptional = userRepository.findByMobile(mobile);
         User user = userOptional.get();
