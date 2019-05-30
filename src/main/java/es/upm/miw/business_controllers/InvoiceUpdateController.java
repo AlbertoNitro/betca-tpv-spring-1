@@ -29,12 +29,9 @@ public class InvoiceUpdateController {
     private PdfService pdfService;
     private Invoice convertInvoiceUpdateDtoToInvoice(InvoiceUpdateDto invoiceUpdateDto){
         Invoice invoice = new Invoice (
-                1,
                 invoiceUpdateDto.getBaseTax(),
                 invoiceUpdateDto.getTax(),
-                null,
-                null,
-                invoiceUpdateDto.getReferencespositiveinvoice()
+                invoiceUpdateDto.getReferencesPositiveInvoice()
         );
         return invoice;
     }
@@ -143,6 +140,7 @@ public class InvoiceUpdateController {
                     oldTicket.get().getUser());
             ticketRepository.save(negativeTicket);
             negativeInvoice.setTicket(negativeTicket);
+            negativeInvoice.setUser(oldTicket.get().getUser());
         }
         if (negativeInvoice != null) {
             invoiceRepository.save(negativeInvoice);

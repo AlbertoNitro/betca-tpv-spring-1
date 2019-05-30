@@ -7,22 +7,22 @@ public class InvoiceUpdateDto {
     String creationDate;
     BigDecimal baseTax;
     BigDecimal tax;
-    String referencespositiveinvoice;
+    String referencesPositiveInvoice;
 
-    public InvoiceUpdateDto(String id, String creationDate, BigDecimal baseTax, BigDecimal tax, String referencespositiveinvoice) {
+    public InvoiceUpdateDto(String id, String creationDate, BigDecimal baseTax, BigDecimal tax, String referencesPositiveInvoice) {
         this.id = id;
         this.creationDate = creationDate;
         this.baseTax = baseTax;
         this.tax = tax;
-        this.referencespositiveinvoice =referencespositiveinvoice;
+        this.referencesPositiveInvoice =referencesPositiveInvoice;
     }
 
-    public String getReferencespositiveinvoice() {
-        return referencespositiveinvoice;
+    public String getReferencesPositiveInvoice() {
+        return referencesPositiveInvoice;
     }
 
-    public void setReferencespositiveinvoice(String referencespositiveinvoice) {
-        this.referencespositiveinvoice = referencespositiveinvoice;
+    public void setReferencesPositiveInvoice(String referencesPositiveInvoice) {
+        this.referencesPositiveInvoice = referencesPositiveInvoice;
     }
 
     public String getId() {
