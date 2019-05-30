@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -94,6 +95,17 @@ public class TicketControllerIT {
     @Test
     void updateModifiedTicketAndPdf(){
         assertNotNull(ticketController.updateModifiedTicketAndPdf("1395", this.ticketModificationStateOrAmountDto));
+    }
+
+    @Test
+    void testConvertStringToDate() {
+        LocalDateTime correctDay =
+                LocalDateTime.of(2019, 05, 30, 00, 00, 00);
+        LocalDateTime incorrectDay =
+                LocalDateTime.of(2018, 05, 30, 00, 00, 00);
+        LocalDateTime result = ticketController.convertStringToDate("2019-05-30T00:00:00");
+        assertEquals(correctDay, result);
+        assertNotEquals(incorrectDay, result);
     }
 
 }
