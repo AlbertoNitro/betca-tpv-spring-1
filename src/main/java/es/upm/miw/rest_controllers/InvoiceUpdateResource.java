@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -21,6 +22,7 @@ public class InvoiceUpdateResource {
     public static final String MOBILEIDBETWEENDATES = "/dates/{mobile}/{afterDate}/{beforeDate}";
     public static final String INVOICEUPDATE = "/invoice-update";
     public static final String PDF = "/pdf/{id}";
+    public static final String NEGATIVE = "/negative/{id}";
     @Autowired
     private InvoiceUpdateController invoiceUpdateController;
 
@@ -53,6 +55,10 @@ public class InvoiceUpdateResource {
         return invoiceUpdateController.getInvoiceByMobileAndCreationDateBetween(mobile,
                                                                                 afterDate,
                                                                                 beforeDate);
+    }
+    @GetMapping(value = NEGATIVE)
+    public BigDecimal look4PosibleTotal (@PathVariable String id) {
+        return invoiceUpdateController.look4PosibleTotal(id);
     }
 
 }

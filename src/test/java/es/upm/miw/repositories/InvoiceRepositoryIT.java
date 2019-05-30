@@ -28,7 +28,7 @@ class InvoiceRepositoryIT {
     @Test
     void testCreate() {
         Ticket ticket = this.ticketRepository.findById("201901121").get();
-        Invoice invoice = new Invoice(5, new BigDecimal("20"), new BigDecimal("4.2"), ticket.getUser(), ticket);
+        Invoice invoice = new Invoice(5, new BigDecimal("20"), new BigDecimal("4.2"), ticket.getUser(), ticket, null);
         this.invoiceRepository.save(invoice);
         Invoice bdInvoice = this.invoiceRepository.findById(invoice.getId()).get();
         System.out.println(bdInvoice.simpleId());

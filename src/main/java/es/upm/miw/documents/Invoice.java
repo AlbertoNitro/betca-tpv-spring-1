@@ -29,17 +29,29 @@ public class Invoice {
     @DBRef
     private User user;
 
+    private Invoice referencespositiveinvoice;
+
     public Invoice() {
         creationDate = LocalDateTime.now();
     }
 
-    public Invoice(int idOfYear, BigDecimal baseTax, BigDecimal tax, User user, Ticket ticket) {
+
+    public Invoice getReferencespositiveinvoice() {
+        return referencespositiveinvoice;
+    }
+
+    public void setReferencespositiveinvoice(Invoice negativeinvoice) {
+        this.referencespositiveinvoice = negativeinvoice;
+    }
+
+    public Invoice(int idOfYear, BigDecimal baseTax, BigDecimal tax, User user, Ticket ticket, Invoice referencespositiveinvoice) {
         this();
         this.id = new SimpleDateFormat(DATE_FORMAT).format(new Date()) + idOfYear;
         this.baseTax = baseTax;
         this.tax = tax;
         this.user = user;
         this.ticket = ticket;
+        this.referencespositiveinvoice = referencespositiveinvoice;
     }
 
     public void setBaseTax(BigDecimal baseTax) {
