@@ -27,7 +27,17 @@ public class InvoiceUpdateController {
     private TicketRepository ticketRepository;
     @Autowired
     private PdfService pdfService;
-
+    private Invoice convertInvoiceUpdateDtoToInvoice(InvoiceUpdateDto invoiceUpdateDto){
+        Invoice invoice = new Invoice (
+                1,
+                invoiceUpdateDto.getBaseTax(),
+                invoiceUpdateDto.getTax(),
+                null,
+                null,
+                invoiceUpdateDto.getReferencespositiveinvoice()
+        );
+        return invoice;
+    }
     private List<InvoiceUpdateDto> convertInvoiceToInvoiceUpdateDto(List<Invoice> invoices) {
         InvoiceUpdateDto invoiceUpdateDto;
         List<InvoiceUpdateDto> invoiceUpdateDtoList = new ArrayList<InvoiceUpdateDto>();
@@ -35,8 +45,9 @@ public class InvoiceUpdateController {
             invoiceUpdateDto = new InvoiceUpdateDto(
                     invoice.getId(),
                     invoice.getCreationDate().toString(),
-                    Float.parseFloat(invoice.getBaseTax().toString()),
-                    Float.parseFloat(invoice.getTax().toString())
+                    invoice.getBaseTax(),
+                    invoice.getTax(),
+                    invoice.getReferencespositiveinvoice()
             );
             invoiceUpdateDtoList.add(invoiceUpdateDto);
         }
@@ -102,7 +113,8 @@ public class InvoiceUpdateController {
             System.out.println("positive Cash: " + posibleTotal.toString());
             posibleTotal = posibleTotal.add(positiveinvoice.get().getTicket().getCard());
             System.out.println("positive Card+Cash: " + posibleTotal.toString());
-            negativeinvoices = Optional.ofNullable(invoiceRepository.findByReferencespositiveinvoice(positiveinvoice.get()));
+            negativeinvoices = Optional.ofNullable(invoiceRepository
+                    .findByReferencespositiveinvoice(positiveinvoice.get().getId()));
             System.out.println("negativeinvoices " + negativeinvoices.get().toString());
         }
         if (negativeinvoices.isPresent()) {
@@ -116,5 +128,26 @@ public class InvoiceUpdateController {
             }
         }
         return posibleTotal;
+    }
+    public byte [] createNegativeInvoiceAndPdf(InvoiceUpdateDto invoiceUpdateDto){
+        Invoice negativeInvoice = convertInvoiceUpdateDtoToInvoice(invoiceUpdateDto);
+        Optional<Ticket> oldTicket = Optional.ofNullable(invoiceRepository.findById(invoiceUpdateDto.getId()).get().getTicket());
+        Ticket negativeTicket = null;
+        if (oldTicket.isPresent()) {
+            BigDecimal negativeCash = new BigDecimal(String.valueOf(oldTicket.get().getCash().negate() ));
+            BigDecimal negativeCard = new BigDecimal(String.valueOf(oldTicket.get().getCard().negate() ));
+            negativeTicket = new Ticket(1, negativeCard,
+                    negativeCash,
+                    new BigDecimal(0),
+                    oldTicket.get().getShoppingList(),
+                    oldTicket.get().getUser());
+            ticketRepository.save(negativeTicket);
+            negativeInvoice.setTicket(negativeTicket);
+        }
+        if (negativeInvoice != null) {
+            invoiceRepository.save(negativeInvoice);
+            return this.pdfService.generateInvoice(negativeInvoice, negativeInvoice.getTicket());
+        }
+        return null;
     }
 }

@@ -318,13 +318,6 @@ ticketList:
       - *sh5
     user: *us5
     giftTicket: *gtil3
-  - &ti4
-    id: 201905123
-    reference: 6P0ISee_twnCisFmYGRFd5sGQqF
-    cash: -18
-    shoppingList:
-      - *sh3
-    user: *us4
 
 # Budget
 budgetList:
