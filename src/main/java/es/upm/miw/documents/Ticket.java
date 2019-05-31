@@ -60,10 +60,14 @@ public class Ticket {
     public void addPay(BigDecimal card, BigDecimal cash, BigDecimal voucher) {
         this.card = this.card.add(card);
         this.cash = this.cash.add(cash);
+        BigDecimal ZERO = new BigDecimal(0);
         this.voucher = this.voucher.add(voucher);
-        if (this.pay().compareTo(this.getTotalCommited()) < 0) {
-            throw new BadRequestException("Dinero inferior al material entregado");
+        if (this.cash.compareTo(ZERO) > -1 && this.card.compareTo(ZERO) > -1){
+            if (this.pay().compareTo(this.getTotalCommited()) < 0) {
+                throw new BadRequestException("Dinero inferior al material entregado");
+            }
         }
+
     }
 
     public BigDecimal pay() {
