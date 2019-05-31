@@ -40,7 +40,7 @@ class ArticleResourceIT {
     }
 
     @Test
-    void testReadAllArticles(){
+    void testReadAllArticles() {
         List<ArticleSearchOutputDto> articles = readAllArticles();
 
         assertNotNull(articles);
@@ -70,6 +70,20 @@ class ArticleResourceIT {
                 .clazz(ArticleMinimumDto[].class).path(ArticleResource.ARTICLES).path(ArticleResource.MINIMUM)
                 .get().build());
         assertTrue(dtos.size() > 1);
+    }
+
+    @Test
+    void testMinimumStock() {
+        List<Article> list = this.articleRepository.findByStockBetween(0, 25);
+        assertNotNull(list);
+        assertTrue(list.size() > 0);
+    }
+
+    @Test
+    void testReservation() {
+        List<Article> list = this.articleRepository.findByStockLessThan(1);
+        assertNotNull(list);
+        assertTrue(list.size() > 0);
     }
 
     @Test
@@ -151,7 +165,7 @@ class ArticleResourceIT {
     }
 
     @Test
-    void testDeleteArticleExist(){
+    void testDeleteArticleExist() {
         List<ArticleSearchOutputDto> articlesBeforeDelete = readAllArticles();
 
         this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleDto>()).clazz(ArticleDto.class)
@@ -164,7 +178,7 @@ class ArticleResourceIT {
     }
 
     @Test
-    void testDeleteArticleNotExist(){
+    void testDeleteArticleNotExist() {
         List<ArticleSearchOutputDto> articlesBeforeDelete = readAllArticles();
 
         this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleDto>()).clazz(ArticleDto.class)
@@ -176,9 +190,10 @@ class ArticleResourceIT {
 
     }
 
-    private List<ArticleSearchOutputDto> readAllArticles(){
+    private List<ArticleSearchOutputDto> readAllArticles() {
         return Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleSearchOutputDto[]>())
                 .clazz(ArticleSearchOutputDto[].class).path(ArticleResource.ARTICLES)
                 .get().build());
     }
+
 }

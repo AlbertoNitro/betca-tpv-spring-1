@@ -339,7 +339,7 @@ public class TicketController {
         return pdfService.generateTicket(this.updateModifiedTicket(id, modifiedTicket));
     }
 
-    private LocalDateTime convertStringToDate(String datesold){
+    public LocalDateTime convertStringToDate(String datesold){
         return LocalDateTime.parse(datesold);
     }
 
