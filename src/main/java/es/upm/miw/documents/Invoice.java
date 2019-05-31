@@ -41,11 +41,11 @@ public class Invoice {
         this.referencesPositiveInvoice = referencesPositiveInvoice;
     }
 
-    public String getReferencespositiveinvoice() {
+    public String getReferencesPositiveInvoice() {
         return referencesPositiveInvoice;
     }
 
-    public void setReferencespositiveinvoice(String negativeinvoice) {
+    public void setReferencesPositiveInvoice(String negativeinvoice) {
         this.referencesPositiveInvoice = negativeinvoice;
     }
 

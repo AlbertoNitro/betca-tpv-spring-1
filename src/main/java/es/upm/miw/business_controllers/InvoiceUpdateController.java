@@ -44,7 +44,7 @@ public class InvoiceUpdateController {
                     invoice.getCreationDate().toString(),
                     invoice.getBaseTax(),
                     invoice.getTax(),
-                    invoice.getReferencespositiveinvoice()
+                    invoice.getReferencesPositiveInvoice()
             );
             invoiceUpdateDtoList.add(invoiceUpdateDto);
         }
@@ -111,7 +111,7 @@ public class InvoiceUpdateController {
             posibleTotal = posibleTotal.add(positiveinvoice.get().getTicket().getCard());
             System.out.println("positive Card+Cash: " + posibleTotal.toString());
             negativeinvoices = Optional.ofNullable(invoiceRepository
-                    .findByReferencespositiveinvoice(positiveinvoice.get().getId()));
+                    .findByReferencesPositiveInvoice(positiveinvoice.get().getId()));
             System.out.println("negativeinvoices " + negativeinvoices.get().toString());
         }
         if (negativeinvoices.isPresent()) {
