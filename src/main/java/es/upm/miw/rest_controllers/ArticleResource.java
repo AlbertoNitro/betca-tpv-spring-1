@@ -26,6 +26,8 @@ public class ArticleResource {
     public static final String CODE_ID = "/{code}";
     public static final String FAMILY_SIZE = "/family-size";
     public static final String MINIMUM = "/minimum";
+    public static final String MINIMUM_STOCK = "/minimum/{stock}";
+    public static final String RESERVATION = "/reservation";
     public static final String SEARCH = "/search";
     public static final String PARTIALLY_DEFINED = "/partially-defined";
     static final String STOCK_PREDICTION = "/stock-prediction";
@@ -48,6 +50,16 @@ public class ArticleResource {
     @GetMapping(value = MINIMUM)
     public List<ArticleMinimumDto> readArticlesMinimum() {
         return this.articleController.readArticlesMinimum();
+    }
+
+    @GetMapping(value = MINIMUM_STOCK)
+    public List<ArticleDto> readArticlesMinimumStock(@PathVariable Integer stock) {
+        return this.articleController.readArticlesMinimumStock(stock);
+    }
+
+    @GetMapping(value = RESERVATION)
+    public List<ArticleDto> readArticlesReservation() {
+        return this.articleController.readArticlesReservation();
     }
 
     @PostMapping

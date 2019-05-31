@@ -1,16 +1,33 @@
 package es.upm.miw.dtos.output;
 
+import java.math.BigDecimal;
+
 public class InvoiceUpdateDto {
     String id;
     String creationDate;
-    float baseTax;
-    float tax;
+    BigDecimal baseTax;
+    BigDecimal tax;
+    String referencesPositiveInvoice;
+    BigDecimal negative;
 
-    public InvoiceUpdateDto(String id, String creationDate, float baseTax, float tax) {
+    public InvoiceUpdateDto(String id, String creationDate, BigDecimal baseTax,
+                            BigDecimal tax,
+                            String referencesPositiveInvoice,
+                            BigDecimal negative) {
         this.id = id;
         this.creationDate = creationDate;
         this.baseTax = baseTax;
         this.tax = tax;
+        this.referencesPositiveInvoice =referencesPositiveInvoice;
+        this.negative = negative;
+    }
+
+    public String getReferencesPositiveInvoice() {
+        return referencesPositiveInvoice;
+    }
+
+    public void setReferencesPositiveInvoice(String referencesPositiveInvoice) {
+        this.referencesPositiveInvoice = referencesPositiveInvoice;
     }
 
     public String getId() {
@@ -29,19 +46,27 @@ public class InvoiceUpdateDto {
         this.creationDate = creationDate;
     }
 
-    public float getBaseTax() {
+    public BigDecimal getBaseTax() {
         return baseTax;
     }
 
-    public void setBaseTax(float baseTax) {
+    public void setBaseTax(BigDecimal baseTax) {
         this.baseTax = baseTax;
     }
 
-    public float getTax() {
+    public BigDecimal getTax() {
         return tax;
     }
 
-    public void setTax(float tax) {
+    public void setTax(BigDecimal tax) {
         this.tax = tax;
+    }
+
+    public BigDecimal getNegative() {
+        return negative;
+    }
+
+    public void setNegative(BigDecimal negative) {
+        this.negative = negative;
     }
 }

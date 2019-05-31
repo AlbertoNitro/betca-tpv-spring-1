@@ -339,4 +339,20 @@ public class TicketController {
         return pdfService.generateTicket(this.updateModifiedTicket(id, modifiedTicket));
     }
 
+    public LocalDateTime convertStringToDate(String datesold){
+        return LocalDateTime.parse(datesold);
+    }
+
+    public List<Article> getDateSold(String datesold) {
+        List<Ticket> tickets =
+                this.ticketRepository.findByCreationDateBetween(this.convertStringToDate(datesold), LocalDateTime.now());
+        List<Article>  results = new ArrayList<>();
+        for (Ticket ticket : tickets) {
+            Shopping[] shoppingList = ticket.getShoppingList();
+            for (int i = 0; i < shoppingList.length; i++) {
+                results.add(shoppingList[i].getArticle());
+            }
+        }
+        return results;
+    }
 }

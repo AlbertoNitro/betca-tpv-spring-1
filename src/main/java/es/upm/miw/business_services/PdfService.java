@@ -4,9 +4,11 @@ import es.upm.miw.documents.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 public class PdfService {
@@ -224,6 +226,37 @@ public class PdfService {
         }
         pdf.line();
         pdf.paragraph(this.cancel);
+        return pdf.build();
+    }
+    public byte[] generateInvoice(Invoice invoice, Ticket ticket){
+        final String path = "/tpv-pdfs/invoices/invoice-" + invoice.getId();
+        PdfBuilder pdf = new PdfBuilder(path, PdfBuilder.PAGE_SIZE_A4);
+        this.generateCommonHead(pdf);
+        BigDecimal totalBeforeTax = new BigDecimal(0);
+        BigDecimal total = new BigDecimal(0);
+        BigDecimal tax = new BigDecimal(0);
+        pdf.paragraphEmphasized("INVOICE");
+        pdf.line();
+        Shopping[] shoppingList = ticket.getShoppingList();
+        pdf.paragraphEmphasized(invoice.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        PdfTableBuilder table = pdf.table(TABLE_COLUMNS_SIZES_TICKETS).tableColumnsHeader(TABLE_COLUMNS_HEADERS);
+        for (int i = 0; i < shoppingList.length; i++) {
+            Shopping shopping = shoppingList[i];
+
+            this.generateTableCellFromShopping(table, shopping, i, 0);
+        }
+        table.build();
+        totalBeforeTax = totalBeforeTax.add(ticket.getCard().add(ticket.getCash()));
+        tax = totalBeforeTax.multiply(invoice.getBaseTax().add(invoice.getTax())).divide(new BigDecimal(100));
+        total = totalBeforeTax.add(tax);
+        pdf.paragraphEmphasized("Total before Tax: " + totalBeforeTax.toString());
+        pdf.paragraphEmphasized("Base tax: " + invoice.getBaseTax().toString() + "% --- Added tax: "
+                +  invoice.getTax().toString() + "% --- Total tax: " + tax.toString());
+        pdf.paragraphEmphasized("Total plus tax: " + total.toString());
+        pdf.paragraph("ID Invoice: " + invoice.getId());
+        pdf.barCode(invoice.getId());
+        pdf.line();
+        this.generateCommonFooter(pdf);
         return pdf.build();
     }
 }

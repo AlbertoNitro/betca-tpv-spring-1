@@ -24,4 +24,8 @@ public interface ArticleRepository extends MongoRepository<Article, String> {
 
     Article findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(String prefix);
 
+    List<Article> findByStockBetween(Integer stockMin, Integer stockLimit);
+
+    List<Article> findByStockLessThan(Integer stockMin);
+
 }
