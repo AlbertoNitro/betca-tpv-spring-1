@@ -52,7 +52,7 @@ public class InvoiceUpdateController {
         return invoiceUpdateDtoList;
     }
     private LocalDateTime convertStringToLocalDateTime(String date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date convertedDate = null;
         try{
             convertedDate = simpleDateFormat.parse(date);
@@ -72,18 +72,24 @@ public class InvoiceUpdateController {
         Optional<User> userOptional = userRepository.findByMobile(mobile);
         User user = userOptional.get();
         List<Invoice> invoices = invoiceRepository.findByUser(user);
-        return convertInvoiceToInvoiceUpdateDto(invoices);
+
+        List<InvoiceUpdateDto> invoiceUpdateDtos = convertInvoiceToInvoiceUpdateDto(invoices);
+        return invoiceUpdateDtos;
     }
     public List<InvoiceUpdateDto> getInvoiceByCreationDateAfter(String afterDate) {
         List<Invoice> invoices = invoiceRepository
                 .findByCreationDateAfter(convertStringToLocalDateTime(afterDate));
         return convertInvoiceToInvoiceUpdateDto(invoices);
     }
-    public List<InvoiceUpdateDto> getInvoiceByCreationDateBetween(String afterDate, String beforeDate) {
+    public List<InvoiceUpdateDto> getInvoiceByCreationDateBetween(String afterDateString, String beforeDateString) {
+        LocalDateTime afterDate = convertStringToLocalDateTime(afterDateString);
+        LocalDateTime beforeDate = convertStringToLocalDateTime(beforeDateString);
         List<Invoice> invoices = invoiceRepository
-                .findByCreationDateBetween(convertStringToLocalDateTime(afterDate),
-                                            convertStringToLocalDateTime(beforeDate));
-        return convertInvoiceToInvoiceUpdateDto(invoices);
+                .findByCreationDateBetween(afterDate, beforeDate);
+        List<InvoiceUpdateDto> invoiceUpdateDtos = convertInvoiceToInvoiceUpdateDto(invoices);
+        System.out.println("La lista de invoices: " + invoices + " - la lista de DTO: " + invoiceUpdateDtos);
+        return invoiceUpdateDtos;
+
     }
     public List<InvoiceUpdateDto> getInvoiceByMobileAndCreationDateBetween(String mobile,
                                                                            String afterDate,
