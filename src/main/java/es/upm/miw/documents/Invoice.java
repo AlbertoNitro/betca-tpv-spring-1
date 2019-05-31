@@ -36,6 +36,14 @@ public class Invoice {
         this.tax = tax;
         this.referencesPositiveInvoice = referencesPositiveInvoice;
     }
+    public Invoice(BigDecimal baseTax, BigDecimal tax, Ticket ticket, String referencesPositiveInvoice) {
+        this.creationDate = LocalDateTime.now();
+        this.baseTax = baseTax;
+        this.tax = tax;
+        this.ticket = ticket;
+        this.referencesPositiveInvoice = referencesPositiveInvoice;
+    }
+
 
     public String getReferencesPositiveInvoice() {
         return referencesPositiveInvoice;
@@ -60,6 +68,8 @@ public class Invoice {
     public String getId() {
         return id;
     }
+
+    public void setId(String id) { this.id =id; }
 
     public Ticket getTicket() {
         return ticket;

@@ -112,4 +112,18 @@ class ArticleControllerIT {
         List<ArticleSearchOutputDto> articleAfterDelete = this.articleController.readAll();
         assertTrue(articleBeforeDelete.size() > articleAfterDelete.size());
     }
+
+    @Test
+    void testReadArticlesMinimumStock(){
+        List<ArticleDto> articles = this.articleController.readArticlesMinimumStock(10);
+        assertNotNull(articles);
+        assertTrue(articles.size() > 0);
+    }
+
+    @Test
+    void testReadArticlesReservation(){
+        List<ArticleDto> articles = this.articleController.readArticlesReservation();
+        assertNotNull(articles);
+        assertTrue(articles.size() > 0);
+    }
 }
