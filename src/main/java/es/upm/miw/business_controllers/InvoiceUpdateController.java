@@ -11,13 +11,11 @@ import es.upm.miw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class InvoiceUpdateController {
@@ -29,7 +27,14 @@ public class InvoiceUpdateController {
     private TicketRepository ticketRepository;
     @Autowired
     private PdfService pdfService;
-
+    private Invoice convertInvoiceUpdateDtoToInvoice(InvoiceUpdateDto invoiceUpdateDto){
+        Invoice invoice = new Invoice (
+                invoiceUpdateDto.getBaseTax(),
+                invoiceUpdateDto.getTax(),
+                invoiceUpdateDto.getReferencesPositiveInvoice()
+        );
+        return invoice;
+    }
     private List<InvoiceUpdateDto> convertInvoiceToInvoiceUpdateDto(List<Invoice> invoices) {
         InvoiceUpdateDto invoiceUpdateDto;
         List<InvoiceUpdateDto> invoiceUpdateDtoList = new ArrayList<InvoiceUpdateDto>();
@@ -37,8 +42,9 @@ public class InvoiceUpdateController {
             invoiceUpdateDto = new InvoiceUpdateDto(
                     invoice.getId(),
                     invoice.getCreationDate().toString(),
-                    Float.parseFloat(invoice.getBaseTax().toString()),
-                    Float.parseFloat(invoice.getTax().toString())
+                    invoice.getBaseTax(),
+                    invoice.getTax(),
+                    invoice.getReferencesPositiveInvoice()
             );
             invoiceUpdateDtoList.add(invoiceUpdateDto);
         }
@@ -93,5 +99,53 @@ public class InvoiceUpdateController {
         Optional<Invoice> invoice = invoiceRepository.findById(id);
         Optional<Ticket> ticket = ticketRepository.findById(invoice.get().getTicket().getId());
         return this.pdfService.generateInvoice(invoice.get(), ticket.get());
+    }
+    public BigDecimal look4PosibleTotal (String id) {
+        BigDecimal posibleTotal = new BigDecimal(0);
+        Optional<List<Invoice>> negativeinvoices = null;
+        Optional<Invoice> positiveinvoice = invoiceRepository.findById(id);
+
+        if (positiveinvoice.isPresent()){
+            posibleTotal = new BigDecimal(String.valueOf(positiveinvoice.get().getTicket().getCash()));
+            System.out.println("positive Cash: " + posibleTotal.toString());
+            posibleTotal = posibleTotal.add(positiveinvoice.get().getTicket().getCard());
+            System.out.println("positive Card+Cash: " + posibleTotal.toString());
+            negativeinvoices = Optional.ofNullable(invoiceRepository
+                    .findByReferencesPositiveInvoice(positiveinvoice.get().getId()));
+            System.out.println("negativeinvoices " + negativeinvoices.get().toString());
+        }
+        if (negativeinvoices.isPresent()) {
+            BigDecimal cash;
+            BigDecimal card;
+            for (Invoice negativeinvoice : negativeinvoices.get()) {
+                cash = negativeinvoice.getTicket().getCard();
+                card = negativeinvoice.getTicket().getCash();
+                posibleTotal = posibleTotal.subtract(cash);
+                posibleTotal = posibleTotal.subtract(card);
+            }
+        }
+        return posibleTotal;
+    }
+    public byte [] createNegativeInvoiceAndPdf(InvoiceUpdateDto invoiceUpdateDto){
+        Invoice negativeInvoice = convertInvoiceUpdateDtoToInvoice(invoiceUpdateDto);
+        Optional<Ticket> oldTicket = Optional.ofNullable(invoiceRepository.findById(invoiceUpdateDto.getId()).get().getTicket());
+        Ticket negativeTicket = null;
+        if (oldTicket.isPresent()) {
+            BigDecimal negativeCash = new BigDecimal(String.valueOf(oldTicket.get().getCash().negate() ));
+            BigDecimal negativeCard = new BigDecimal(String.valueOf(oldTicket.get().getCard().negate() ));
+            negativeTicket = new Ticket(1, negativeCard,
+                    negativeCash,
+                    new BigDecimal(0),
+                    oldTicket.get().getShoppingList(),
+                    oldTicket.get().getUser());
+            ticketRepository.save(negativeTicket);
+            negativeInvoice.setTicket(negativeTicket);
+            negativeInvoice.setUser(oldTicket.get().getUser());
+        }
+        if (negativeInvoice != null) {
+            invoiceRepository.save(negativeInvoice);
+            return this.pdfService.generateInvoice(negativeInvoice, negativeInvoice.getTicket());
+        }
+        return null;
     }
 }
