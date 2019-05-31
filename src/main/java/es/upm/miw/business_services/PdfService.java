@@ -232,6 +232,7 @@ public class PdfService {
         final String path = "/tpv-pdfs/invoices/invoice-" + invoice.getId();
         PdfBuilder pdf = new PdfBuilder(path, PdfBuilder.PAGE_SIZE_A4);
         this.generateCommonHead(pdf);
+        BigDecimal totalBeforeTax = new BigDecimal(0);
         BigDecimal total = new BigDecimal(0);
         BigDecimal tax = new BigDecimal(0);
         pdf.paragraphEmphasized("INVOICE");
@@ -241,15 +242,17 @@ public class PdfService {
         PdfTableBuilder table = pdf.table(TABLE_COLUMNS_SIZES_TICKETS).tableColumnsHeader(TABLE_COLUMNS_HEADERS);
         for (int i = 0; i < shoppingList.length; i++) {
             Shopping shopping = shoppingList[i];
-            total = total.add(ticket.getCard().add(ticket.getCash()));
-            tax = total.multiply(invoice.getBaseTax().add(invoice.getTax())).divide(new BigDecimal(100));
+
             this.generateTableCellFromShopping(table, shopping, i, 0);
         }
         table.build();
-        pdf.paragraphEmphasized("Total before Tax: " + total.toString());
+        totalBeforeTax = totalBeforeTax.add(ticket.getCard().add(ticket.getCash()));
+        tax = totalBeforeTax.multiply(invoice.getBaseTax().add(invoice.getTax())).divide(new BigDecimal(100));
+        total = totalBeforeTax.add(tax);
+        pdf.paragraphEmphasized("Total before Tax: " + totalBeforeTax.toString());
         pdf.paragraphEmphasized("Base tax: " + invoice.getBaseTax().toString() + "% --- Added tax: "
                 +  invoice.getTax().toString() + "% --- Total tax: " + tax.toString());
-        pdf.paragraphEmphasized("Total plus tax: " + total.add(tax).toString());
+        pdf.paragraphEmphasized("Total plus tax: " + total.toString());
         pdf.paragraph("ID Invoice: " + invoice.getId());
         pdf.barCode(invoice.getId());
         pdf.line();

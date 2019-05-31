@@ -5,14 +5,10 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Document
 public class Invoice {
-
-    private static final String DATE_FORMAT = "yyyy";
 
     @Id
     private String id;
@@ -35,7 +31,7 @@ public class Invoice {
         creationDate = LocalDateTime.now();
     }
     public Invoice(BigDecimal baseTax, BigDecimal tax, String referencesPositiveInvoice) {
-      //  this.id = new SimpleDateFormat(DATE_FORMAT).format(new Date()) + idOfYear;
+        this.creationDate = LocalDateTime.now();
         this.baseTax = baseTax;
         this.tax = tax;
         this.referencesPositiveInvoice = referencesPositiveInvoice;
