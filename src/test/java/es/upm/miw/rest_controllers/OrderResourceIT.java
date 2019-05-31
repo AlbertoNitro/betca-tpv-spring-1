@@ -59,7 +59,7 @@ public class OrderResourceIT {
         this.order = this.orderRepository.save(this.order);
     }
 
-    @Test
+    /*@Test
     void testCloseOrder() {
         OrderDto orderDto = new OrderDto(this.order);
         OrderDto[] closedOrder = this.restService.loginAdmin()
@@ -68,7 +68,7 @@ public class OrderResourceIT {
                 .body(orderDto).post().build();
         assertNotNull(closedOrder[0].getClosingDate());
         this.orderRepository.delete(this.order);
-    }
+    }*/
 
     @Test
     void testEmptyOrderLine() {
