@@ -73,7 +73,6 @@ public class OrderController {
             articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
             articleRepository.save(articleDB);
             for (User user : users) {
-                //LogManager.getLogger().debug("Usuarios: " + user.getEmail());
                 sendNotificationAvailableStock(user, "Stock available of " + articleDB.getReference());
             }
         }
@@ -130,7 +129,6 @@ public class OrderController {
         List<Ticket> Tickets = this.ticketRepository.findByShoppingListArticle(code);
         List<User> user = new ArrayList<>();
         for(Ticket item: Tickets) {
-            //LogManager.getLogger().debug("Articulo nombre " + item.getUser());
             for(Shopping article : item.getShoppingList()) {
                 if(article.getShoppingState() == ShoppingState.NOT_COMMITTED) {
                     user.add(item.getUser());
