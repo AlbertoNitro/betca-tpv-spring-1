@@ -52,8 +52,14 @@ public class InvoiceUpdateController {
         return invoiceUpdateDtoList;
     }
     private LocalDateTime convertStringToLocalDateTime(String date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date convertedDate = null;
+        SimpleDateFormat simpleDateFormat;
+        char discriminator = date.charAt(4);
+        if ("-".equals(discriminator)) {
+            simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        }else {
+            simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        }
+            Date convertedDate = null;
         try{
             convertedDate = simpleDateFormat.parse(date);
         }
@@ -76,11 +82,6 @@ public class InvoiceUpdateController {
         List<InvoiceUpdateDto> invoiceUpdateDtos = convertInvoiceToInvoiceUpdateDto(invoices);
         return invoiceUpdateDtos;
     }
-    public List<InvoiceUpdateDto> getInvoiceByCreationDateAfter(String afterDate) {
-        List<Invoice> invoices = invoiceRepository
-                .findByCreationDateAfter(convertStringToLocalDateTime(afterDate));
-        return convertInvoiceToInvoiceUpdateDto(invoices);
-    }
     public List<InvoiceUpdateDto> getInvoiceByCreationDateBetween(String afterDateString, String beforeDateString) {
         LocalDateTime afterDate = convertStringToLocalDateTime(afterDateString);
         LocalDateTime beforeDate = convertStringToLocalDateTime(beforeDateString);
@@ -96,6 +97,10 @@ public class InvoiceUpdateController {
                                                                            String beforeDate) {
         Optional<User> userOptional = userRepository.findByMobile(mobile);
         User user = userOptional.get();
+        System.out.println("USER: " + user.getId().toString());
+        System.out.println("afterD: " + convertStringToLocalDateTime(afterDate));
+        System.out.println("beforeDate: " + convertStringToLocalDateTime(beforeDate));
+        System.out.println(user);
         List<Invoice> invoices = invoiceRepository
                 .findByUserAndCreationDateBetween(user, convertStringToLocalDateTime(afterDate),
                         convertStringToLocalDateTime(beforeDate));
