@@ -66,4 +66,12 @@ public class OrderControllerIT {
         assertTrue(users.size() > 0);
         this.orderRepository.delete(this.order);
     }
+
+    @Test
+    void testUpdateArticleStock() {
+        Order updateOrder = orderRepository.findById(this.order.getId()).orElse(null);
+        OrderLine[] orderLine = updateOrder.getOrderLines();
+        System.out.print("Enter something:" + orderLine[0].getArticle());
+        assertTrue(orderLine[0].getArticle().getStock() == 5);
+    }
 }

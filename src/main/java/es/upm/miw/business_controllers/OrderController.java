@@ -64,7 +64,7 @@ public class OrderController {
     private void updateArticleStock(@NotNull Order order) {
         
         OrderLine[] orderLine = order.getOrderLines();
-        List<User> users = new ArrayList<>();
+        List<User> users;
 
         for (OrderLine orderLineSingle : orderLine) {
             Article article = orderLineSingle.getArticle();
