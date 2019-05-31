@@ -36,6 +36,7 @@ public class Invoice {
     }
     public Invoice(BigDecimal baseTax, BigDecimal tax, String referencesPositiveInvoice) {
       //  this.id = new SimpleDateFormat(DATE_FORMAT).format(new Date()) + idOfYear;
+        this.creationDate = LocalDateTime.now();
         this.baseTax = baseTax;
         this.tax = tax;
         this.referencesPositiveInvoice = referencesPositiveInvoice;

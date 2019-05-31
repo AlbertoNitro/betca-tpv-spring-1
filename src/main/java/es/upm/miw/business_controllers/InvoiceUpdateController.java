@@ -44,7 +44,8 @@ public class InvoiceUpdateController {
                     invoice.getCreationDate().toString(),
                     invoice.getBaseTax(),
                     invoice.getTax(),
-                    invoice.getReferencesPositiveInvoice()
+                    invoice.getReferencesPositiveInvoice(),
+                    new BigDecimal(0)
             );
             invoiceUpdateDtoList.add(invoiceUpdateDto);
         }
@@ -131,8 +132,16 @@ public class InvoiceUpdateController {
         Optional<Ticket> oldTicket = Optional.ofNullable(invoiceRepository.findById(invoiceUpdateDto.getId()).get().getTicket());
         Ticket negativeTicket = null;
         if (oldTicket.isPresent()) {
-            BigDecimal negativeCash = new BigDecimal(String.valueOf(oldTicket.get().getCash().negate() ));
-            BigDecimal negativeCard = new BigDecimal(String.valueOf(oldTicket.get().getCard().negate() ));
+            BigDecimal oldCash = oldTicket.get().getCash();
+            BigDecimal oldCard = oldTicket.get().getCard();
+            BigDecimal negativeCash = new BigDecimal(0);
+            BigDecimal negativeCard = new BigDecimal(0);
+            BigDecimal differenceCashCard;
+            if (invoiceUpdateDto.getNegative().compareTo(oldCash) > 0 ) {
+                differenceCashCard = oldCard.subtract(oldCash);
+                negativeCard = differenceCashCard.negate();
+            }
+            negativeCash = invoiceUpdateDto.getNegative().negate();
             negativeTicket = new Ticket(1, negativeCard,
                     negativeCash,
                     new BigDecimal(0),

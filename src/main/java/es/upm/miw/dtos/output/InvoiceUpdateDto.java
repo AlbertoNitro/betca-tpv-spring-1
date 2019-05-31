@@ -8,13 +8,18 @@ public class InvoiceUpdateDto {
     BigDecimal baseTax;
     BigDecimal tax;
     String referencesPositiveInvoice;
+    BigDecimal negative;
 
-    public InvoiceUpdateDto(String id, String creationDate, BigDecimal baseTax, BigDecimal tax, String referencesPositiveInvoice) {
+    public InvoiceUpdateDto(String id, String creationDate, BigDecimal baseTax,
+                            BigDecimal tax,
+                            String referencesPositiveInvoice,
+                            BigDecimal negative) {
         this.id = id;
         this.creationDate = creationDate;
         this.baseTax = baseTax;
         this.tax = tax;
         this.referencesPositiveInvoice =referencesPositiveInvoice;
+        this.negative = negative;
     }
 
     public String getReferencesPositiveInvoice() {
@@ -55,5 +60,13 @@ public class InvoiceUpdateDto {
 
     public void setTax(BigDecimal tax) {
         this.tax = tax;
+    }
+
+    public BigDecimal getNegative() {
+        return negative;
+    }
+
+    public void setNegative(BigDecimal negative) {
+        this.negative = negative;
     }
 }
