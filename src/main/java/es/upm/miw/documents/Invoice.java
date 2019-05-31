@@ -73,10 +73,6 @@ public class Invoice {
         return creationDate;
     }
 
-    public int simpleId() {
-        return Integer.parseInt(String.valueOf(id).substring(DATE_FORMAT.length()));
-    }
-
     public BigDecimal getBaseTax() {
         return baseTax;
     }

@@ -61,8 +61,11 @@ public class Ticket {
         this.card = this.card.add(card);
         this.cash = this.cash.add(cash);
         this.voucher = this.voucher.add(voucher);
-        if (this.pay().compareTo(this.getTotalCommited()) < 0) {
-            throw new BadRequestException("Dinero inferior al material entregado");
+        BigDecimal zero = new BigDecimal(0);
+        if ( this.card.compareTo(zero) > -1 && this.card.compareTo(zero) > -1) {
+            if (this.pay().compareTo(this.getTotalCommited()) < 0) {
+                throw new BadRequestException("Dinero inferior al material entregado");
+            }
         }
     }
 
