@@ -2,6 +2,7 @@ package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
 import es.upm.miw.business_services.PdfService;
+import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Shopping;
 import es.upm.miw.documents.ShoppingState;
 import es.upm.miw.documents.Ticket;
@@ -108,4 +109,10 @@ public class TicketControllerIT {
         assertNotEquals(incorrectDay, result);
     }
 
+    @Test
+    void testGetDateSold(){
+        List<Article> articles = this.ticketController.getDateSold("2019-05-30T00:00:00");
+        assertNotNull(articles);
+        assertTrue(articles.size() > 0);
+    }
 }
