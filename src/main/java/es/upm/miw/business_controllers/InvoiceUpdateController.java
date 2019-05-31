@@ -52,7 +52,6 @@ public class InvoiceUpdateController {
         return invoiceUpdateDtoList;
     }
     private LocalDateTime convertStringToLocalDateTime(String date) {
-        System.out.println("Fecha: "+date);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         Date convertedDate = null;
         try{
@@ -108,27 +107,25 @@ public class InvoiceUpdateController {
         Optional<Invoice> invoice = invoiceRepository.findById(id);
         Invoice positiveInvoice;
         if (invoice.isPresent()
-                && invoice.get().getTicket().getCash().compareTo(ZERO) > 0
-                && invoice.get().getTicket().getCard().compareTo(ZERO) > 0){
+                && invoice.get().getTicket().getCash().compareTo(ZERO) >= 0
+                && invoice.get().getTicket().getCard().compareTo(ZERO) >= 0){
             positiveInvoice = invoice.get();
             posibleTotal = new BigDecimal(String.valueOf(positiveInvoice.getTicket().getCash()));
-            System.out.println("positive Cash: " + posibleTotal.toString());
             posibleTotal = posibleTotal.add(positiveInvoice.getTicket().getCard());
-            System.out.println("positive Card+Cash: " + posibleTotal.toString());
             negativeinvoices = Optional.ofNullable(invoiceRepository
                     .findByReferencesPositiveInvoice(positiveInvoice.getId()));
-            System.out.println("negativeinvoices " + negativeinvoices.get().toString());
-        }
-        if (negativeinvoices.isPresent()) {
-            BigDecimal cash;
-            BigDecimal card;
-            for (Invoice negativeinvoice : negativeinvoices.get()) {
-                cash = negativeinvoice.getTicket().getCard();
-                card = negativeinvoice.getTicket().getCash();
-                posibleTotal = posibleTotal.add(cash);
-                posibleTotal = posibleTotal.add(card);
+            if (negativeinvoices.isPresent()) {
+                BigDecimal cash;
+                BigDecimal card;
+                for (Invoice negativeinvoice : negativeinvoices.get()) {
+                    cash = negativeinvoice.getTicket().getCard();
+                    card = negativeinvoice.getTicket().getCash();
+                    posibleTotal = posibleTotal.add(cash);
+                    posibleTotal = posibleTotal.add(card);
+                }
             }
         }
+
         return posibleTotal;
     }
     public byte [] createNegativeInvoiceAndPdf(InvoiceUpdateDto invoiceUpdateDto){
@@ -140,12 +137,12 @@ public class InvoiceUpdateController {
             BigDecimal oldCard = oldTicket.get().getCard();
             BigDecimal negativeCash = new BigDecimal(0);
             BigDecimal negativeCard = new BigDecimal(0);
-            BigDecimal differenceCashCard;
+            BigDecimal differenceCashCard = new BigDecimal(0);
             if (invoiceUpdateDto.getNegative().compareTo(oldCash) > 0 ) {
                 differenceCashCard = invoiceUpdateDto.getNegative().subtract(oldCash);
                 negativeCard = differenceCashCard.negate();
             }
-            negativeCash = invoiceUpdateDto.getNegative().negate();
+            negativeCash = invoiceUpdateDto.getNegative().subtract(differenceCashCard).negate();
             negativeTicket = new Ticket(1,
                                         negativeCard,
                                         negativeCash,
