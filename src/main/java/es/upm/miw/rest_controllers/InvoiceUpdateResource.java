@@ -1,6 +1,7 @@
 package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.InvoiceUpdateController;
+import es.upm.miw.dtos.input.TicketQueryInputDto;
 import es.upm.miw.dtos.output.InvoiceUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +23,8 @@ public class InvoiceUpdateResource {
     public static final String MOBILEIDBETWEENDATES = "/dates/{mobile}/{afterDate}/{beforeDate}";
     public static final String INVOICEUPDATE = "/invoice-update";
     public static final String PDF = "/pdf/{id}";
-    public static final String NEGATIVE = "/negative/{id}";
+    public static final String MAXNEGATIVE = "/maxnegative/{id}";
+    public static final String NEGATIVE = "/negative";
     @Autowired
     private InvoiceUpdateController invoiceUpdateController;
 
@@ -56,9 +58,13 @@ public class InvoiceUpdateResource {
                                                                                 afterDate,
                                                                                 beforeDate);
     }
-    @GetMapping(value = NEGATIVE)
+    @GetMapping(value = MAXNEGATIVE)
     public BigDecimal look4PosibleTotal (@PathVariable String id) {
         return invoiceUpdateController.look4PosibleTotal(id);
+    }
+    @PostMapping(value = NEGATIVE, produces = {"application/pdf", "application/json"})
+    public byte[] createNegativeInvoiceAndPdf (@RequestBody InvoiceUpdateDto invoiceUpdateDto){
+        return invoiceUpdateController.createNegativeInvoiceAndPdf(invoiceUpdateDto);
     }
 
 }
