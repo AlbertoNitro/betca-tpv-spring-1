@@ -37,7 +37,7 @@ public class OrderController {
 
     public Order closeOrder(String orderId, OrderLine[] orderLine) {
         Order closeOrder = orderRepository.findById(orderId).orElse(null);
-        if(orderLine.length > 0) {
+        if(orderLine.length > 0 && closeOrder != null) {
             closeOrder.close();
             closeOrder.setOrderLines(orderLine);
             updateArticleStock(closeOrder);
@@ -68,7 +68,7 @@ public class OrderController {
 
         for (OrderLine orderLineSingle : orderLine) {
             Article article = orderLineSingle.getArticle();
-            Article articleDB = this.articleRepository.findById(article.getCode()).get();
+            Article articleDB = this.articleRepository.findById(article.getCode()).orElse(null);
             users = getUsersWithNotCommittedTickets(article.getCode());
             articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
             articleRepository.save(articleDB);
@@ -126,9 +126,9 @@ public class OrderController {
     }
 
     private List<User> getUsersWithNotCommittedTickets(String code) {
-        List<Ticket> Tickets = this.ticketRepository.findByShoppingListArticle(code);
+        List<Ticket> tickets = this.ticketRepository.findByShoppingListArticle(code);
         List<User> user = new ArrayList<>();
-        for(Ticket item: Tickets) {
+        for(Ticket item: tickets) {
             for(Shopping article : item.getShoppingList()) {
                 if(article.getShoppingState() == ShoppingState.NOT_COMMITTED) {
                     user.add(item.getUser());
