@@ -37,7 +37,7 @@ public class OrderController {
 
     public Order closeOrder(String orderId, OrderLine[] orderLine) {
         Order closeOrder = orderRepository.findById(orderId).orElse(null);
-        if(orderLine.length > 0) {
+        if(orderLine.length > 0 && closeOrder != null) {
             closeOrder.close();
             closeOrder.setOrderLines(orderLine);
             updateArticleStock(closeOrder);
@@ -64,16 +64,15 @@ public class OrderController {
     private void updateArticleStock(@NotNull Order order) {
         
         OrderLine[] orderLine = order.getOrderLines();
-        List<User> users = new ArrayList<>();
+        List<User> users;
 
         for (OrderLine orderLineSingle : orderLine) {
             Article article = orderLineSingle.getArticle();
-            Article articleDB = this.articleRepository.findById(article.getCode()).get();
+            Article articleDB = this.articleRepository.findById(article.getCode()).orElse(null);
             users = getUsersWithNotCommittedTickets(article.getCode());
             articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
             articleRepository.save(articleDB);
             for (User user : users) {
-                //LogManager.getLogger().debug("Usuarios: " + user.getEmail());
                 sendNotificationAvailableStock(user, "Stock available of " + articleDB.getReference());
             }
         }
@@ -127,10 +126,9 @@ public class OrderController {
     }
 
     private List<User> getUsersWithNotCommittedTickets(String code) {
-        List<Ticket> Tickets = this.ticketRepository.findByShoppingListArticle(code);
+        List<Ticket> tickets = this.ticketRepository.findByShoppingListArticle(code);
         List<User> user = new ArrayList<>();
-        for(Ticket item: Tickets) {
-            //LogManager.getLogger().debug("Articulo nombre " + item.getUser());
+        for(Ticket item: tickets) {
             for(Shopping article : item.getShoppingList()) {
                 if(article.getShoppingState() == ShoppingState.NOT_COMMITTED) {
                     user.add(item.getUser());
