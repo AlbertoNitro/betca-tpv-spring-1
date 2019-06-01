@@ -53,8 +53,9 @@ public class InvoiceUpdateController {
     }
     private LocalDateTime convertStringToLocalDateTime(String date) {
         SimpleDateFormat simpleDateFormat;
-        char discriminator = date.charAt(4);
-        if ("-".equals(discriminator)) {
+        char discriminator = '-';
+        char discriminated = date.charAt(4);
+        if (discriminated == discriminator) {
             simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         }else {
             simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -104,7 +105,7 @@ public class InvoiceUpdateController {
                         convertStringToLocalDateTime(beforeDate));
         if (invoices.size()>0){
             return convertInvoiceToInvoiceUpdateDto(invoices);
-        } else return null;
+        } else return new ArrayList<InvoiceUpdateDto>();
     }
     public byte[] generatePdf(String id) {
         Optional<Invoice> invoice = invoiceRepository.findById(id);
