@@ -87,9 +87,11 @@ public class InvoiceUpdateController {
         LocalDateTime beforeDate = convertStringToLocalDateTime(beforeDateString);
         List<Invoice> invoices = invoiceRepository
                 .findByCreationDateBetween(afterDate, beforeDate);
-        List<InvoiceUpdateDto> invoiceUpdateDtos = convertInvoiceToInvoiceUpdateDto(invoices);
-        System.out.println("La lista de invoices: " + invoices + " - la lista de DTO: " + invoiceUpdateDtos);
-        return invoiceUpdateDtos;
+        if (invoices.size()>0) {
+            List<InvoiceUpdateDto> invoiceUpdateDtos = convertInvoiceToInvoiceUpdateDto(invoices);
+            return invoiceUpdateDtos;
+        } else
+            return null;
 
     }
     public List<InvoiceUpdateDto> getInvoiceByMobileAndCreationDateBetween(String mobile,
@@ -97,14 +99,12 @@ public class InvoiceUpdateController {
                                                                            String beforeDate) {
         Optional<User> userOptional = userRepository.findByMobile(mobile);
         User user = userOptional.get();
-        System.out.println("USER: " + user.getId().toString());
-        System.out.println("afterD: " + convertStringToLocalDateTime(afterDate));
-        System.out.println("beforeDate: " + convertStringToLocalDateTime(beforeDate));
-        System.out.println(user);
         List<Invoice> invoices = invoiceRepository
                 .findByUserAndCreationDateBetween(user, convertStringToLocalDateTime(afterDate),
                         convertStringToLocalDateTime(beforeDate));
-        return convertInvoiceToInvoiceUpdateDto(invoices);
+        if (invoices.size()>0){
+            return convertInvoiceToInvoiceUpdateDto(invoices);
+        } else return null;
     }
     public byte[] generatePdf(String id) {
         Optional<Invoice> invoice = invoiceRepository.findById(id);

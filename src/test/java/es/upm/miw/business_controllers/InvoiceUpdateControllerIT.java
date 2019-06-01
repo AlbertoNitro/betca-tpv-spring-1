@@ -91,25 +91,7 @@ public class InvoiceUpdateControllerIT {
         LocalDateTime creationDateTest = invoiceRepository.findAll().get(0).getCreationDate();
         assertEquals(this.user.getMobile(), "777");
     }
-    /*
-    @Test
-    void getInvoiceByCreationDateAfter() {
-        LocalDateTime afterDateTest = LocalDateTime.now().minusDays(1);
-        InvoiceUpdateDto testInvoiceDto = invoiceUpdateController.getInvoiceByCreationDateAfter(afterDateTest.toString()).get(0);
-        String myInvoiceId = invoiceRepository.findAll().get(0).getId();
-        assertEquals(myInvoiceId, testInvoiceDto.getId() );
-    }
-     */
-    @Test
-    void getInvoiceByCreationDateBetween() {
-        String afterDateTest = LocalDateTime.now().minusDays(5).toString();
-        String beforeDateTest = LocalDateTime.now().plusDays(5).toString();
-        List<InvoiceUpdateDto> testInvoiceDtoList = invoiceUpdateController
-                .getInvoiceByCreationDateBetween(afterDateTest, beforeDateTest);
-        String myInvoiceId = invoiceRepository.findAll().get(0).getId();
-        assertEquals(myInvoiceId, testInvoiceDtoList.get(0).getId() );
 
-    }
     @Test
     void getInvoiceByMobileAndCreationDateBetween() {
         String afterDateTest = LocalDateTime.now().minusDays(5).toString();
