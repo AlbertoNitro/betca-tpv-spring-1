@@ -52,8 +52,15 @@ public class InvoiceUpdateController {
         return invoiceUpdateDtoList;
     }
     private LocalDateTime convertStringToLocalDateTime(String date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date convertedDate = null;
+        SimpleDateFormat simpleDateFormat;
+        char discriminator = '-';
+        char discriminated = date.charAt(4);
+        if (discriminated == discriminator) {
+            simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        }else {
+            simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        }
+            Date convertedDate = null;
         try{
             convertedDate = simpleDateFormat.parse(date);
         }
@@ -76,19 +83,16 @@ public class InvoiceUpdateController {
         List<InvoiceUpdateDto> invoiceUpdateDtos = convertInvoiceToInvoiceUpdateDto(invoices);
         return invoiceUpdateDtos;
     }
-    public List<InvoiceUpdateDto> getInvoiceByCreationDateAfter(String afterDate) {
-        List<Invoice> invoices = invoiceRepository
-                .findByCreationDateAfter(convertStringToLocalDateTime(afterDate));
-        return convertInvoiceToInvoiceUpdateDto(invoices);
-    }
     public List<InvoiceUpdateDto> getInvoiceByCreationDateBetween(String afterDateString, String beforeDateString) {
         LocalDateTime afterDate = convertStringToLocalDateTime(afterDateString);
         LocalDateTime beforeDate = convertStringToLocalDateTime(beforeDateString);
         List<Invoice> invoices = invoiceRepository
                 .findByCreationDateBetween(afterDate, beforeDate);
-        List<InvoiceUpdateDto> invoiceUpdateDtos = convertInvoiceToInvoiceUpdateDto(invoices);
-        System.out.println("La lista de invoices: " + invoices + " - la lista de DTO: " + invoiceUpdateDtos);
-        return invoiceUpdateDtos;
+        if (invoices.size()>0) {
+            List<InvoiceUpdateDto> invoiceUpdateDtos = convertInvoiceToInvoiceUpdateDto(invoices);
+            return invoiceUpdateDtos;
+        } else
+            return null;
 
     }
     public List<InvoiceUpdateDto> getInvoiceByMobileAndCreationDateBetween(String mobile,
@@ -99,7 +103,9 @@ public class InvoiceUpdateController {
         List<Invoice> invoices = invoiceRepository
                 .findByUserAndCreationDateBetween(user, convertStringToLocalDateTime(afterDate),
                         convertStringToLocalDateTime(beforeDate));
-        return convertInvoiceToInvoiceUpdateDto(invoices);
+        if (invoices.size()>0){
+            return convertInvoiceToInvoiceUpdateDto(invoices);
+        } else return new ArrayList<InvoiceUpdateDto>();
     }
     public byte[] generatePdf(String id) {
         Optional<Invoice> invoice = invoiceRepository.findById(id);

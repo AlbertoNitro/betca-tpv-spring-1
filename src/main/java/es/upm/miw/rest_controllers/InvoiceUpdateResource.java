@@ -18,9 +18,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping(InvoiceUpdateResource.INVOICEUPDATE)
 public class InvoiceUpdateResource {
     public static final String MOBILEID = "/mobile/{mobile}";
-    public static final String FROMDATE = "/dates/{fromdate}";
     public static final String BETWEENDATES = "/dates/{afterDate}/{beforeDate}";
-    public static final String MOBILEIDBETWEENDATES = "/dates/{mobile}/{afterDate}/{beforeDate}";
+    public static final String MOBILEIDBETWEENDATES = "/mobiledates/{mobile}/{afterDate}/{beforeDate}";
     public static final String INVOICEUPDATE = "/invoice-update";
     public static final String PDF = "/pdf/{id}";
     public static final String MAXNEGATIVE = "/maxnegative/{id}";
@@ -41,10 +40,6 @@ public class InvoiceUpdateResource {
     public byte[] getInvoicePDF(@PathVariable String id){
         byte[] response = invoiceUpdateController.generatePdf(id);
         return response;
-    }
-    @GetMapping(value = FROMDATE)
-    public List<InvoiceUpdateDto> getInvoicesByCreationDateAfter(@PathVariable String afterDate) {
-        return invoiceUpdateController.getInvoiceByCreationDateAfter(afterDate);
     }
     @GetMapping(value = BETWEENDATES)
     public List<InvoiceUpdateDto> getInvoicesByCreationDateBetween(@PathVariable String afterDate, @PathVariable String beforeDate) {
