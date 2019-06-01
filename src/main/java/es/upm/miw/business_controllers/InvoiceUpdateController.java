@@ -102,7 +102,9 @@ public class InvoiceUpdateController {
         List<Invoice> invoices = invoiceRepository
                 .findByUserAndCreationDateBetween(user, convertStringToLocalDateTime(afterDate),
                         convertStringToLocalDateTime(beforeDate));
-        return convertInvoiceToInvoiceUpdateDto(invoices);
+        if (invoices.size()>0){
+            return convertInvoiceToInvoiceUpdateDto(invoices);
+        } else return null;
     }
     public byte[] generatePdf(String id) {
         Optional<Invoice> invoice = invoiceRepository.findById(id);
