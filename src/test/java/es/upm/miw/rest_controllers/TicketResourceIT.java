@@ -575,4 +575,13 @@ class TicketResourceIT {
         assertNotNull(pdf);
     }
 
+    @Test
+    void testGetDateSold() {
+        List<Article> articles = Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<Article[]>())
+                .clazz(Article[].class).path(TicketResource.TICKETS).path(TicketResource.DATE_SOLD).expand("2019-05-30T00:00:00")
+                .get().build());
+        assertNotNull(articles);
+        assertTrue(articles.size() > 1);
+    }
+
 }
