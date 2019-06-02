@@ -59,7 +59,7 @@ public class InvoiceUpdateControllerIT {
         this.shoppingsDto[0] = shoppingDto;
         this.shoppingsDto[1] = shoppingDto2;
         this.user =  new User("777", "User777", "777", "123456789",
-                "C/ TPV 5, Vallekas", "777@mail.com");
+                "10", "C/ TPV 5, Vallekas", "777@mail.com");
         this.userRepository.save(user);
         this.ticket = new Ticket(5, new BigDecimal(25), new BigDecimal(100), new BigDecimal(0),
                 shoppings, user);
