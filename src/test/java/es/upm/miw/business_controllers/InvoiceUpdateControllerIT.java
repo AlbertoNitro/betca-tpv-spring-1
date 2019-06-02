@@ -45,9 +45,7 @@ public class InvoiceUpdateControllerIT {
 
     @BeforeEach
     void seedDb() {
-        // ticketRepository.deletel();
         userRepository.deleteByMobile("777");
-        // invoiceRepository.deleteAll();
         this.shoppings = new Shopping[2];
         Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20")
                 .description("Varios").build());
