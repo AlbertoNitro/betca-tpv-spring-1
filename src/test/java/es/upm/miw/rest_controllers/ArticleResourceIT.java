@@ -73,17 +73,21 @@ class ArticleResourceIT {
     }
 
     @Test
-    void testMinimumStock() {
-        List<Article> list = this.articleRepository.findByStockBetween(0, 25);
-        assertNotNull(list);
-        assertTrue(list.size() > 0);
+    void testArticlesMinimumStock() {
+        List<ArticleDto> dtos = Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleDto[]>())
+                .clazz(ArticleDto[].class).path(ArticleResource.ARTICLES).path(ArticleResource.MINIMUM_STOCK).expand("6")
+                .get().build());
+        assertNotNull(dtos);
+        assertTrue(dtos.size() > 1);
     }
 
     @Test
-    void testReservation() {
-        List<Article> list = this.articleRepository.findByStockLessThan(1);
-        assertNotNull(list);
-        assertTrue(list.size() > 0);
+    void testArticlesReservation() {
+        List<ArticleDto> dtos = Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleDto[]>())
+                .clazz(ArticleDto[].class).path(ArticleResource.ARTICLES).path(ArticleResource.RESERVATION)
+                .get().build());
+        assertNotNull(dtos);
+        assertTrue(dtos.size() > 0);
     }
 
     @Test
