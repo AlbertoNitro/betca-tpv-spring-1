@@ -26,4 +26,5 @@ public interface UserRepository extends MongoRepository<User, String> {
     List<UserMinimumDto> findByMobileUsernameDniAddressLikeNullSafeandRoles(String mobile, String username, String dni, String address, Role[]roles);
 
 
+    void deleteByMobile(String mobile);
 }

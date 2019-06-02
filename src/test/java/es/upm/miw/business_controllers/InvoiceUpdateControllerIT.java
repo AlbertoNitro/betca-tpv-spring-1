@@ -45,9 +45,9 @@ public class InvoiceUpdateControllerIT {
 
     @BeforeEach
     void seedDb() {
-        ticketRepository.deleteAll();
-        userRepository.deleteAll();
-        invoiceRepository.deleteAll();
+        // ticketRepository.deletel();
+        userRepository.deleteByMobile("777");
+        // invoiceRepository.deleteAll();
         this.shoppings = new Shopping[2];
         Shopping shopping = new Shopping(1, new BigDecimal(1), Article.builder("1").retailPrice("20")
                 .description("Varios").build());
@@ -97,9 +97,9 @@ public class InvoiceUpdateControllerIT {
         String afterDateTest = LocalDateTime.now().minusDays(5).toString();
         String beforeDateTest = LocalDateTime.now().plusDays(5).toString();
         List<InvoiceUpdateDto> testInvoiceDtoList = invoiceUpdateController
-                .getInvoiceByMobileAndCreationDateBetween("777", afterDateTest, beforeDateTest);
+                .getInvoiceByMobileAndCreationDateBetween("666666004", afterDateTest, beforeDateTest);
         User userActual = invoiceRepository.findAll().get(0).getUser();
-        User userExpected = userRepository.findByMobile("777").get();
+        User userExpected = userRepository.findByMobile("666666004").get();
         assertEquals(userActual, userExpected );
     }
     @Test
