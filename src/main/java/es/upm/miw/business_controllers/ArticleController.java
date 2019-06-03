@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 @Controller
 public class ArticleController {
 
+    private static final Integer ZERO = 0;
+    private static final Integer ONE = 1;
+
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -50,6 +53,24 @@ public class ArticleController {
             dtos.add(new ArticleMinimumDto(article));
         }
         return dtos;
+    }
+
+    public List<ArticleDto> readArticlesMinimumStock(Integer minimumStock){
+        List<Article> articles = articleRepository.findByStockBetween(ZERO, minimumStock);
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        for(Article article : articles){
+            articleDtos.add(new ArticleDto(article));
+        }
+        return articleDtos;
+    }
+
+    public List<ArticleDto> readArticlesReservation(){
+        List<Article> articles = articleRepository.findByStockLessThan(ONE);
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        for(Article article : articles){
+            articleDtos.add(new ArticleDto(article));
+        }
+        return articleDtos;
     }
 
     public ArticleDto readArticle(String code) {
@@ -137,13 +158,8 @@ public class ArticleController {
         return new FamilySizeInputDto(familyComposite);
     }
 
-    //public List<ArticleDto> findArticleByprovider(String idProvider){
-    //    System.out.println("ArticuloByController: " + articleRepository.findAllByProvider(idProvider));
-    //    return articleRepository.findAllByProvider(idProvider);
-    //}
-
-    public List<Article> findArticleByprovider(String id){
+    public List<ArticleSearchOutputDto> findArticleByProvider(String id){
         Optional<Provider> provider = providerRepository.findById(id);
-        return (List<Article>) this.articleRepository.findAllByProvider(provider);
+        return (List<ArticleSearchOutputDto>) this.articleRepository.findAllByProvider(provider);
     }
 }

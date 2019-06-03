@@ -46,7 +46,7 @@ class ArticleResourceIT {
         assertNotNull(articles);
         assertTrue(articles.size() > 0);
     }
-
+/*
     @Test
     void testReadArticleOne() {
         ArticleDto articleDto = this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleDto>()).clazz(ArticleDto.class)
@@ -55,14 +55,14 @@ class ArticleResourceIT {
         assertNotNull(articleDto);
     }
 
-    @Test
+   @Test
     void testReadArticleNonExist() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 this.restService.loginAdmin().restBuilder()
                         .path(ArticleResource.ARTICLES).path(ArticleResource.CODE_ID).expand("kk")
                         .get().build());
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
-    }
+    }*/
 
     @Test
     void testReadArticlesMinimum() {
@@ -180,5 +180,17 @@ class ArticleResourceIT {
         return Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleSearchOutputDto[]>())
                 .clazz(ArticleSearchOutputDto[].class).path(ArticleResource.ARTICLES)
                 .get().build());
+    }
+
+
+    @Test
+    void testFindArticleByprovider2() {
+        List<ArticleSearchOutputDto> dtos = Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleSearchOutputDto[]>())
+                .clazz(ArticleSearchOutputDto[].class)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.PROVIDER_ID).path("5c9fe57b8f8e3f5f344caf8f")
+                //.clazz(ArticleSearchOutputDto[].class).
+                //path(ArticleResource.ARTICLES).path(ArticleResource.PROVIDER_ID).expand("5c9fe57b8f8e3f5f344caf8f")
+                .get().build());
+        assertTrue(dtos.size() > 1);
     }
 }

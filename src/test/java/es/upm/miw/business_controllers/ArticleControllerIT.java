@@ -81,9 +81,11 @@ class ArticleControllerIT {
     }
 
     @Test
-    void findArticlesProvider(){
-        System.out.println(".........." + articleController.findArticleByprovider("5c9fe57b8f8e3f5f344caf8f"));
+    void findArticleByProvider(){
+        List<ArticleSearchOutputDto> articles = articleController.findArticleByProvider("5c9fe57b8f8e3f5f344caf8f");
+        assertTrue(articles.size() > 0);
     }
+
     @Test
     void testUpdateArticleNotFoundException() {
         assertThrows(NotFoundException.class, () -> this.articleController.update("miw", articleDto));

@@ -31,5 +31,10 @@ public interface ArticleRepository extends MongoRepository<Article, String> {
     //List<Article> findByProvider(String id);
 
     //@Query(value = "{}", fields = "{'_id':0,'code':1}")
-    List<Article> findAllByProvider(Optional<Provider> provider);
+    List<ArticleSearchOutputDto> findAllByProvider(Optional<Provider> provider);
+
+    List<Article> findByStockBetween(Integer stockMin, Integer stockLimit);
+
+    List<Article> findByStockLessThan(Integer stockMin);
+
 }

@@ -28,10 +28,12 @@ public class ArticleResource {
     public static final String CODE_ID = "/{code}";
     public static final String FAMILY_SIZE = "/family-size";
     public static final String MINIMUM = "/minimum";
+    public static final String MINIMUM_STOCK = "/minimum/{stock}";
+    public static final String RESERVATION = "/reservation";
     public static final String SEARCH = "/search";
     public static final String PARTIALLY_DEFINED = "/partially-defined";
     static final String STOCK_PREDICTION = "/stock-prediction";
-    public static final String PROVIDER = "/provider";
+    public static final String PROVIDER_ID = "/provider_id/{id}";
 
     @Autowired
     private ArticleController articleController;
@@ -45,12 +47,23 @@ public class ArticleResource {
 
     @GetMapping(value = CODE_ID)
     public ArticleDto readArticle(@PathVariable String code) {
+
         return this.articleController.readArticle(code);
     }
 
     @GetMapping(value = MINIMUM)
     public List<ArticleMinimumDto> readArticlesMinimum() {
         return this.articleController.readArticlesMinimum();
+    }
+
+    @GetMapping(value = MINIMUM_STOCK)
+    public List<ArticleDto> readArticlesMinimumStock(@PathVariable Integer stock) {
+        return this.articleController.readArticlesMinimumStock(stock);
+    }
+
+    @GetMapping(value = RESERVATION)
+    public List<ArticleDto> readArticlesReservation() {
+        return this.articleController.readArticlesReservation();
     }
 
     @PostMapping
@@ -91,10 +104,11 @@ public class ArticleResource {
         return this.stockPredictionController.calculateStockPrediction(input);
     }
 
-    @PostMapping(value = PROVIDER)
-    public List<Article> findByProvider(@Valid @RequestBody Provider provider) {
-        System.out.println( "Provider: " + provider);
-        System.out.println( "FindByProvider: " + this.articleController.findArticleByprovider(provider.getId()));
-        return this.articleController.findArticleByprovider(provider.getId());
+    @GetMapping(value = PROVIDER_ID)
+    public List<ArticleSearchOutputDto> findByProvider(@PathVariable String id){
+        return this.articleController.findArticleByProvider(id);
     }
+
+
+
 }
