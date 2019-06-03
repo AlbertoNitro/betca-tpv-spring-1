@@ -89,9 +89,10 @@ public class UserResource {
         String mobile = userQueryDto.getMobile();
         String username = userQueryDto.getUsername();
         String dni = userQueryDto.getDni();
+        String discount = userQueryDto.getDiscount();
         String address = userQueryDto.getAddress();
 
-        return this.userController.readAllByUsernameDniAddressRoles(mobile, username, dni, address, authorities);
+        return this.userController.readAllByUsernameDniDiscountAddressRoles(mobile, username, dni, discount, address, authorities);
     }
 
     public Role[] autorizationRole(Role userRoles) {

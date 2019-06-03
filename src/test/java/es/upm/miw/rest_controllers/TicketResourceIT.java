@@ -154,12 +154,12 @@ class TicketResourceIT {
         TicketQueryOutputDto[] results = this.restService.loginAdmin()
                 .restBuilder(new RestBuilder<TicketQueryOutputDto[]>().clazz(TicketQueryOutputDto[].class))
                 .path(TicketResource.TICKETS).path(TicketResource.QUERY).body(searchTicketDto).post().build();
-        assertEquals(1, results.length);
+        assertEquals(2, results.length);
     }
 
     @Test
     void testFindTicketByUserMobileTicketsNotFoundException() {
-        String userMobile = "666666005";
+        String userMobile = "123456789";
         TicketQueryInputDto searchTicketDto = new TicketQueryInputDto();
         searchTicketDto.setUserMobile(userMobile);
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
@@ -573,6 +573,15 @@ class TicketResourceIT {
                 .expand("201901121")
                 .put().build();
         assertNotNull(pdf);
+    }
+
+    @Test
+    void testGetDateSold() {
+        List<Article> articles = Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<Article[]>())
+                .clazz(Article[].class).path(TicketResource.TICKETS).path(TicketResource.DATE_SOLD).expand("2019-05-30T00:00:00")
+                .get().build());
+        assertNotNull(articles);
+        assertTrue(articles.size() > 1);
     }
 
 }

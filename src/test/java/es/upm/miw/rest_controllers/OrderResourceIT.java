@@ -12,11 +12,6 @@ import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
 import es.upm.miw.repositories.ProviderRepository;
 import org.junit.jupiter.api.BeforeEach;
-import es.upm.miw.dtos.OrderSearchDto;
-import es.upm.miw.dtos.OrderSearchInputDto;
-import es.upm.miw.repositories.ArticleRepository;
-import es.upm.miw.repositories.OrderRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -66,6 +61,7 @@ public class OrderResourceIT {
             }
         }
     }
+
     @BeforeEach
     void before() {
         this.article = this.articleRepository.findAll().get(1);
@@ -77,8 +73,7 @@ public class OrderResourceIT {
         this.order = this.orderRepository.save(this.order);
     }
 
-
-/*  @Test
+    /*@Test
     void testCloseOrder() {
         OrderDto orderDto = new OrderDto(this.order);
         OrderDto[] closedOrder = this.restService.loginAdmin()
@@ -87,7 +82,7 @@ public class OrderResourceIT {
                 .body(orderDto).post().build();
         assertNotNull(closedOrder[0].getClosingDate());
         this.orderRepository.delete(this.order);
-    }  */
+    }*/
 
     @Test
     void testEmptyOrderLine() {
@@ -101,15 +96,6 @@ public class OrderResourceIT {
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         this.orderRepository.delete(this.order);
     }
-
-/*    @Test
-    void testReadNotFound() {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                this.restService.loginAdmin().restBuilder(new RestBuilder<Order[]>()).clazz(Order[].class)
-                        .path(OrderResource.ORDERS).path("/non-existent-id")
-                        .get().build());
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
-    }*/
 
     @Test
     void testReadAll() {
@@ -130,12 +116,4 @@ public class OrderResourceIT {
         assertTrue(activesSearch.size() >= 0);
 
     }
-
-/*    @Test
-    void testRead() {
-        OrderSearchDto providerDto = this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<OrderSearchDto>()).clazz(OrderSearchDto.class)
-                .path(OrderResource.ORDERS).path("/" + "OrderDescrip_8400000000024")
-                .get().build();
-    }*/
 }

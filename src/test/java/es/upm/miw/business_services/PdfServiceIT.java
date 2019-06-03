@@ -32,7 +32,7 @@ public class PdfServiceIT {
     @Test
     void testPdfGeneratePrintableRgpdAgreement() {
         User user = new User("999777666", "123445", "666001110", "123445",
-                "C/ TPV, 100, 1A, 28000 Madrid", "user2@gmail.com");
+                null,"C/ TPV, 100, 1A, 28000 Madrid", "user2@gmail.com");
         assertNotNull(this.pdfService.generatePrintableRgpdAgreement(user, RgpdAgreementType.MEDIUM));
     }
 }

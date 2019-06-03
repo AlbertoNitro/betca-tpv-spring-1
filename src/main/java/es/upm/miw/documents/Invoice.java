@@ -5,14 +5,10 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Document
 public class Invoice {
-
-    private static final String DATE_FORMAT = "yyyy";
 
     @Id
     private String id;
@@ -29,17 +25,32 @@ public class Invoice {
     @DBRef
     private User user;
 
+    private String referencesPositiveInvoice;
+
     public Invoice() {
         creationDate = LocalDateTime.now();
     }
-
-    public Invoice(int idOfYear, BigDecimal baseTax, BigDecimal tax, User user, Ticket ticket) {
-        this();
-        this.id = new SimpleDateFormat(DATE_FORMAT).format(new Date()) + idOfYear;
+    public Invoice(BigDecimal baseTax, BigDecimal tax, String referencesPositiveInvoice) {
+        this.creationDate = LocalDateTime.now();
         this.baseTax = baseTax;
         this.tax = tax;
-        this.user = user;
+        this.referencesPositiveInvoice = referencesPositiveInvoice;
+    }
+    public Invoice(BigDecimal baseTax, BigDecimal tax, Ticket ticket, String referencesPositiveInvoice) {
+        this.creationDate = LocalDateTime.now();
+        this.baseTax = baseTax;
+        this.tax = tax;
         this.ticket = ticket;
+        this.referencesPositiveInvoice = referencesPositiveInvoice;
+    }
+
+
+    public String getReferencesPositiveInvoice() {
+        return referencesPositiveInvoice;
+    }
+
+    public void setReferencesPositiveInvoice(String negativeinvoice) {
+        this.referencesPositiveInvoice = negativeinvoice;
     }
 
     public void setBaseTax(BigDecimal baseTax) {
@@ -58,16 +69,14 @@ public class Invoice {
         return id;
     }
 
+    public void setId(String id) { this.id =id; }
+
     public Ticket getTicket() {
         return ticket;
     }
 
-    public LocalDateTime getCreationDated() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
-    }
-
-    public int simpleId() {
-        return Integer.parseInt(String.valueOf(id).substring(DATE_FORMAT.length()));
     }
 
     public BigDecimal getBaseTax() {

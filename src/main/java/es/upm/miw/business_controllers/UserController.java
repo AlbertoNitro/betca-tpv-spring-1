@@ -79,7 +79,7 @@ public class UserController {
             throw new BadRequestException("User mobile (" + userDto.getMobile() + ") already exist.");
         }
         User saved = User.builder().mobile(userDto.getMobile()).username(userDto.getUsername()).email(userDto.getEmail())
-                .dni(userDto.getDni()).address(userDto.getAddress()).active(userDto.isActive()).roles(new Role[]{Role.CUSTOMER})
+                .dni(userDto.getDni()).discount(userDto.getDiscount()).address(userDto.getAddress()).active(userDto.isActive()).roles(new Role[]{Role.CUSTOMER})
                 .registrationDate(userDto.getRegistrationDate()).build();
 
         this.userRepository.save(saved);
@@ -95,7 +95,7 @@ public class UserController {
                 .orElseThrow(() -> new NotFoundException("User mobile (" + userDto.getMobile() + ") is not found."));
 
         User saved = User.builder().id(userFound.getId()).username(userDto.getUsername()).password(userFound.getPassword())
-                .mobile(userDto.getMobile()).roles(userFound.getRoles()).dni(userDto.getDni()).address(userDto.getAddress())
+                .mobile(userDto.getMobile()).roles(userFound.getRoles()).dni(userDto.getDni()).discount(userDto.getDiscount()).address(userDto.getAddress())
                 .email(userDto.getEmail()).registrationDate(userDto.getRegistrationDate()).active(userDto.isActive()).build();
 
         this.userRepository.save(saved);
@@ -108,7 +108,7 @@ public class UserController {
             throw new BadRequestException("User mobile (" + userRolesDto.getMobile() + ")");
 
         User user = this.userRepository.findByMobile(mobile).orElseThrow(() -> new NotFoundException("User mobile (" + mobile + ")"));;
-        User result = this.userRepository.save(new User(user.getId(),user.getUsername(),user.getDni(),user.getEmail(),user.getAddress(),user.getPassword(),userRolesDto));
+        User result = this.userRepository.save(new User(user.getId(),user.getUsername(),user.getDni(),user.getDiscount(),user.getEmail(),user.getAddress(),user.getPassword(),userRolesDto));
         return new UserDto(result);
     }
 
@@ -118,12 +118,12 @@ public class UserController {
             throw new BadRequestException("User mobile (" + userProfileDto.getMobile() + ")");
 
         User user = this.userRepository.findByMobile(mobile).orElseThrow(() -> new NotFoundException("User mobile (" + mobile + ")"));;
-        User result = this.userRepository.save(new User(user.getId(),user.getUsername(),user.getDni(),user.getEmail(),user.getAddress(),user.getRoles(),userProfileDto));
+        User result = this.userRepository.save(new User(user.getId(),user.getUsername(),user.getDni(),user.getDiscount(),user.getEmail(),user.getAddress(),user.getRoles(),userProfileDto));
         return new UserProfileDto(result);
     }
 
-    public List<UserMinimumDto> readAllByUsernameDniAddressRoles(String mobile,String username,String dni, String address,  Role[] roles) {
-       return this.userRepository.findByMobileUsernameDniAddressLikeNullSafeandRoles(mobile,username,dni,address,roles);
+    public List<UserMinimumDto> readAllByUsernameDniDiscountAddressRoles(String mobile,String username,String dni,String discount,String address,Role[] roles) {
+       return this.userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles(mobile,username,dni,discount,address,roles);
     }
 
     public Boolean validatorPassword(String mobile, UserProfileDto userProfileDto) {

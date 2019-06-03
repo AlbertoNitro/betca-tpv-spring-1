@@ -17,13 +17,15 @@ public interface UserRepository extends MongoRepository<User, String> {
     List<UserMinimumDto> findAllUsers();
 
     @Query("{$and:["
-            + "?#{ [0] == null ? { $where : 'true'} : { mobile : {$regex:[0], $options: 'i'} } },"
-            + "?#{ [1] == null ? { $where : 'true'} : { username : {$regex:[1], $options: 'i'} } },"
-            + "?#{ [2] == null ? { $where : 'true'} : { dni : {$regex:[2], $options: 'i'} } },"
-            + "?#{ [3] == null ? { $where : 'true'} : { address : {$regex:[3], $options: 'i'} } },"
-            + "{'roles':{$in:?4}}"
+            + "?#{ [0] == null or [0] == '' ? { $where : 'true'} : { mobile : {$regex:[0], $options: 'i'} } },"
+            + "?#{ [1] == null or [1] == '' ? { $where : 'true'} : { username : {$regex:[1], $options: 'i'} } },"
+            + "?#{ [2] == null or [2] == '' ? { $where : 'true'} : { dni : {$regex:[2], $options: 'i'} } },"
+            + "?#{ [3] == null or [3] == '' ? { $where : 'true'} : { discount : {$regex:[3], $options: 'i'} } },"
+            + "?#{ [4] == null or [4] == '' ? { $where : 'true'} : { address : {$regex:[4], $options: 'i'} } },"
+            + "{'roles':{$in:?5}}"
             + "] }")
-    List<UserMinimumDto> findByMobileUsernameDniAddressLikeNullSafeandRoles(String mobile, String username, String dni, String address, Role[]roles);
+    List<UserMinimumDto> findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles(String mobile, String username, String dni, String discount, String address, Role[] roles);
 
-
+    void deleteByMobile(String mobile);
 }
+
