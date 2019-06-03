@@ -1,24 +1,21 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
-import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Order;
-import es.upm.miw.documents.OrderLine;
-import es.upm.miw.documents.User;
+import es.upm.miw.documents.*;
+import es.upm.miw.dtos.*;
 import es.upm.miw.dtos.OrderDto;
-import es.upm.miw.dtos.OrderSearchDto;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
-import es.upm.miw.rest_controllers.OrderResource;
-import es.upm.miw.rest_controllers.RestBuilder;
+import es.upm.miw.repositories.ProviderRepository;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestConfig
@@ -34,6 +31,12 @@ public class OrderControllerIT {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private ProviderController providerController;
+
+    @Autowired
+    private ProviderRepository providerRepository;
 
     @BeforeEach
     void createOrder() {
@@ -59,6 +62,24 @@ public class OrderControllerIT {
         List<OrderSearchDto> orders = orderController.searchOrder("OrderDescrip_8400000000024", "", true);
         assertTrue(orders.size() >= 0);
     }
+
+    @Test
+    void testCreate() {
+        OrderDto orderDto = new OrderDto();
+        String[] articlesId = {"1", "8400000000017", "8400000000024", "8400000000031"};
+        Integer[] requiredAmount = {1, 2, 3, 4};
+        Provider provider = new Provider(new ProviderDto("new-companyFred"));
+        this.providerRepository.save(provider);
+        orderDto = this.orderController.create("Desc", provider.getId(), articlesId, requiredAmount);
+        assertTrue(orderDto.getOrderLines().length > 0);
+    }
+
+    //@Test
+    //void testRead() {
+    //    List<OrderSearchDto> order = orderController.findById("OrderDescrip_8400000000024");
+    //    System.out.println("orderRead: " + order);
+    //    assertNotNull(order.size() >= 0);
+    //}
 
     @Test
     void testUsersWithArticleReserved() {

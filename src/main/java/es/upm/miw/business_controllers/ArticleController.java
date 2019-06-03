@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -157,4 +158,8 @@ public class ArticleController {
         return new FamilySizeInputDto(familyComposite);
     }
 
+    public List<ArticleSearchOutputDto> findArticleByProvider(String id){
+        Optional<Provider> provider = providerRepository.findById(id);
+        return (List<ArticleSearchOutputDto>) this.articleRepository.findAllByProvider(provider);
+    }
 }

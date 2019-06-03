@@ -46,6 +46,16 @@ public class OrderResource {
         Boolean onlyClosingDate = orderSearchInputDto.isOnlyClosingDate();
         return this.orderController.searchOrder(descriptionOrders, descriptionArticles, onlyClosingDate);
     }
+
+    @PostMapping
+    public OrderDto create(@Valid @RequestBody String descriptionOrder, String providerId, String[] idArticles, Integer[] requiredAmount) {
+        return this.orderController.create(descriptionOrder, providerId, idArticles, requiredAmount);
+    }
+
+    @GetMapping(value = ID)
+    public List<OrderSearchDto> read(@PathVariable String id) {
+        return this.orderController.findById(id);
+    }
 }
 
 

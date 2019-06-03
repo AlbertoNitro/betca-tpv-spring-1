@@ -1,9 +1,9 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.business_controllers.OrderController;
 import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Order;
 import es.upm.miw.documents.OrderLine;
+import es.upm.miw.business_controllers.OrderController;
 import es.upm.miw.documents.Provider;
 import es.upm.miw.dtos.OrderDto;
 import es.upm.miw.dtos.OrderSearchDto;
@@ -46,7 +46,21 @@ public class OrderResourceIT {
 
     @Autowired
     private RestService restService;
+
     private OrderSearchDto existentOrder;
+
+    @BeforeEach
+    void createOrder() {
+        if (this.orderRepository.findAll().size() == 0) {
+            String[] articlesId = {"1", "8400000000048", "8400000000024", "8400000000031"};
+            for (int i = 0; i < 3; i++) {
+                Article article = this.articleRepository.findById(articlesId[i]).get();
+                OrderLine[] orderLines = org.assertj.core.util.Arrays.array(new OrderLine(article, 4), new OrderLine(article, 5));
+                Order order = new Order("OrderDescrip_" + articlesId[i], article.getProvider(), orderLines);
+                this.orderRepository.save(order);
+            }
+        }
+    }
 
     @BeforeEach
     void before() {
@@ -81,15 +95,6 @@ public class OrderResourceIT {
                 .body(orderDto).post().build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         this.orderRepository.delete(this.order);
-    }
-
-    @Test
-    void testReadNotFound() {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                this.restService.loginAdmin().restBuilder(new RestBuilder<OrderSearchDto[]>()).clazz(OrderSearchDto[].class)
-                        .path(OrderResource.ORDERS).path("/non-existent-id")
-                        .get().build());
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 
     @Test

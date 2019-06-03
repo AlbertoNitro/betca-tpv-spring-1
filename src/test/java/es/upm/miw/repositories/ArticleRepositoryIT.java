@@ -2,6 +2,8 @@ package es.upm.miw.repositories;
 
 import es.upm.miw.TestConfig;
 import es.upm.miw.documents.Article;
+import es.upm.miw.documents.Provider;
+import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,6 +23,9 @@ class ArticleRepositoryIT {
 
     private Article article;
     private Article article2;
+
+    @Autowired
+    private ProviderRepository providerRepository;
 
     @BeforeEach
     void seedDb() {
@@ -104,6 +110,15 @@ class ArticleRepositoryIT {
                 ("zaR", 7, "2", "21");
         assertEquals(1, articleList.size());
     }
+
+    @Test
+    void testFindArticleByProvider() {
+        Optional<Provider> provider = providerRepository.findById("company-p1");
+        List<ArticleSearchOutputDto> articles=articleRepository.findAllByProvider(provider);
+        assertTrue(articles.size() >= 0);
+    }
+
+
 
     @Test
     void testFindFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(){

@@ -200,4 +200,14 @@ class ArticleResourceIT {
                 .get().build());
     }
 
+
+    @Test
+    void testFindArticleByprovider() {
+        List<ArticleSearchOutputDto> dtos = Arrays.asList(this.restService.loginAdmin().restBuilder(new RestBuilder<ArticleSearchOutputDto[]>())
+                .clazz(ArticleSearchOutputDto[].class)
+                .path(ArticleResource.ARTICLES).path(ArticleResource.PROVIDER_ID).path("5c9fe57b8f8e3f5f344caf8f")
+                .get().build());
+        assertTrue(dtos.size() > 1);
+    }
+
 }
