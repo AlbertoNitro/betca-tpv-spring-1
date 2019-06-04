@@ -18,7 +18,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 @Controller
-public class InvoiceUpdateController {
+public class InvoiceController {
     @Autowired
     private InvoiceRepository invoiceRepository;
     @Autowired
