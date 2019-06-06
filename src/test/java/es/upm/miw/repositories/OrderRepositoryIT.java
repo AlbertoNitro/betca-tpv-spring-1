@@ -23,6 +23,8 @@ class OrderRepositoryIT {
     @Autowired
     private ArticleRepository articleRepository;
 
+    static String idOrder = "";
+
     @BeforeEach
     void createOrder() {
         if (this.orderRepository.findAll().size() == 0) {
@@ -32,6 +34,7 @@ class OrderRepositoryIT {
                 OrderLine[] orderLines = Arrays.array(new OrderLine(article, 4), new OrderLine(article, 5));
                 Order order = new Order("OrderDescrip_" + articlesId[i], article.getProvider(), orderLines);
                 this.orderRepository.save(order);
+                idOrder = order.getId();
             }
         }
     }
@@ -68,13 +71,7 @@ class OrderRepositoryIT {
     }
 
     @Test
-    void readById() {
-        System.out.println(orderRepository.findByDescription("OrderDescrip_8400000000024").toString());
-        //assertTrue(orderRepository.findById("5c9e55078f8e3f19fc6d9ab0"). >= 0);
-    }
-
-    @Test
-    void testFindById() {
+    void testFindByDescription() {
         Optional<Order> order = this.orderRepository.findByDescription("OrderDescrip_8400000000024");
         assertTrue(order.isPresent());
     }
