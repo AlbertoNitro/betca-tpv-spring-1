@@ -13,9 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestConfig
@@ -64,6 +61,13 @@ public class OrderControllerIT {
     }
 
     @Test
+    void testUsersWithArticleReserved() {
+        List<User> users = this.orderController.sendArticlesFromOrderLine(this.order.getOrderLines());
+        assertTrue(users.size() > 0);
+        this.orderRepository.delete(this.order);
+    }
+
+    @Test
     void testCreate() {
         OrderDto orderDto = new OrderDto();
         String[] articlesId = {"1", "8400000000017", "8400000000024", "8400000000031"};
@@ -72,19 +76,5 @@ public class OrderControllerIT {
         this.providerRepository.save(provider);
         orderDto = this.orderController.create("Desc", provider.getId(), articlesId, requiredAmount);
         assertTrue(orderDto.getOrderLines().length > 0);
-    }
-
-    //@Test
-    //void testRead() {
-    //    List<OrderSearchDto> order = orderController.findById("OrderDescrip_8400000000024");
-    //    System.out.println("orderRead: " + order);
-    //    assertNotNull(order.size() >= 0);
-    //}
-
-    @Test
-    void testUsersWithArticleReserved() {
-        List<User> users = this.orderController.sendArticlesFromOrderLine(this.order.getOrderLines());
-        assertTrue(users.size() > 0);
-        this.orderRepository.delete(this.order);
     }
 }

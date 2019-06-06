@@ -1,13 +1,8 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Order;
-import es.upm.miw.documents.OrderLine;
+import es.upm.miw.documents.*;
 import es.upm.miw.business_controllers.OrderController;
-import es.upm.miw.documents.Provider;
-import es.upm.miw.dtos.OrderDto;
-import es.upm.miw.dtos.OrderSearchDto;
-import es.upm.miw.dtos.OrderSearchInputDto;
+import es.upm.miw.dtos.*;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
 import es.upm.miw.repositories.ProviderRepository;
@@ -90,7 +85,8 @@ public class OrderResourceIT {
         this.order.setOrderLines(orderLines);
         OrderDto orderDto = new OrderDto(this.order);
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<OrderDto[]>()).clazz(OrderDto[].class)
+                .restBuilder(new RestBuilder<OrderDto[]>())
+                .clazz(OrderDto[].class)
                 .path(OrderResource.ORDERS).path(OrderResource.CLOSE)
                 .body(orderDto).post().build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
@@ -100,9 +96,11 @@ public class OrderResourceIT {
     @Test
     void testReadAll() {
         List<OrderSearchDto> orders = Arrays.asList(this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<OrderSearchDto[]>()).clazz(OrderSearchDto[].class)
+                .restBuilder(new RestBuilder<OrderSearchDto[]>())
+                .clazz(OrderSearchDto[].class)
                 .path(OrderResource.ORDERS)
-                .get().build());
+                .get()
+                .build());
         assertTrue(orders.size() >= 0);
     }
 
@@ -110,10 +108,14 @@ public class OrderResourceIT {
     void testFindByAttributesLike() {
         OrderSearchInputDto orderSearchInputDto = new OrderSearchInputDto("null", "null", false);
         List<OrderSearchDto> activesSearch = Arrays.asList(this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<OrderSearchDto[]>()).clazz(OrderSearchDto[].class)
-                .path(OrderResource.ORDERS).path(OrderResource.SEARCH).body(orderSearchInputDto)
+                .restBuilder(new RestBuilder<OrderSearchDto[]>())
+                .clazz(OrderSearchDto[].class)
+                .path(OrderResource.ORDERS)
+                .path(OrderResource.SEARCH)
+                .body(orderSearchInputDto)
                 .post().build());
         assertTrue(activesSearch.size() >= 0);
 
     }
+
 }
