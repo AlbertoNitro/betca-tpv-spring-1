@@ -106,7 +106,7 @@ public class OrderController {
         return new OrderDto(order);
     }
 
-    public List<OrderSearchDto> findById(String id) {
+    public List<OrderSearchDto> findByDescription(String id) {
         OrderSearchDto orderSearchDto = null;
         orderSearchDtos = new ArrayList<>();
         Optional<Order> order = orderRepository.findByDescription(id);

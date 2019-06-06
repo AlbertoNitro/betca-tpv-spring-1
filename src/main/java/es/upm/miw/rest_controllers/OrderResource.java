@@ -69,7 +69,7 @@ public class OrderResource {
 
     @GetMapping(value = ID)
     public List<OrderSearchDto> read(@PathVariable String id) {
-        return this.orderController.findById(id);
+        return this.orderController.findByDescription(id);
     }
 }
 
