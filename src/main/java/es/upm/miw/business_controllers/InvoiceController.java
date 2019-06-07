@@ -30,7 +30,7 @@ public class InvoiceController {
     @Autowired
     private PdfService pdfService;
 
-    private final double TAX_RATE = 1.21;
+    private static final double TAX_RATE = 1.21;
 
     private TicketController ticketController;
 
