@@ -24,6 +24,7 @@ class UserRepositoryIT {
     private User user;
     private User user2;
     private User user3;
+    private User user4;
 
     @BeforeEach
     void seedDb() {
@@ -34,6 +35,8 @@ class UserRepositoryIT {
         this.userRepository.save(user2);
         this.user3 = new User("1234457", "1234457", "666001111","1234457",null,"C/ TPV, 100, 1A, 28000 Madrid","user3@gmail.com");
         this.userRepository.save(user3);
+        this.user4 = new User("9876556789","987655678","6556789", "name_1", "lastname_1", "Y5995AQ", null,"28000 Madrid", "user4@gmail.com" );
+        this.userRepository.save(user4);
     }
 
     @Test
@@ -41,6 +44,14 @@ class UserRepositoryIT {
         User userBd = userRepository.findByMobile("666001000").get();
         assertEquals("666001000", userBd.getUsername());
         assertArrayEquals(new Role[]{Role.CUSTOMER}, userBd.getRoles());
+    }
+    @Test
+    void testFindByMoileAndGetInvoiceValidUserParameters(){
+        User userBd = userRepository.findByMobile("9876556789").get();
+        assertTrue(userBd.getDni().length()>0);
+        assertTrue(userBd.getAddress().length()>0);
+        assertTrue(userBd.getName().length()>0);
+        assertTrue(userBd.getLastname().length()>0);
     }
 
     @Test
@@ -52,7 +63,7 @@ class UserRepositoryIT {
     @Test
     void testfindByOnlyCustomer() {
         List<UserMinimumDto> userList = userRepository.findByMobileUsernameDniDiscountAddressLikeNullSafeandRoles("","","","","",this.user.getRoles());
-        assertEquals(7, userList.size());
+        assertEquals(8, userList.size());
     }
     @Test
     void testfindByAdressAndOnlyCustomer() {
@@ -126,6 +137,7 @@ class UserRepositoryIT {
         this.userRepository.delete(user);
         this.userRepository.delete(user2);
         this.userRepository.delete(user3);
+        this.userRepository.delete(user4);
     }
 
 }
