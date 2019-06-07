@@ -56,7 +56,7 @@ public class TicketController {
         return nextId;
     }
 
-    private Ticket createTicket(TicketCreationInputDto ticketCreationDto) {
+    public Ticket createTicket(TicketCreationInputDto ticketCreationDto) {
         User user = this.userRepository.findByMobile(ticketCreationDto.getUserMobile()).orElse(null);
         List<Shopping> shoppingList = new ArrayList<>();
         for (ShoppingDto shoppingDto : ticketCreationDto.getShoppingCart()) {
