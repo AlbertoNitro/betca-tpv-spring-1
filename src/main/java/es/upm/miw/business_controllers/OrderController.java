@@ -2,6 +2,7 @@ package es.upm.miw.business_controllers;
 
 import es.upm.miw.business_services.EmailServiceImpl;
 import es.upm.miw.documents.*;
+import es.upm.miw.dtos.OrderArticleDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.documents.Article;
@@ -39,6 +40,15 @@ public class OrderController {
 
     @Autowired
     EmailServiceImpl emailService;
+
+    private List<OrderSearchDto> orderSearchDtos;
+
+    private List<OrderArticleDto> orderArticleDtos;
+
+    @Autowired
+    private ProviderRepository providerRepository;
+
+    public static String SEARCHWORD = "";
 
     public Order closeOrder(String orderId, OrderLine[] orderLine) {
         Order closeOrder = orderRepository.findById(orderId).orElse(null);
@@ -87,13 +97,6 @@ public class OrderController {
         emailService.sendSimpleMessage(user.getEmail(), "Notification", message);
     }
 
-    private List<OrderSearchDto> orderSearchDtos;
-
-    @Autowired
-    private ProviderRepository providerRepository;
-
-    public static String SEARCHWORD = "";
-
     public OrderDto create(String descriptionOrder, String providerId, String[] idArticles, Integer[] requiredAmount) {
         OrderLine[] orderLines = new OrderLine[idArticles.length];
         for (int i = 0; i < idArticles.length; i++) {
@@ -129,7 +132,7 @@ public class OrderController {
 
     public List<OrderSearchDto> readAll() {
         orderSearchDtos = new ArrayList<>();
-        for (OrderDto dto : orderRepository.findAllOrders()) {
+        for (OrderDto dto : orderRepository.findAllOrdersByOpeningDateDesc()) {
             for (OrderLine orderLine : dto.getOrderLines()) {
                 createAddOrderSearchDto(dto, orderLine);
             }
@@ -140,7 +143,7 @@ public class OrderController {
     public List<OrderSearchDto> searchOrder(String orderDescription, String articleDescription, Boolean onlyClosingDate) {
         SEARCHWORD = (orderDescription).trim().toLowerCase().toString() + " " + (articleDescription).trim().toLowerCase().toString();
         orderSearchDtos = new ArrayList<>();
-        for (OrderDto dto : orderRepository.findAllOrders())
+        for (OrderDto dto : orderRepository.findAllOrdersByOpeningDateDesc())
             for (OrderLine orderLine : dto.getOrderLines()) {
                 String orderDescry = dto.getDescription().toLowerCase();
                 String articleDescry = orderLine.getArticle().getDescription().toLowerCase();
@@ -177,5 +180,31 @@ public class OrderController {
             }
         }
         return user;
+    }
+
+    public List<OrderArticleDto> findById(String id) {
+        OrderArticleDto orderArticleDto = null;
+        orderArticleDtos = new ArrayList<>();
+        Optional<Order> order = orderRepository.findById(id);
+        for (OrderLine orderLine : order.get().getOrderLines()) {
+            orderArticleDto = new OrderArticleDto(
+                    orderLine.getArticle().getCode(),
+                    orderLine.getArticle().getDescription(),
+                    orderLine.getArticle().getRetailPrice().doubleValue(),
+                    orderLine.getRequiredAmount(),
+                    0.0,
+                    0.0,
+                    false,
+                    orderLine.getArticle().getProvider().getId());
+            orderArticleDtos.add(orderArticleDto);
+        }
+        return orderArticleDtos;
+    }
+
+    public void delete(String id) {
+        Optional<Order> order = this.orderRepository.findById(id);
+        if (order.isPresent()) {
+            this.orderRepository.delete(order.get());
+        }
     }
 }
