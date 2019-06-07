@@ -5,7 +5,6 @@ import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Order;
 import es.upm.miw.documents.OrderLine;
 import org.assertj.core.util.Arrays;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +22,22 @@ class OrderRepositoryIT {
     @Autowired
     private ArticleRepository articleRepository;
 
+    static String idOrder = "";
+
     @BeforeEach
     void createOrder() {
         if (this.orderRepository.findAll().size() == 0) {
             String[] articlesId = {"1", "8400000000048", "8400000000024", "8400000000031"};
+            String description = "ORDER-" + String.valueOf((int) (Math.random() * 10000));
             for (int i = 0; i < 3; i++) {
                 Article article = this.articleRepository.findById(articlesId[i]).get();
                 OrderLine[] orderLines = Arrays.array(new OrderLine(article, 4), new OrderLine(article, 5));
-                Order order = new Order("OrderDescrip_" + articlesId[i], article.getProvider(), orderLines);
+                if (i > 1 && i < 3) {
+                    description = "ORDER-02019";
+                }
+                Order order = new Order(description, article.getProvider(), orderLines);
                 this.orderRepository.save(order);
+                idOrder = order.getId();
             }
         }
     }
@@ -64,19 +70,21 @@ class OrderRepositoryIT {
 
     @Test
     void readAllOrders() {
-        assertTrue(orderRepository.findAllOrders().size() >= 0);
+        System.out.println(orderRepository.findAllOrdersByOpeningDateDesc());
+        assertTrue(orderRepository.findAllOrdersByOpeningDateDesc().size() >= 0);
     }
 
     @Test
-    void readById() {
-        System.out.println(orderRepository.findByDescription("OrderDescrip_8400000000024").toString());
-        //assertTrue(orderRepository.findById("5c9e55078f8e3f19fc6d9ab0"). >= 0);
+    void testFindByDescription() {
+        Optional<Order> order = this.orderRepository.findByDescription("ORDER-02019");
+        System.out.println(this.orderRepository.findByDescription("ORDER-02019"));
+        assertTrue(order.isPresent());
     }
 
     @Test
     void testFindById() {
-        Optional<Order> order = this.orderRepository.findByDescription("OrderDescrip_8400000000024");
+        Optional<Order> order = this.orderRepository.findById(idOrder);
+        System.out.println(orderRepository.findById(idOrder).toString());
         assertTrue(order.isPresent());
     }
-
 }

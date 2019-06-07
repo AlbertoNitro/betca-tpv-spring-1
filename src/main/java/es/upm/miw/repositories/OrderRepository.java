@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface OrderRepository extends MongoRepository<Order, String> {
 
-    @Query(value = "{}", fields = "{ 'id' : 0, 'description' : 1, 'provider': 1, 'openingDate': 1, 'closingDate':1, 'orderLines': 1}")
-    List<OrderDto> findAllOrders();
+    @Query(value = "{}", fields = "{ 'id' : 1, 'description' : 1, 'provider': 1, 'openingDate': 1, 'closingDate':1, 'orderLines': 1}")
+    List<OrderDto> findAllOrdersByOpeningDateDesc();
 
     Optional<Order> findByDescription(String description);
 }
