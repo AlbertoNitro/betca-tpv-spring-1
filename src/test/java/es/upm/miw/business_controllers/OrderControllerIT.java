@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestConfig
 public class OrderControllerIT {
-
-    private Order order;
 
     @Autowired
     private OrderController orderController;
@@ -35,17 +35,31 @@ public class OrderControllerIT {
     @Autowired
     private ProviderRepository providerRepository;
 
+    private String idOrder = "";
+
     @BeforeEach
     void createOrder() {
         if (this.orderRepository.findAll().size() == 0) {
             String[] articlesId = {"1", "8400000000048", "8400000000024", "8400000000031"};
+            String description = "ORDER-" + String.valueOf((int) (Math.random() * 10000));
             for (int i = 0; i < 3; i++) {
                 Article article = this.articleRepository.findById(articlesId[i]).get();
                 OrderLine[] orderLines = Arrays.array(new OrderLine(article, 4), new OrderLine(article, 5));
-                Order order = new Order("OrderDescrip_" + articlesId[i], article.getProvider(), orderLines);
-                this.order = this.orderRepository.save(order);
+                if (i > 1 && i < 3) {
+                    description = "ORDER-02019";
+                }
+                Order order = new Order(description, article.getProvider(), orderLines);
+                this.orderRepository.save(order);
+                idOrder = order.getId();
             }
         }
+    }
+
+    @Test
+    void testFindById() {
+        Optional<Order> order = this.orderRepository.findByDescription("ORDER-02019");
+        Optional<Order> order2 = this.orderRepository.findById(order.get().getId());
+        assertTrue(order.isPresent());
     }
 
     @Test
@@ -62,9 +76,14 @@ public class OrderControllerIT {
 
     @Test
     void testUsersWithArticleReserved() {
-        List<User> users = this.orderController.sendArticlesFromOrderLine(this.order.getOrderLines());
+        Optional<Order> order = this.orderRepository.findByDescription("ORDER-02019");
+        List<User> users = this.orderController.sendArticlesFromOrderLine(order.get().getOrderLines());
+        Provider provider = new Provider(new ProviderDto("new-company: " + String.valueOf((int) (Math.random() * 10000))));
+        this.providerRepository.save(provider);
+        Order order1 = new Order("ORDER-12389", provider, order.get().getOrderLines());
+        this.orderRepository.save(order1);
         assertTrue(users.size() > 0);
-        this.orderRepository.delete(this.order);
+        this.orderRepository.delete(order1);
     }
 
     @Test
@@ -72,9 +91,14 @@ public class OrderControllerIT {
         OrderDto orderDto = new OrderDto();
         String[] articlesId = {"1", "8400000000017", "8400000000024", "8400000000031"};
         Integer[] requiredAmount = {1, 2, 3, 4};
-        Provider provider = new Provider(new ProviderDto("new-companyFred"));
+        Provider provider = new Provider(new ProviderDto("new-company: " + String.valueOf((int) (Math.random() * 10000))));
         this.providerRepository.save(provider);
-        orderDto = this.orderController.create("Desc", provider.getId(), articlesId, requiredAmount);
+        orderDto = this.orderController.create("ORDER-" + String.valueOf((int) (Math.random() * 10000)), provider.getId(), articlesId, requiredAmount);
         assertTrue(orderDto.getOrderLines().length > 0);
+    }
+
+    @Test
+    void testDeleteOrderExistController() {
+        this.orderController.delete(idOrder);
     }
 }

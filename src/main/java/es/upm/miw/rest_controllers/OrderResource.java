@@ -23,6 +23,8 @@ public class OrderResource {
     public static final String SEARCH = "/search";
     public static final String CLOSE = "/orders/close/{id}";
     public static final String ORDERS_art = "/art";
+    public static final String ARTICLE = "/article";
+    public static final String ORDER_ID = "/{idOrder}";
 
     @Autowired
     private OrderController orderController;
@@ -55,7 +57,7 @@ public class OrderResource {
         int size = articleDto.length;
         String[] articlesId = new String[size];
         Integer[] requiredAmount = new Integer[size];
-        String desc= "Descr-" + String.valueOf((int) (Math.random() * 10000));
+        String desc= "ORDER-" + String.valueOf((int) (Math.random() * 10000));
         String idProvider= "";
         int i=0;
         for (OrderArticleDto dto : articleDto) {
@@ -70,6 +72,18 @@ public class OrderResource {
     @GetMapping(value = ID)
     public List<OrderSearchDto> read(@PathVariable String id) {
         return this.orderController.findByDescription(id);
+    }
+
+    //find by Id de una orden de compra
+    @PostMapping(value = ARTICLE)
+    public List<OrderArticleDto> findById(@Valid @RequestBody  OrderDto orderDto) {
+        System.out.println("find By id: " + orderDto.getId());
+        return this.orderController.findById(orderDto.getId());
+    }
+
+    @DeleteMapping(value = ORDER_ID)
+    public void delete(@PathVariable String idOrder) {
+        this.orderController.delete(idOrder);
     }
 }
 

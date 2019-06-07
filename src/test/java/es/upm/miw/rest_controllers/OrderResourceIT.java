@@ -38,6 +38,7 @@ public class OrderResourceIT {
     @Autowired
     private OrderRepository orderRepository;
 
+    private String idOrder = "";
 
     @Autowired
     private RestService restService;
@@ -53,6 +54,7 @@ public class OrderResourceIT {
                 OrderLine[] orderLines = org.assertj.core.util.Arrays.array(new OrderLine(article, 4), new OrderLine(article, 5));
                 Order order = new Order("OrderDescrip_" + articlesId[i], article.getProvider(), orderLines);
                 this.orderRepository.save(order);
+                idOrder = order.getId();
             }
         }
     }
@@ -64,7 +66,7 @@ public class OrderResourceIT {
         this.provider = this.providerRepository.findAll().get(0);
         OrderLine orderLine = new OrderLine(article, 10);
         OrderLine[] orderLines = {orderLine};
-        this.order = new Order("Test Order", this.provider, orderLines);
+        this.order = new Order("ORDER-" + String.valueOf((int) (Math.random() * 10000)), this.provider, orderLines);
         this.order = this.orderRepository.save(this.order);
     }
 
@@ -116,6 +118,17 @@ public class OrderResourceIT {
                 .post().build());
         assertTrue(activesSearch.size() >= 0);
 
+    }
+
+    @Test
+    void testDeleteNoExistsOrderResource() {
+        this.restService.loginAdmin().restBuilder(new RestBuilder<Order>())
+                .clazz(Order.class)
+                .path(OrderResource.ORDERS)
+                .path(OrderResource.ORDER_ID)
+                .expand("asas")
+                .delete()
+                .build();
     }
 
 }
