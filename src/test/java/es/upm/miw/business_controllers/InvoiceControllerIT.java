@@ -3,6 +3,7 @@ package es.upm.miw.business_controllers;
 import es.upm.miw.TestConfig;
 import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ShoppingDto;
+import es.upm.miw.dtos.input.TicketCreationInputDto;
 import es.upm.miw.dtos.output.InvoiceUpdateDto;
 import es.upm.miw.repositories.InvoiceRepository;
 import es.upm.miw.repositories.TicketRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -117,5 +119,26 @@ public class InvoiceControllerIT {
         int invoicesSizePlusNegative = invoiceRepository.findAll().size();
         assertNotNull(invoiceNegativePdf);
         assertEquals(invoicesSize + 1, invoicesSizePlusNegative);
+    }
+    @Test
+    void createInvoiceAndPdf(){
+
+        List<ShoppingDto>lstShoppings = new ArrayList();
+        lstShoppings.add(shoppingsDto[0]);
+        lstShoppings.add(shoppingsDto[1]);
+        int invoicesSize = invoiceRepository.findAll().size();
+        TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(
+                this.user.getMobile(),
+                new BigDecimal(200),
+                new BigDecimal(100),
+                new BigDecimal(0),
+                lstShoppings,
+                "Test",
+                ""
+        );
+        byte[] invoicePdf = invoiceController.createInvoiceAndPdf(ticketCreationInputDto);
+        int invoicesSizePlusNewInvoice = invoiceRepository.findAll().size();
+        assertNotNull(invoicePdf);
+        assertEquals(invoicesSize + 1, invoicesSizePlusNewInvoice);
     }
 }

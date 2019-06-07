@@ -29,10 +29,10 @@ public class InvoiceController {
     private TicketRepository ticketRepository;
     @Autowired
     private PdfService pdfService;
-
-    private static final double TAX_RATE = 1.21;
-
+    @Autowired
     private TicketController ticketController;
+
+    private static final double TAX_RATE = 0.21;
 
     private Invoice convertInvoiceUpdateDtoToInvoice(InvoiceUpdateDto invoiceUpdateDto){
         Invoice invoice = new Invoice (
@@ -56,7 +56,7 @@ public class InvoiceController {
         BigDecimal tax = new BigDecimal(0);
 
         total = total.add(ticketCreationInputDto.getCash());
-        total = total.add(ticketCreationInputDto.getCash());
+        total = total.add(ticketCreationInputDto.getCard());
         total = total.add(ticketCreationInputDto.getVoucher());
 
         tax = total.multiply(new BigDecimal(TAX_RATE));
