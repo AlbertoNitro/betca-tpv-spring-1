@@ -74,4 +74,8 @@ public class FamilyArticle extends ArticlesFamily {
         return Arrays.asList(this.article.getCode());
     }
 
+    public Provider getProvider() {
+        return this.article.getProvider();
+    }
+
 }
