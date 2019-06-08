@@ -85,7 +85,11 @@ public class OrderController {
             Article article = orderLineSingle.getArticle();
             Article articleDB = this.articleRepository.findById(article.getCode()).orElse(null);
             users = getUsersWithNotCommittedTickets(article.getCode());
-            articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
+            if(articleDB != null) {
+                articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
+            } else {
+                return;
+            }
             articleRepository.save(articleDB);
             for (User user : users) {
                 sendNotificationAvailableStock(user, "Stock available of " + articleDB.getReference());
