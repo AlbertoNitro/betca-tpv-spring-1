@@ -2,14 +2,12 @@ package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
 import es.upm.miw.documents.*;
-import es.upm.miw.dtos.BudgetDto;
 import es.upm.miw.dtos.ShoppingDto;
+import es.upm.miw.dtos.input.TicketCreationInputDto;
 import es.upm.miw.dtos.output.InvoiceUpdateDto;
-import es.upm.miw.repositories.BudgetRepository;
 import es.upm.miw.repositories.InvoiceRepository;
 import es.upm.miw.repositories.TicketRepository;
 import es.upm.miw.repositories.UserRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +20,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestConfig
-public class InvoiceUpdateControllerIT {
+public class InvoiceControllerIT {
 
     @Autowired
-    private InvoiceUpdateController invoiceUpdateController;
+    private InvoiceController invoiceController;
 
     @Autowired
     private InvoiceRepository invoiceRepository;
@@ -73,19 +71,19 @@ public class InvoiceUpdateControllerIT {
 
     @Test
     void testReadAll() {
-        List<InvoiceUpdateDto> invoices = invoiceUpdateController.getAll();
+        List<InvoiceUpdateDto> invoices = invoiceController.getAll();
         // System.out.println(invoices);
         assertTrue(invoices.size() > 0);
     }
     @Test
     void generatePdf() {
         this.invoices = invoiceRepository.findAll();
-        byte[] invoicePdf = invoiceUpdateController.generatePdf(invoices.get(0).getId());
+        byte[] invoicePdf = invoiceController.generatePdf(invoices.get(0).getId());
         assertNotNull(invoicePdf);
     }
     @Test
     void getInvoiceByMobile() {
-        List<InvoiceUpdateDto> testInvoiceDtoList = invoiceUpdateController.getInvoiceByMobile("777");
+        List<InvoiceUpdateDto> testInvoiceDtoList = invoiceController.getInvoiceByMobile("777");
         LocalDateTime creationDateTest = invoiceRepository.findAll().get(0).getCreationDate();
         assertEquals(this.user.getMobile(), "777");
     }
@@ -94,7 +92,7 @@ public class InvoiceUpdateControllerIT {
     void getInvoiceByMobileAndCreationDateBetween() {
         String afterDateTest = LocalDateTime.now().minusDays(5).toString();
         String beforeDateTest = LocalDateTime.now().plusDays(5).toString();
-        List<InvoiceUpdateDto> testInvoiceDtoList = invoiceUpdateController
+        List<InvoiceUpdateDto> testInvoiceDtoList = invoiceController
                 .getInvoiceByMobileAndCreationDateBetween("666666004", afterDateTest, beforeDateTest);
         User userActual = invoiceRepository.findAll().get(0).getUser();
         User userExpected = userRepository.findByMobile("666666004").get();
@@ -102,9 +100,9 @@ public class InvoiceUpdateControllerIT {
     }
     @Test
     void look4PosibleTotal() {
-        String idTest = invoiceUpdateController.getInvoiceByMobile("777").get(0).getId();
+        String idTest = invoiceController.getInvoiceByMobile("777").get(0).getId();
         BigDecimal expectedPosibleTotal = new BigDecimal(125);
-        assertEquals(expectedPosibleTotal, new BigDecimal(String.valueOf(invoiceUpdateController.look4PosibleTotal(idTest))));
+        assertEquals(expectedPosibleTotal, new BigDecimal(String.valueOf(invoiceController.look4PosibleTotal(idTest))));
     }
     @Test
     void createNegativeInvoiceAndPdf() {
@@ -117,9 +115,30 @@ public class InvoiceUpdateControllerIT {
                                                                     testInvoiceId,
                                                                     new BigDecimal(100));
 
-        byte[] invoiceNegativePdf = invoiceUpdateController.createNegativeInvoiceAndPdf(invoiceUpdateDtoTest);
+        byte[] invoiceNegativePdf = invoiceController.createNegativeInvoiceAndPdf(invoiceUpdateDtoTest);
         int invoicesSizePlusNegative = invoiceRepository.findAll().size();
         assertNotNull(invoiceNegativePdf);
         assertEquals(invoicesSize + 1, invoicesSizePlusNegative);
+    }
+    @Test
+    void createInvoiceAndPdf(){
+
+        List<ShoppingDto>lstShoppings = new ArrayList();
+        lstShoppings.add(shoppingsDto[0]);
+        lstShoppings.add(shoppingsDto[1]);
+        int invoicesSize = invoiceRepository.findAll().size();
+        TicketCreationInputDto ticketCreationInputDto = new TicketCreationInputDto(
+                this.user.getMobile(),
+                new BigDecimal(200),
+                new BigDecimal(100),
+                new BigDecimal(0),
+                lstShoppings,
+                "Test",
+                ""
+        );
+        byte[] invoicePdf = invoiceController.createInvoiceAndPdf(ticketCreationInputDto);
+        int invoicesSizePlusNewInvoice = invoiceRepository.findAll().size();
+        assertNotNull(invoicePdf);
+        assertEquals(invoicesSize + 1, invoicesSizePlusNewInvoice);
     }
 }

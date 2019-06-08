@@ -3,6 +3,7 @@ package es.upm.miw.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import es.upm.miw.documents.Role;
+import es.upm.miw.documents.Ticket;
 import es.upm.miw.documents.User;
 
 import javax.validation.constraints.Pattern;
@@ -21,6 +22,10 @@ public class UserDto extends UserMinimumDto {
 
     private String address;
 
+    private String name;
+
+    private String lastname;
+
     private Boolean active;
 
     private Role[] roles;
@@ -33,6 +38,8 @@ public class UserDto extends UserMinimumDto {
 
     public UserDto(User user) {
         super(user.getMobile(), user.getUsername());
+        this.name = user.getName();
+        this.lastname = user.getLastname();
         this.email = user.getEmail();
         this.dni = user.getDni();
         this.discount = user.getDiscount();
@@ -40,6 +47,14 @@ public class UserDto extends UserMinimumDto {
         this.active = user.isActive();
         this.roles = user.getRoles();
         this.registrationDate = user.getRegistrationDate();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLastname() {
+        return lastname;
     }
 
     public String getEmail() {
@@ -73,6 +88,8 @@ public class UserDto extends UserMinimumDto {
         return "UserDto{" +
                 "mobile='" + this.getMobile() + '\'' +
                 ", username='" + this.getUsername() + '\'' +
+                ", name='" + this.getName() + '\'' +
+                ", lastname='" + this.getLastname() + '\'' +
                 ", email='" + email + '\'' +
                 ", dni='" + dni + '\'' +
                 ", discount='" + discount + '\'' +
@@ -82,6 +99,4 @@ public class UserDto extends UserMinimumDto {
                 ", registrationDate=" + registrationDate +
                 '}';
     }
-
-
 }

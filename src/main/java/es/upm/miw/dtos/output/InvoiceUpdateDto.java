@@ -2,11 +2,7 @@ package es.upm.miw.dtos.output;
 
 import java.math.BigDecimal;
 
-public class InvoiceUpdateDto {
-    String id;
-    String creationDate;
-    BigDecimal baseTax;
-    BigDecimal tax;
+public class InvoiceUpdateDto extends InvoiceDto {
     String referencesPositiveInvoice;
     BigDecimal negative;
 
@@ -14,10 +10,8 @@ public class InvoiceUpdateDto {
                             BigDecimal tax,
                             String referencesPositiveInvoice,
                             BigDecimal negative) {
-        this.id = id;
-        this.creationDate = creationDate;
-        this.baseTax = baseTax;
-        this.tax = tax;
+
+        super(id, creationDate,baseTax,tax);
         this.referencesPositiveInvoice =referencesPositiveInvoice;
         this.negative = negative;
     }

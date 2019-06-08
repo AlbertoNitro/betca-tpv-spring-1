@@ -43,6 +43,17 @@ public class Invoice {
         this.ticket = ticket;
         this.referencesPositiveInvoice = referencesPositiveInvoice;
     }
+    public Invoice(BigDecimal baseTax, BigDecimal tax, Ticket ticket){
+        this.creationDate = LocalDateTime.now();
+        this.baseTax = baseTax;
+        this.tax = tax;
+        this.ticket = ticket;
+    }
+    public Invoice(BigDecimal baseTax, BigDecimal tax){
+        this.creationDate = LocalDateTime.now();
+        this.baseTax = baseTax;
+        this.tax = tax;
+    }
 
 
     public String getReferencesPositiveInvoice() {

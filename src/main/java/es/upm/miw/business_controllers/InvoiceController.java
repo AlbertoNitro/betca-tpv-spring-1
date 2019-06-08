@@ -4,6 +4,8 @@ import es.upm.miw.business_services.PdfService;
 import es.upm.miw.documents.Invoice;
 import es.upm.miw.documents.Ticket;
 import es.upm.miw.documents.User;
+import es.upm.miw.dtos.input.TicketCreationInputDto;
+import es.upm.miw.dtos.output.InvoiceDto;
 import es.upm.miw.dtos.output.InvoiceUpdateDto;
 import es.upm.miw.repositories.InvoiceRepository;
 import es.upm.miw.repositories.TicketRepository;
@@ -18,7 +20,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 @Controller
-public class InvoiceUpdateController {
+public class InvoiceController {
     @Autowired
     private InvoiceRepository invoiceRepository;
     @Autowired
@@ -27,12 +29,42 @@ public class InvoiceUpdateController {
     private TicketRepository ticketRepository;
     @Autowired
     private PdfService pdfService;
+    @Autowired
+    private TicketController ticketController;
+
+    private static final double TAX_RATE = 0.21;
+
     private Invoice convertInvoiceUpdateDtoToInvoice(InvoiceUpdateDto invoiceUpdateDto){
         Invoice invoice = new Invoice (
                 invoiceUpdateDto.getBaseTax(),
                 invoiceUpdateDto.getTax(),
                 invoiceUpdateDto.getReferencesPositiveInvoice()
         );
+        return invoice;
+    }
+    private Invoice convertInvoiceDtoToInvoice(InvoiceDto invoiceDto){
+        Invoice invoice = new Invoice(
+                invoiceDto.getBaseTax(),
+                invoiceDto.getTax()
+        );
+        return invoice;
+    }
+    private Invoice ConvertTicketDtoToInvoice(TicketCreationInputDto ticketCreationInputDto)
+    {
+        BigDecimal total = new BigDecimal(0);
+        BigDecimal baseTax = new BigDecimal(0);
+        BigDecimal tax = new BigDecimal(0);
+
+        total = total.add(ticketCreationInputDto.getCash());
+        total = total.add(ticketCreationInputDto.getCard());
+        total = total.add(ticketCreationInputDto.getVoucher());
+
+        tax = total.multiply(new BigDecimal(TAX_RATE));
+        baseTax = total.subtract(tax);
+        Ticket ticket = ticketController.createTicket(ticketCreationInputDto);
+
+        Invoice invoice = new Invoice(baseTax, tax, ticket);
+        invoice.setUser(ticket.getUser());
         return invoice;
     }
     private List<InvoiceUpdateDto> convertInvoiceToInvoiceUpdateDto(List<Invoice> invoices) {
@@ -168,6 +200,14 @@ public class InvoiceUpdateController {
         if (negativeInvoice != null) {
             invoiceRepository.save(negativeInvoice);
             return this.pdfService.generateInvoice(negativeInvoice, negativeInvoice.getTicket());
+        }
+        return null;
+    }
+    public byte [] createInvoiceAndPdf(TicketCreationInputDto ticketCreationInputDto){
+        Invoice invoice = ConvertTicketDtoToInvoice(ticketCreationInputDto);
+        if(invoice != null){
+            invoiceRepository.save(invoice);
+            return  this.pdfService.generateInvoice(invoice,invoice.getTicket());
         }
         return null;
     }
