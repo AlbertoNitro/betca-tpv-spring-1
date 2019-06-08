@@ -2,6 +2,7 @@ package es.upm.miw.business_controllers;
 
 import es.upm.miw.business_services.EmailServiceImpl;
 import es.upm.miw.documents.*;
+import es.upm.miw.dtos.OrderArticleDto;
 import es.upm.miw.exceptions.BadRequestException;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.documents.Article;
@@ -10,23 +11,16 @@ import es.upm.miw.documents.OrderLine;
 import es.upm.miw.documents.Provider;
 import es.upm.miw.dtos.OrderDto;
 import es.upm.miw.dtos.OrderSearchDto;
-import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
 import es.upm.miw.repositories.TicketRepository;
 import org.apache.logging.log4j.LogManager;
 import es.upm.miw.repositories.ProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
-
-import es.upm.miw.dtos.OrderDto;
-import es.upm.miw.dtos.OrderSearchDto;
 import org.springframework.stereotype.Controller;
-
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,9 +41,18 @@ public class OrderController {
     @Autowired
     EmailServiceImpl emailService;
 
+    private List<OrderSearchDto> orderSearchDtos;
+
+    private List<OrderArticleDto> orderArticleDtos;
+
+    @Autowired
+    private ProviderRepository providerRepository;
+
+    public static String SEARCHWORD = "";
+
     public Order closeOrder(String orderId, OrderLine[] orderLine) {
         Order closeOrder = orderRepository.findById(orderId).orElse(null);
-        if(orderLine.length > 0 && closeOrder != null) {
+        if (orderLine.length > 0 && closeOrder != null) {
             closeOrder.close();
             closeOrder.setOrderLines(orderLine);
             updateArticleStock(closeOrder);
@@ -63,7 +66,7 @@ public class OrderController {
 
     public List<User> sendArticlesFromOrderLine(OrderLine[] orderLine) {
         List<User> users = new ArrayList<>();
-        for(OrderLine orderLineSingle : orderLine) {
+        for (OrderLine orderLineSingle : orderLine) {
             LogManager.getLogger().debug("Probando");
             users = getUsersWithNotCommittedTickets(orderLineSingle.getArticle().getCode());
             for (User user : users) {
@@ -82,7 +85,11 @@ public class OrderController {
             Article article = orderLineSingle.getArticle();
             Article articleDB = this.articleRepository.findById(article.getCode()).orElse(null);
             users = getUsersWithNotCommittedTickets(article.getCode());
-            articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
+            if(articleDB != null) {
+                articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
+            } else {
+                return;
+            }
             articleRepository.save(articleDB);
             for (User user : users) {
                 sendNotificationAvailableStock(user, "Stock available of " + articleDB.getReference());
@@ -94,15 +101,7 @@ public class OrderController {
         emailService.sendSimpleMessage(user.getEmail(), "Notification", message);
     }
 
-    private List<OrderSearchDto> orderSearchDtos;
-
-    @Autowired
-    private ProviderRepository providerRepository;
-
-    public static String SEARCHWORD = "";
-
     public OrderDto create(String descriptionOrder, String providerId, String[] idArticles, Integer[] requiredAmount) {
-
         OrderLine[] orderLines = new OrderLine[idArticles.length];
         for (int i = 0; i < idArticles.length; i++) {
             Article article = this.articleRepository.findById(idArticles[i]).get();
@@ -114,15 +113,15 @@ public class OrderController {
         return new OrderDto(order);
     }
 
-    public List<OrderSearchDto> findById(String id){
+    public List<OrderSearchDto> findByDescription(String id) {
         OrderSearchDto orderSearchDto = null;
         orderSearchDtos = new ArrayList<>();
-        Optional<Order> order= orderRepository.findByDescription(id);
+        Optional<Order> order = orderRepository.findByDescription(id);
         for (OrderLine orderLine : order.get().getOrderLines()) {
             orderSearchDto = new OrderSearchDto(order.get().getDescription(), orderLine.getArticle().getDescription(), orderLine.getRequiredAmount(), orderLine.getFinalAmount(), order.get().getOpeningDate(), order.get().getClosingDate());
             orderSearchDtos.add(orderSearchDto);
         }
-       return orderSearchDtos;
+        return orderSearchDtos;
     }
 
  /*   public OrderDto update(String id, OrderDto providerDto) {
@@ -137,7 +136,7 @@ public class OrderController {
 
     public List<OrderSearchDto> readAll() {
         orderSearchDtos = new ArrayList<>();
-        for (OrderDto dto : orderRepository.findAllOrders()) {
+        for (OrderDto dto : orderRepository.findAllOrdersByOpeningDateDesc()) {
             for (OrderLine orderLine : dto.getOrderLines()) {
                 createAddOrderSearchDto(dto, orderLine);
             }
@@ -148,7 +147,7 @@ public class OrderController {
     public List<OrderSearchDto> searchOrder(String orderDescription, String articleDescription, Boolean onlyClosingDate) {
         SEARCHWORD = (orderDescription).trim().toLowerCase().toString() + " " + (articleDescription).trim().toLowerCase().toString();
         orderSearchDtos = new ArrayList<>();
-        for (OrderDto dto : orderRepository.findAllOrders())
+        for (OrderDto dto : orderRepository.findAllOrdersByOpeningDateDesc())
             for (OrderLine orderLine : dto.getOrderLines()) {
                 String orderDescry = dto.getDescription().toLowerCase();
                 String articleDescry = orderLine.getArticle().getDescription().toLowerCase();
@@ -170,20 +169,46 @@ public class OrderController {
 
     public void createAddOrderSearchDto(OrderDto dto, OrderLine orderLine) {
         OrderSearchDto orderSearchDto;
-        orderSearchDto = new OrderSearchDto(dto.getDescription(), orderLine.getArticle().getDescription(), orderLine.getRequiredAmount(), orderLine.getFinalAmount(), dto.getOpeningDate(), dto.getClosingDate());
+        orderSearchDto = new OrderSearchDto(dto.getId(), dto.getDescription(), orderLine.getArticle().getDescription(), orderLine.getRequiredAmount(), orderLine.getFinalAmount(), dto.getOpeningDate(), dto.getClosingDate());
         orderSearchDtos.add(orderSearchDto);
     }
 
     private List<User> getUsersWithNotCommittedTickets(String code) {
         List<Ticket> tickets = this.ticketRepository.findByShoppingListArticle(code);
         List<User> user = new ArrayList<>();
-        for(Ticket item: tickets) {
-            for(Shopping article : item.getShoppingList()) {
-                if(article.getShoppingState() == ShoppingState.NOT_COMMITTED) {
+        for (Ticket item : tickets) {
+            for (Shopping article : item.getShoppingList()) {
+                if (article.getShoppingState() == ShoppingState.NOT_COMMITTED) {
                     user.add(item.getUser());
                 }
             }
         }
         return user;
+    }
+
+    public List<OrderArticleDto> findById(String id) {
+        OrderArticleDto orderArticleDto = null;
+        orderArticleDtos = new ArrayList<>();
+        Optional<Order> order = orderRepository.findById(id);
+        for (OrderLine orderLine : order.get().getOrderLines()) {
+            orderArticleDto = new OrderArticleDto(
+                    orderLine.getArticle().getCode(),
+                    orderLine.getArticle().getDescription(),
+                    orderLine.getArticle().getRetailPrice().doubleValue(),
+                    orderLine.getRequiredAmount(),
+                    0.0,
+                    0.0,
+                    false,
+                    orderLine.getArticle().getProvider().getId());
+            orderArticleDtos.add(orderArticleDto);
+        }
+        return orderArticleDtos;
+    }
+
+    public void delete(String id) {
+        Optional<Order> order = this.orderRepository.findById(id);
+        if (order.isPresent()) {
+            this.orderRepository.delete(order.get());
+        }
     }
 }

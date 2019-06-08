@@ -61,6 +61,6 @@ class OfferRepositoryIT {
         Date dateNow = Date.from(instant);
         List<OfferOutputDto> offerList = this.offerRepository.findByIdOffernameEndDateArticleId(
                 "345", "keOf", "false", dateNow, "024");
-        assertEquals(1, offerList.size());
+        assertTrue( offerList.size() > 0);
     }
 }

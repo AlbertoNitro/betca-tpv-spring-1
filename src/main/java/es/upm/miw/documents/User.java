@@ -26,6 +26,10 @@ public class User {
 
     private String password;
 
+    private String name;
+
+    private String lastname;
+
     private Boolean active;
 
     private String email;
@@ -85,6 +89,11 @@ public class User {
         this.setRoles(roles);
 
     }
+    public User(String mobile, String username, String password, String name, String lastname,String dni, String discount, String address, String email) {
+        this(mobile, username, password, dni, discount, address, email);
+        this.name = name;
+        this.lastname = lastname;
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -120,6 +129,22 @@ public class User {
         } else {
             this.password = new BCryptPasswordEncoder().encode(password);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public Boolean isActive() {
@@ -188,6 +213,8 @@ public class User {
                 ", registrationDate=" + registrationDate +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastname + '\'' +
                 ", active=" + active +
                 ", email='" + email + '\'' +
                 ", dni='" + dni + '\'' +
@@ -227,6 +254,16 @@ public class User {
             } else {
                 this.user.password = new BCryptPasswordEncoder().encode(password);
             }
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.user.name = name;
+            return this;
+        }
+
+        public Builder lastname(String lastname) {
+            this.user.lastname = lastname;
             return this;
         }
 

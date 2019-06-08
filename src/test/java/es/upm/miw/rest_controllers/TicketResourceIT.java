@@ -503,7 +503,7 @@ class TicketResourceIT {
         Article article = this.articleRepository.findById(articleId).orElse(null);
         OrderLine orderLine = new OrderLine(article, 10);
         OrderLine[] orderLines = {orderLine};
-        Order order = new Order("Test Order", null, orderLines);
+        Order order = new Order("ORDER-" + String.valueOf((int) (Math.random() * 10000)), null, orderLines);
         this.orderRepository.save(order);
         //Setup Ticket
         this.ticketRepository.deleteAll();

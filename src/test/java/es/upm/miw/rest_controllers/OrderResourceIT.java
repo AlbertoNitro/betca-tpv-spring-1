@@ -1,13 +1,8 @@
 package es.upm.miw.rest_controllers;
 
-import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Order;
-import es.upm.miw.documents.OrderLine;
+import es.upm.miw.documents.*;
 import es.upm.miw.business_controllers.OrderController;
-import es.upm.miw.documents.Provider;
-import es.upm.miw.dtos.OrderDto;
-import es.upm.miw.dtos.OrderSearchDto;
-import es.upm.miw.dtos.OrderSearchInputDto;
+import es.upm.miw.dtos.*;
 import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
 import es.upm.miw.repositories.ProviderRepository;
@@ -43,6 +38,7 @@ public class OrderResourceIT {
     @Autowired
     private OrderRepository orderRepository;
 
+    private String idOrder = "";
 
     @Autowired
     private RestService restService;
@@ -58,6 +54,7 @@ public class OrderResourceIT {
                 OrderLine[] orderLines = org.assertj.core.util.Arrays.array(new OrderLine(article, 4), new OrderLine(article, 5));
                 Order order = new Order("OrderDescrip_" + articlesId[i], article.getProvider(), orderLines);
                 this.orderRepository.save(order);
+                idOrder = order.getId();
             }
         }
     }
@@ -69,11 +66,11 @@ public class OrderResourceIT {
         this.provider = this.providerRepository.findAll().get(0);
         OrderLine orderLine = new OrderLine(article, 10);
         OrderLine[] orderLines = {orderLine};
-        this.order = new Order("Test Order", this.provider, orderLines);
+        this.order = new Order("ORDER-" + String.valueOf((int) (Math.random() * 10000)), this.provider, orderLines);
         this.order = this.orderRepository.save(this.order);
     }
 
-    /*@Test
+    @Test
     void testCloseOrder() {
         OrderDto orderDto = new OrderDto(this.order);
         OrderDto[] closedOrder = this.restService.loginAdmin()
@@ -82,7 +79,7 @@ public class OrderResourceIT {
                 .body(orderDto).post().build();
         assertNotNull(closedOrder[0].getClosingDate());
         this.orderRepository.delete(this.order);
-    }*/
+    }
 
     @Test
     void testEmptyOrderLine() {
@@ -90,7 +87,8 @@ public class OrderResourceIT {
         this.order.setOrderLines(orderLines);
         OrderDto orderDto = new OrderDto(this.order);
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<OrderDto[]>()).clazz(OrderDto[].class)
+                .restBuilder(new RestBuilder<OrderDto[]>())
+                .clazz(OrderDto[].class)
                 .path(OrderResource.ORDERS).path(OrderResource.CLOSE)
                 .body(orderDto).post().build());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
@@ -100,9 +98,11 @@ public class OrderResourceIT {
     @Test
     void testReadAll() {
         List<OrderSearchDto> orders = Arrays.asList(this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<OrderSearchDto[]>()).clazz(OrderSearchDto[].class)
+                .restBuilder(new RestBuilder<OrderSearchDto[]>())
+                .clazz(OrderSearchDto[].class)
                 .path(OrderResource.ORDERS)
-                .get().build());
+                .get()
+                .build());
         assertTrue(orders.size() >= 0);
     }
 
@@ -110,10 +110,25 @@ public class OrderResourceIT {
     void testFindByAttributesLike() {
         OrderSearchInputDto orderSearchInputDto = new OrderSearchInputDto("null", "null", false);
         List<OrderSearchDto> activesSearch = Arrays.asList(this.restService.loginAdmin()
-                .restBuilder(new RestBuilder<OrderSearchDto[]>()).clazz(OrderSearchDto[].class)
-                .path(OrderResource.ORDERS).path(OrderResource.SEARCH).body(orderSearchInputDto)
+                .restBuilder(new RestBuilder<OrderSearchDto[]>())
+                .clazz(OrderSearchDto[].class)
+                .path(OrderResource.ORDERS)
+                .path(OrderResource.SEARCH)
+                .body(orderSearchInputDto)
                 .post().build());
         assertTrue(activesSearch.size() >= 0);
 
     }
+
+    @Test
+    void testDeleteNoExistsOrderResource() {
+        this.restService.loginAdmin().restBuilder(new RestBuilder<Order>())
+                .clazz(Order.class)
+                .path(OrderResource.ORDERS)
+                .path(OrderResource.ORDER_ID)
+                .expand("asas")
+                .delete()
+                .build();
+    }
+
 }

@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 @JsonInclude(Include.NON_NULL)
 public class OrderSearchDto {
 
+    private String id;
+
     private String descriptionOrders;
 
     private String descriptionArticles;
@@ -22,6 +24,16 @@ public class OrderSearchDto {
 
     public OrderSearchDto() {
         // Empty for framework
+    }
+
+    public OrderSearchDto(String id, String descriptionOrders, String descriptionArticles, int requiredAmount, int finalAmount, LocalDateTime openingDate, LocalDateTime closingDate) {
+        this.id = id;
+        this.descriptionOrders = descriptionOrders;
+        this.descriptionArticles = descriptionArticles;
+        this.requiredAmount = requiredAmount;
+        this.finalAmount = finalAmount;
+        this.openingDate = openingDate;
+        this.closingDate = closingDate;
     }
 
     public OrderSearchDto(String descriptionOrders, String descriptionArticles, int requiredAmount, int finalAmount, LocalDateTime openingDate, LocalDateTime closingDate) {
@@ -81,10 +93,19 @@ public class OrderSearchDto {
         this.closingDate = closingDate;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "OrderSearchDto{" +
-                "descriptionOrders='" + descriptionOrders + '\'' +
+                "id='" + id + '\'' +
+                ", descriptionOrders='" + descriptionOrders + '\'' +
                 ", descriptionArticles='" + descriptionArticles + '\'' +
                 ", requiredAmount=" + requiredAmount +
                 ", finalAmount=" + finalAmount +
