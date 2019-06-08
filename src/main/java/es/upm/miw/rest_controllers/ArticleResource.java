@@ -26,7 +26,7 @@ public class ArticleResource {
 
     public static final String ARTICLES = "/articles";
     public static final String CODE_ID = "/{code}";
-    public static final String FAMILY_SIZE = "/family-size";
+    public static final String FAMILY_SIZES = "/family-sizes";
     public static final String MINIMUM = "/minimum";
     public static final String MINIMUM_STOCK = "/minimum/{stock}";
     public static final String RESERVATION = "/reservation";
@@ -71,7 +71,7 @@ public class ArticleResource {
         return this.articleController.createArticle(articleDto);
     }
 
-    @PostMapping(value = FAMILY_SIZE)
+    @PostMapping(value = FAMILY_SIZES)
     public FamilySizeInputDto createFamilySize(@Valid @RequestBody FamilySizeInputDto familySizeInputDto) {
         return this.articleController.createFamilySize(familySizeInputDto);
     }

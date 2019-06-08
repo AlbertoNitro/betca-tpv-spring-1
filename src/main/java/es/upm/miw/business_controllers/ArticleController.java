@@ -139,23 +139,47 @@ public class ArticleController {
     public FamilySizeInputDto createFamilySize(FamilySizeInputDto familySizeInputDto) {
         String reference = familySizeInputDto.getReference();
         String description = familySizeInputDto.getDescription();
-        Provider provider = new Provider(familySizeInputDto.getProvider());
+        Provider provider = this.getProvider(familySizeInputDto.getProvider());
         ArrayList<String> sizesArray = familySizeInputDto.getSizesArray();
+        this.createFamilyComposite(reference, description, provider, sizesArray);
+        return new FamilySizeInputDto(reference, description, provider.getCompany(), sizesArray);
+    }
 
+    public Provider getProvider(String company) {
+        Provider provider;
+        if(this.providerRepository.findByCompany(company).isPresent()) {
+            provider = this.providerRepository.findByCompany(company).get();
+        } else {
+            provider = new Provider(company);
+            this.providerRepository.save(provider);
+        }
+        return provider;
+    }
+
+    public FamilyComposite createFamilyComposite(String reference, String description, Provider provider, ArrayList<String> sizesArray) {
         FamilyComposite familyComposite = new FamilyComposite(FamilyType.SIZES, reference, description);
         sizesArray.forEach(size -> {
-            Article article = Article.builder(this.databaseSeederService.nextCodeEan())
-                    .reference(reference + " T-" + size)
-                    .description(description + " T-" + size)
-                    .provider(provider)
-                    .build();
-            FamilyArticle familyArticle = new FamilyArticle(article);
-            this.familyArticleRepository.save(familyArticle);
-            familyComposite.add(familyArticle);
+            Article article = this.createArticleForEachSize(size, reference, description, provider);
+            familyComposite.add(this.createFamilyArticle(article));
         });
         this.familyCompositeRepository.save(familyComposite);
+        return familyComposite;
+    }
 
-        return new FamilySizeInputDto(familyComposite);
+    public Article createArticleForEachSize(String size,String reference,String description,Provider provider) {
+        Article article = Article.builder(this.databaseSeederService.nextCodeEan())
+                .reference(reference + " T-" + size)
+                .description(description + " T-" + size)
+                .provider(provider)
+                .build();
+        this.articleRepository.save(article);
+        return article;
+    }
+
+    public FamilyArticle createFamilyArticle(Article article) {
+        FamilyArticle familyArticle = new FamilyArticle(article);
+        this.familyArticleRepository.save(familyArticle);
+        return familyArticle;
     }
 
     public List<ArticleSearchOutputDto> findArticleByProvider(String id){

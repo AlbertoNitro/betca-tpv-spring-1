@@ -70,21 +70,18 @@ class OrderRepositoryIT {
 
     @Test
     void readAllOrders() {
-        System.out.println(orderRepository.findAllOrdersByOpeningDateDesc());
         assertTrue(orderRepository.findAllOrdersByOpeningDateDesc().size() >= 0);
     }
 
     @Test
     void testFindByDescription() {
         Optional<Order> order = this.orderRepository.findByDescription("ORDER-02019");
-        System.out.println(this.orderRepository.findByDescription("ORDER-02019"));
         assertTrue(order.isPresent());
     }
 
     @Test
     void testFindById() {
         Optional<Order> order = this.orderRepository.findById(idOrder);
-        System.out.println(orderRepository.findById(idOrder).toString());
         assertTrue(order.isPresent());
     }
 }
