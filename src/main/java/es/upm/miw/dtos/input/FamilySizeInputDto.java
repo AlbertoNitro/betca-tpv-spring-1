@@ -1,6 +1,5 @@
 package es.upm.miw.dtos.input;
 
-import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.dtos.validations.ListNotEmpty;
 
 import javax.validation.constraints.NotNull;
@@ -20,7 +19,15 @@ public class FamilySizeInputDto {
     @ListNotEmpty
     private ArrayList<String> sizesArray;
 
-    public FamilySizeInputDto(FamilyComposite familyComposite) {
+    public FamilySizeInputDto() {
+        // Empty for framework
+    }
+
+    public FamilySizeInputDto(String reference, String description, String provider, ArrayList<String> sizesArray) {
+        this.reference = reference;
+        this.description = description;
+        this.provider = provider;
+        this.sizesArray = sizesArray;
     }
 
     public String getReference() {
