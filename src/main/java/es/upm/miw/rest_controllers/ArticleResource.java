@@ -2,8 +2,6 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.ArticleController;
 import es.upm.miw.business_controllers.StockPredictionController;
-import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Provider;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.dtos.input.ArticleSearchInputDto;

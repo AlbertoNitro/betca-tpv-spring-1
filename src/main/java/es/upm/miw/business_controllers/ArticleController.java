@@ -156,7 +156,7 @@ public class ArticleController {
         return provider;
     }
 
-    public FamilyComposite createFamilyComposite(String reference, String description, Provider provider, ArrayList<String> sizesArray) {
+    public FamilyComposite createFamilyComposite(String reference, String description, Provider provider, List<String> sizesArray) {
         FamilyComposite familyComposite = new FamilyComposite(FamilyType.SIZES, reference, description);
         sizesArray.forEach(size -> {
             Article article = this.createArticleForEachSize(size, reference, description, provider);
