@@ -1,7 +1,6 @@
 package es.upm.miw.dtos;
 
 import es.upm.miw.documents.ArticlesFamily;
-import es.upm.miw.documents.FamilyComposite;
 import es.upm.miw.documents.FamilyType;
 
 import javax.validation.constraints.NotNull;
