@@ -43,8 +43,6 @@ public class OrderController {
 
     private List<OrderSearchDto> orderSearchDtos;
 
-    private List<OrderArticleDto> orderArticleDtos;
-
     @Autowired
     private ProviderRepository providerRepository;
 
@@ -85,7 +83,11 @@ public class OrderController {
             Article article = orderLineSingle.getArticle();
             Article articleDB = this.articleRepository.findById(article.getCode()).orElse(null);
             users = getUsersWithNotCommittedTickets(article.getCode());
-            articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
+            if(articleDB != null) {
+                articleDB.setStock(articleDB.getStock() + orderLineSingle.getFinalAmount());
+            } else {
+                return;
+            }
             articleRepository.save(articleDB);
             for (User user : users) {
                 sendNotificationAvailableStock(user, "Stock available of " + articleDB.getReference());
@@ -100,35 +102,32 @@ public class OrderController {
     public OrderDto create(String descriptionOrder, String providerId, String[] idArticles, Integer[] requiredAmount) {
         OrderLine[] orderLines = new OrderLine[idArticles.length];
         for (int i = 0; i < idArticles.length; i++) {
-            Article article = this.articleRepository.findById(idArticles[i]).get();
-            orderLines[i] = new OrderLine(article, requiredAmount[i]);
+            if(this.articleRepository.findById(idArticles[i]).isPresent()) {
+                Article article = this.articleRepository.findById(idArticles[i]).get();
+                orderLines[i] = new OrderLine(article, requiredAmount[i]);
+            }
         }
-        Provider provider = providerRepository.findById(providerId).get();
-        Order order = new Order(descriptionOrder, provider, orderLines);
-        this.orderRepository.save(order);
-        return new OrderDto(order);
+        if((providerRepository.findById(providerId).isPresent())){
+            Provider provider = providerRepository.findById(providerId).get();
+            Order order = new Order(descriptionOrder, provider, orderLines);
+            this.orderRepository.save(order);
+            return new OrderDto(order);
+        }
+        return null;
     }
 
     public List<OrderSearchDto> findByDescription(String id) {
         OrderSearchDto orderSearchDto = null;
         orderSearchDtos = new ArrayList<>();
         Optional<Order> order = orderRepository.findByDescription(id);
-        for (OrderLine orderLine : order.get().getOrderLines()) {
-            orderSearchDto = new OrderSearchDto(order.get().getDescription(), orderLine.getArticle().getDescription(), orderLine.getRequiredAmount(), orderLine.getFinalAmount(), order.get().getOpeningDate(), order.get().getClosingDate());
-            orderSearchDtos.add(orderSearchDto);
+        if(order.isPresent()){
+            for (OrderLine orderLine : order.get().getOrderLines()) {
+                orderSearchDto = new OrderSearchDto(order.get().getDescription(), orderLine.getArticle().getDescription(), orderLine.getRequiredAmount(), orderLine.getFinalAmount(), order.get().getOpeningDate(), order.get().getClosingDate());
+                orderSearchDtos.add(orderSearchDto);
+            }
         }
         return orderSearchDtos;
     }
-
- /*   public OrderDto update(String id, OrderDto providerDto) {
-
-        String company = providerDto.getCompany();
-        Optional<Provider> provider = this.providerRepository.findByCompany(company);
-        if (provider.isPresent() && !provider.get().getId().equals(id))
-            throw new ConflictException("Provider company (" + company + ")");
-        Provider result = this.providerRepository.save(new Provider(providerDto));
-        return new ProviderDto(result);
-    }*/
 
     public List<OrderSearchDto> readAll() {
         orderSearchDtos = new ArrayList<>();
@@ -141,13 +140,13 @@ public class OrderController {
     }
 
     public List<OrderSearchDto> searchOrder(String orderDescription, String articleDescription, Boolean onlyClosingDate) {
-        SEARCHWORD = (orderDescription).trim().toLowerCase().toString() + " " + (articleDescription).trim().toLowerCase().toString();
+        SEARCHWORD = validateValue(orderDescription, articleDescription);
         orderSearchDtos = new ArrayList<>();
         for (OrderDto dto : orderRepository.findAllOrdersByOpeningDateDesc())
             for (OrderLine orderLine : dto.getOrderLines()) {
                 String orderDescry = dto.getDescription().toLowerCase();
                 String articleDescry = orderLine.getArticle().getDescription().toLowerCase();
-                if (orderDescription == "" && articleDescription == "") {
+                if (orderDescription.isEmpty() && articleDescription.isEmpty()) {
                     validateClosingDate(dto, orderLine, onlyClosingDate);
                 } else if (SEARCHWORD.contains(orderDescry) || SEARCHWORD.contains(articleDescry)) {
                     validateClosingDate(dto, orderLine, onlyClosingDate);
@@ -183,6 +182,7 @@ public class OrderController {
     }
 
     public List<OrderArticleDto> findById(String id) {
+        List<OrderArticleDto> orderArticleDtos;
         OrderArticleDto orderArticleDto = null;
         orderArticleDtos = new ArrayList<>();
         Optional<Order> order = orderRepository.findById(id);
@@ -206,5 +206,9 @@ public class OrderController {
         if (order.isPresent()) {
             this.orderRepository.delete(order.get());
         }
+    }
+
+    public String validateValue(String value1, String value2){
+        return (value1).trim().toLowerCase().toString() + " " + (value2).trim().toLowerCase().toString();
     }
 }

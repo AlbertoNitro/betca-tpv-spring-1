@@ -2,6 +2,7 @@ package es.upm.miw.rest_controllers;
 
 import es.upm.miw.business_controllers.OrderController;
 import es.upm.miw.dtos.*;
+import es.upm.miw.exceptions.BadRequestException;
 import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.constraints.NotNull;
 import es.upm.miw.repositories.ProviderRepository;
@@ -21,7 +22,7 @@ public class OrderResource {
     public static final String ORDERS = "/orders";
     public static final String ID = "/{id}";
     public static final String SEARCH = "/search";
-    public static final String CLOSE = "/orders/close/{id}";
+    public static final String CLOSE = "/close";
     public static final String ORDERS_art = "/art";
     public static final String ARTICLE = "/article";
     public static final String ORDER_ID = "/{idOrder}";
@@ -32,10 +33,15 @@ public class OrderResource {
     @Autowired
     private ProviderRepository providerRepository;
 
-    @PostMapping(CLOSE)
-    public List<OrderDto> closeOrder(@NotNull @RequestBody OrderDto orderDto) {
+    @PostMapping(value = CLOSE)
+    public List<OrderDto> closeOrder(@Valid @RequestBody OrderDto orderDto) {
+        System.out.println("Order: " + orderDto);
         List<OrderDto> closedOrder = new ArrayList<>();
-        closedOrder.add(new OrderDto(this.orderController.closeOrder(orderDto.getId(), orderDto.getOrderLines())));
+        if(orderDto.getOrderLines() == null) {
+            throw new BadRequestException("orderLine is empty");
+        } else {
+            closedOrder.add(new OrderDto(this.orderController.closeOrder(orderDto.getId(), orderDto.getOrderLines())));
+        }
         return closedOrder;
     }
 
@@ -86,5 +92,3 @@ public class OrderResource {
         this.orderController.delete(idOrder);
     }
 }
-
-

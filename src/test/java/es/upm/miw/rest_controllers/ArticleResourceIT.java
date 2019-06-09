@@ -5,6 +5,7 @@ import es.upm.miw.documents.Tax;
 import es.upm.miw.dtos.ArticleDto;
 import es.upm.miw.dtos.ArticleMinimumDto;
 import es.upm.miw.dtos.input.ArticleSearchInputDto;
+import es.upm.miw.dtos.input.FamilySizeInputDto;
 import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import es.upm.miw.repositories.ArticleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -210,4 +212,19 @@ class ArticleResourceIT {
         assertTrue(dtos.size() > 1);
     }
 
+    @Test
+    void testCreateFamilySize() {
+        ArrayList<String> sizeArray = new ArrayList<String>();
+        for(int i = 2; i < 10; i = i+2) {
+            sizeArray.add(Integer.toString(i));
+        }
+        FamilySizeInputDto familySizeInputDto = new FamilySizeInputDto("Ref#1245", "Descripcion", "prv", sizeArray);
+
+        FamilySizeInputDto fsDTO = this.restService.loginAdmin()
+                .restBuilder(new RestBuilder<FamilySizeInputDto>()).clazz(FamilySizeInputDto.class)
+                .path(ArticleResource.ARTICLES + ArticleResource.FAMILY_SIZES)
+                .body(familySizeInputDto)
+                .post().build();
+        assertEquals("prv", fsDTO.getProvider());
+    }
 }

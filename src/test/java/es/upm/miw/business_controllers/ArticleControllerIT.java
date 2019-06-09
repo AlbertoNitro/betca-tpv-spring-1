@@ -1,19 +1,21 @@
 package es.upm.miw.business_controllers;
 
 import es.upm.miw.TestConfig;
-import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Tax;
+import es.upm.miw.documents.*;
 import es.upm.miw.dtos.ArticleDto;
+import es.upm.miw.dtos.input.FamilySizeInputDto;
 import es.upm.miw.dtos.output.ArticleSearchOutputDto;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.exceptions.NotFoundException;
 import es.upm.miw.repositories.ArticleRepository;
+import es.upm.miw.repositories.FamilyCompositeRepository;
 import es.upm.miw.repositories.ProviderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,6 +33,9 @@ class ArticleControllerIT {
     private Article article;
 
     private ProviderRepository providerRepository;
+
+    @Autowired
+    private FamilyCompositeRepository familyCompositeRepository;
 
     @BeforeEach
     void seed() {
@@ -134,5 +139,53 @@ class ArticleControllerIT {
         List<ArticleDto> articles = this.articleController.readArticlesReservation();
         assertNotNull(articles);
         assertTrue(articles.size() > 0);
+    }
+
+    @Test
+    Provider testGetProvider() {
+        Provider provider = this.articleController.getProvider("Zara");
+        String id = provider.getId();
+        Provider pvd = this.articleController.getProvider("Zara");
+        assertEquals(id, pvd.getId());
+        return provider;
+    }
+
+    @Test
+    Article testCreateArticleForSingleSize() {
+        Article article = this.articleController.createArticleForEachSize("M", "R001", "T-Shirt", this.testGetProvider());
+        Article art = this.articleRepository.findByCode(article.getCode());
+        assertEquals("T-Shirt T-M", art.getDescription());
+        return art;
+    }
+
+    @Test
+    void testCreateSizeArticleFamily(){
+        FamilyArticle familyArticle = this.articleController.createFamilyArticle(this.testCreateArticleForSingleSize());
+        assertEquals("T-Shirt T-M", familyArticle.getDescription());
+        assertEquals(FamilyType.ARTICLE, familyArticle.getFamilyType());
+    }
+
+    @Test
+    FamilyComposite testCreateSizeFamilyComposite(){
+        ArrayList<String> sizeArray = new ArrayList<>();
+        for(int i = 34; i < 42; i = i+2) {
+            sizeArray.add(Integer.toString(i));
+        }
+        FamilyComposite familyComposite = this.articleController.createFamilyComposite("Ref.01", "Short", this.testGetProvider(), sizeArray);
+        assertEquals("Short", familyComposite.getDescription());
+        assertEquals(FamilyType.SIZES, familyComposite.getFamilyType());
+        assertEquals(4, familyComposite.getArticlesFamilyList().size());
+        return familyComposite;
+    }
+
+    @Test
+    void testCreateFamilySize(){
+        ArrayList<String> sizeArray = new ArrayList<>();
+        for(int i = 34; i < 42; i = i+2) {
+            sizeArray.add(Integer.toString(i));
+        }
+        FamilySizeInputDto familySizeInputDto = new FamilySizeInputDto("Ref","Short", "Zara", sizeArray);
+        FamilySizeInputDto responseFSIO = this.articleController.createFamilySize(familySizeInputDto);
+        assertEquals("Ref", responseFSIO.getReference());
     }
 }
