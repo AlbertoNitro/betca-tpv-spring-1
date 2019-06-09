@@ -18,4 +18,6 @@ public interface TicketRepository extends MongoRepository<Ticket, String> {
     List<Ticket> findByCreationDateBetween(LocalDateTime dateFrom, LocalDateTime dateTo);
 
     List<Ticket> findByShoppingListArticle(String articleCode);
+
+    List<Ticket> findByReference(String reference);
 }

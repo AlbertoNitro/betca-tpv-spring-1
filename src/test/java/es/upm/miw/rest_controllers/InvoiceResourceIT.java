@@ -1,5 +1,6 @@
 package es.upm.miw.rest_controllers;
 
+import es.upm.miw.documents.Invoice;
 import es.upm.miw.documents.Ticket;
 import es.upm.miw.dtos.ShoppingDto;
 import es.upm.miw.dtos.input.TicketCreationInputDto;
@@ -47,5 +48,14 @@ public class InvoiceResourceIT {
                 .path(InvoiceResource.INVOICE).body(ticketCreationInputDto)
                 .post().build();
         assertNotNull(pdf);
+    }
+    @Test
+    void testGenerateInvoiceByTicketReference(){
+        String ticketReference = "t2j_u9M9CisFmYGRFs1Uulgn7hI";
+        byte[] pdf = this.restService.loginAdmin().restBuilder(new RestBuilder<byte[]>()).clazz(byte[].class)
+                .path(InvoiceResource.INVOICE).path(InvoiceResource.INVOICE_GENERATE).path("/" + ticketReference)
+                .get().build();
+        assertNotNull(pdf);
+
     }
 }

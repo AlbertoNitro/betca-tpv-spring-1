@@ -67,6 +67,20 @@ public class InvoiceController {
         invoice.setUser(ticket.getUser());
         return invoice;
     }
+    private Invoice ConvertTicketToInvoice(Ticket ticket)
+    {
+        BigDecimal total = new BigDecimal(0);
+        total = total.add(ticket.getCash());
+        total = total.add(ticket.getCard());
+        total = total.add(ticket.getVoucher());
+
+        BigDecimal tax = total.multiply(new BigDecimal(TAX_RATE));
+        BigDecimal baseTax = total.subtract(tax);
+        Invoice invoice = new Invoice(baseTax, tax, ticket);
+        invoice.setUser(ticket.getUser());
+        return invoice;
+
+    }
     private List<InvoiceUpdateDto> convertInvoiceToInvoiceUpdateDto(List<Invoice> invoices) {
         InvoiceUpdateDto invoiceUpdateDto;
         List<InvoiceUpdateDto> invoiceUpdateDtoList = new ArrayList<InvoiceUpdateDto>();
@@ -103,6 +117,14 @@ public class InvoiceController {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
 
+    }
+    private boolean validateValidInvoiceUser(User user){
+        if(user.getAddress() != null && !user.getAddress().trim().isEmpty()
+                && user.getName()!= null && !user.getName().trim().isEmpty()
+                && user.getLastname()!= null && !user.getLastname().trim().isEmpty())
+            return true;
+        else
+            return false;
     }
     public List<InvoiceUpdateDto> getAll() {
         return convertInvoiceToInvoiceUpdateDto(this.invoiceRepository.findAll());
@@ -210,5 +232,19 @@ public class InvoiceController {
             return  this.pdfService.generateInvoice(invoice,invoice.getTicket());
         }
         return null;
+    }
+    public byte [] generateInvoicePdfByTicketReference(String ticketReference){
+        Ticket ticket = ticketRepository.findByReference(ticketReference).get(0);
+        if (ticket == null)
+            return null;
+        if(!validateValidInvoiceUser(ticket.getUser()))
+            return null;
+        Invoice invoice = ConvertTicketToInvoice(ticket);
+        if(invoice == null){
+            return null;
+        }else {
+            invoiceRepository.save(invoice);
+            return this.pdfService.generateInvoice(invoice,ticket);
+        }
     }
 }
