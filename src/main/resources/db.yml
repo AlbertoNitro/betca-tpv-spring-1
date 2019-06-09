@@ -41,6 +41,8 @@ userList:
     mobile: 666666004
     username: u004
     password: p004
+    name: Bruce
+    lastname: Wayne
     email: u004@gmail.com
     dni: 66666604T
     address: C/ TPV, 4, 1A, 28000 Madrid

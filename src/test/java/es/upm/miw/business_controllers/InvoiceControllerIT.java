@@ -141,4 +141,10 @@ public class InvoiceControllerIT {
         assertNotNull(invoicePdf);
         assertEquals(invoicesSize + 1, invoicesSizePlusNewInvoice);
     }
+    @Test
+    void generateInvoicePDF(){
+        byte[] invoicePdf = invoiceController.generateInvoicePdfByTicketReference("t2j_u9M9CisFmYGRFs1Uulgn7hI");
+        assertNotNull(invoicePdf);
+    }
+
 }

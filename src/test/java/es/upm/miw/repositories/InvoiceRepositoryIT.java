@@ -46,4 +46,10 @@ class InvoiceRepositoryIT {
         assertEquals(3, invoices.size());
     }
 
+    @Test
+    void testGetTicketByReference(){
+        Ticket ticket = this.ticketRepository.findByReference("t2j_u9M9CisFmYGRFs1Uulgn7hI").get(0);
+        assertNotNull(ticket);
+    }
+
 }
