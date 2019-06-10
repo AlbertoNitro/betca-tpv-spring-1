@@ -120,8 +120,7 @@ public class InvoiceController {
     }
     private boolean validateValidInvoiceUser(User user){
         if(user.getAddress() != null && !user.getAddress().trim().isEmpty()
-                && user.getName()!= null && !user.getName().trim().isEmpty()
-                && user.getLastname()!= null && !user.getLastname().trim().isEmpty())
+                && user.getUsername()!= null && !user.getUsername().trim().isEmpty())
             return true;
         else
             return false;
@@ -233,8 +232,8 @@ public class InvoiceController {
         }
         return null;
     }
-    public byte [] generateInvoicePdfByTicketReference(String ticketReference){
-        Ticket ticket = ticketRepository.findByReference(ticketReference).get(0);
+    public byte [] generateInvoicePdfByTicketReference(String id){
+        Ticket ticket = ticketRepository.findById(id).get();
         if (ticket == null)
             return null;
         if(!validateValidInvoiceUser(ticket.getUser()))

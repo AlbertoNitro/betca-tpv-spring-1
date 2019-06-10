@@ -20,4 +20,5 @@ public interface TicketRepository extends MongoRepository<Ticket, String> {
     List<Ticket> findByShoppingListArticle(String articleCode);
 
     List<Ticket> findByReference(String reference);
+
 }
