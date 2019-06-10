@@ -140,9 +140,10 @@ public class ArticleController {
         String reference = familySizeInputDto.getReference();
         String description = familySizeInputDto.getDescription();
         Provider provider = this.getProvider(familySizeInputDto.getProvider());
+        String stock = familySizeInputDto.getStock();
         ArrayList<String> sizesArray = familySizeInputDto.getSizesArray();
-        this.createFamilyComposite(reference, description, provider, sizesArray);
-        return new FamilySizeInputDto(reference, description, provider.getCompany(), sizesArray);
+        this.createFamilyComposite(reference, description, provider, Integer.parseInt(stock), sizesArray);
+        return new FamilySizeInputDto(reference, description, provider.getCompany(), stock, sizesArray);
     }
 
     public Provider getProvider(String company) {
@@ -156,21 +157,23 @@ public class ArticleController {
         return provider;
     }
 
-    public FamilyComposite createFamilyComposite(String reference, String description, Provider provider, List<String> sizesArray) {
+    public FamilyComposite createFamilyComposite(String reference, String description, Provider provider, Integer stock, List<String> sizesArray) {
         FamilyComposite familyComposite = new FamilyComposite(FamilyType.SIZES, reference, description);
+
         sizesArray.forEach(size -> {
-            Article article = this.createArticleForEachSize(size, reference, description, provider);
+            Article article = this.createArticleForEachSize(size, reference, description, provider, stock);
             familyComposite.add(this.createFamilyArticle(article));
         });
         this.familyCompositeRepository.save(familyComposite);
         return familyComposite;
     }
 
-    public Article createArticleForEachSize(String size,String reference,String description,Provider provider) {
+    public Article createArticleForEachSize(String size,String reference,String description,Provider provider, Integer stock) {
         Article article = Article.builder(this.databaseSeederService.nextCodeEan())
                 .reference(reference + " T-" + size)
                 .description(description + " T-" + size)
                 .provider(provider)
+                .stock(stock)
                 .build();
         this.articleRepository.save(article);
         return article;

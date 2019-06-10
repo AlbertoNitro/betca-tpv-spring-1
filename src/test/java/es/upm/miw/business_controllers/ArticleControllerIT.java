@@ -152,7 +152,7 @@ class ArticleControllerIT {
 
     @Test
     Article testCreateArticleForSingleSize() {
-        Article article = this.articleController.createArticleForEachSize("M", "R001", "T-Shirt", this.testGetProvider());
+        Article article = this.articleController.createArticleForEachSize("M", "R001", "T-Shirt", this.testGetProvider(), 6);
         Article art = this.articleRepository.findByCode(article.getCode());
         assertEquals("T-Shirt T-M", art.getDescription());
         return art;
@@ -171,7 +171,7 @@ class ArticleControllerIT {
         for(int i = 34; i < 42; i = i+2) {
             sizeArray.add(Integer.toString(i));
         }
-        FamilyComposite familyComposite = this.articleController.createFamilyComposite("Ref.01", "Short", this.testGetProvider(), sizeArray);
+        FamilyComposite familyComposite = this.articleController.createFamilyComposite("Ref.01", "Short", this.testGetProvider(), 10, sizeArray);
         assertEquals("Short", familyComposite.getDescription());
         assertEquals(FamilyType.SIZES, familyComposite.getFamilyType());
         assertEquals(4, familyComposite.getArticlesFamilyList().size());
@@ -184,7 +184,7 @@ class ArticleControllerIT {
         for(int i = 34; i < 42; i = i+2) {
             sizeArray.add(Integer.toString(i));
         }
-        FamilySizeInputDto familySizeInputDto = new FamilySizeInputDto("Ref","Short", "Zara", sizeArray);
+        FamilySizeInputDto familySizeInputDto = new FamilySizeInputDto("Ref","Short", "Zara", "10", sizeArray);
         FamilySizeInputDto responseFSIO = this.articleController.createFamilySize(familySizeInputDto);
         assertEquals("Ref", responseFSIO.getReference());
     }
