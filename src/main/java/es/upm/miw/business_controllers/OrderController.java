@@ -133,7 +133,7 @@ public class OrderController {
         orderSearchDtos = new ArrayList<>();
         for (OrderDto dto : orderRepository.findAllOrdersByOpeningDateDesc()) {
             for (OrderLine orderLine : dto.getOrderLines()) {
-                createAddOrderSearchDto(dto, orderLine);
+                createAddOrderSearchDto(dto);
             }
         }
         return orderSearchDtos;
@@ -142,29 +142,27 @@ public class OrderController {
     public List<OrderSearchDto> searchOrder(String orderDescription, String articleDescription, Boolean onlyClosingDate) {
         SEARCHWORD = validateValue(orderDescription, articleDescription);
         orderSearchDtos = new ArrayList<>();
-        for (OrderDto dto : orderRepository.findAllOrdersByOpeningDateDesc())
-            for (OrderLine orderLine : dto.getOrderLines()) {
+        for (OrderDto dto : orderRepository.findAllOrdersByOpeningDateDesc()){
                 String orderDescry = dto.getDescription().toLowerCase();
-                String articleDescry = orderLine.getArticle().getDescription().toLowerCase();
-                if (orderDescription.isEmpty() && articleDescription.isEmpty()) {
-                    validateClosingDate(dto, orderLine, onlyClosingDate);
-                } else if (SEARCHWORD.contains(orderDescry) || SEARCHWORD.contains(articleDescry)) {
-                    validateClosingDate(dto, orderLine, onlyClosingDate);
+                if (orderDescription.isEmpty()) {
+                    validateClosingDate(dto, onlyClosingDate);
+                } else if (SEARCHWORD.contains(orderDescry)) {
+                    validateClosingDate(dto, onlyClosingDate);
                 }
-            }
+        }
         return orderSearchDtos;
     }
 
-    public void validateClosingDate(OrderDto dto, OrderLine orderLine, Boolean onlyClosingDate) {
+    public void validateClosingDate(OrderDto dto, Boolean onlyClosingDate) {
         if (onlyClosingDate == false)
-            createAddOrderSearchDto(dto, orderLine);
+            createAddOrderSearchDto(dto);
         else if (dto.getClosingDate() != null)
-            createAddOrderSearchDto(dto, orderLine);
+            createAddOrderSearchDto(dto);
     }
 
-    public void createAddOrderSearchDto(OrderDto dto, OrderLine orderLine) {
+    public void createAddOrderSearchDto(OrderDto dto) {
         OrderSearchDto orderSearchDto;
-        orderSearchDto = new OrderSearchDto(dto.getId(), dto.getDescription(), orderLine.getArticle().getDescription(), orderLine.getRequiredAmount(), orderLine.getFinalAmount(), dto.getOpeningDate(), dto.getClosingDate());
+        orderSearchDto = new OrderSearchDto(dto.getId(), dto.getDescription(), "",0, 0, dto.getOpeningDate(), dto.getClosingDate());
         orderSearchDtos.add(orderSearchDto);
     }
 
