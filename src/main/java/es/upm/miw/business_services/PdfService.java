@@ -1,6 +1,8 @@
 package es.upm.miw.business_services;
 
 import es.upm.miw.documents.*;
+import es.upm.miw.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +65,9 @@ public class PdfService {
 
     @Value("${miw.rgpd.cancel}")
     private String cancel;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private void generateCommonHead(PdfBuilder pdf) {
         pdf.image(this.logo).paragraphEmphasized(this.name).paragraphEmphasized("Tfn: " + this.phone)
@@ -235,6 +240,15 @@ public class PdfService {
         BigDecimal totalBeforeTax = new BigDecimal(0);
         BigDecimal total = new BigDecimal(0);
         BigDecimal tax = new BigDecimal(0);
+        String dni = invoice.getUser().getDni();
+        String address = invoice.getUser().getAddress();
+        String email = invoice.getUser().getEmail();
+        String name  = invoice.getUser().getName();
+        String lastname = invoice.getUser().getLastname();
+        pdf.paragraphEmphasized("Customer ID: " + totalBeforeTax.toString());
+        pdf.paragraphEmphasized("Customer Name: " + name + " --- Lastname: " + lastname + " --- DNI: " + dni);
+        pdf.paragraphEmphasized("Customer's address: " + address + " --- email: " + email);
+        pdf.line();
         pdf.paragraphEmphasized("INVOICE");
         pdf.line();
         Shopping[] shoppingList = ticket.getShoppingList();

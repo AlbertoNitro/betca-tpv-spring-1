@@ -47,6 +47,7 @@ public class InvoiceUpdateResource {
     public List<InvoiceUpdateDto> getInvoicesByMobileAndCreationDateBetween(@PathVariable String mobile,
                                                                    @PathVariable String afterDate,
                                                                    @PathVariable String beforeDate) {
+
         return invoiceController.getInvoiceByMobileAndCreationDateBetween(mobile,
                                                                                 afterDate,
                                                                                 beforeDate);
