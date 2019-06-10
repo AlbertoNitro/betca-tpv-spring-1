@@ -194,7 +194,7 @@ articleList:
     code: 8400000000070
     description: descrip-a6
     retailPrice: 20
-    stock: 15
+    stock:  15
     tax: REDUCED
     discontinued: false
   - &ar7
@@ -202,7 +202,7 @@ articleList:
     reference: null
     description: descrip-a7
     retailPrice: 21
-    stock: 12
+    stock:  12
     tax: REDUCED
     discontinued: false
     provider: null

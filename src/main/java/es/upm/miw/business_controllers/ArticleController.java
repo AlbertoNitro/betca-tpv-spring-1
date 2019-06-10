@@ -56,7 +56,8 @@ public class ArticleController {
     }
 
     public List<ArticleDto> readArticlesMinimumStock(Integer minimumStock){
-        List<Article> articles = articleRepository.findByStockBetween(ZERO, minimumStock);
+        List<Article> articles = articleRepository.findByStockLessThan(minimumStock);
+//      List<Article> articles = articleRepository.findByStockBetween(ZERO, minimumStock);
         List<ArticleDto> articleDtos = new ArrayList<>();
         for(Article article : articles){
             articleDtos.add(new ArticleDto(article));
