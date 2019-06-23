@@ -8,6 +8,7 @@ import es.upm.miw.documents.Provider;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Optional;
 
 @JsonInclude(Include.NON_NULL)
 public class OrderDto {
@@ -24,7 +25,7 @@ public class OrderDto {
 
     private OrderLine[] orderLines;
 
-    public OrderDto() {
+    public OrderDto(Optional<Order> order) {
         // Empty for framework
     }
 
@@ -35,6 +36,10 @@ public class OrderDto {
         this.description = order.getDescription();
         this.provider = order.getProvider();
         this.orderLines = order.getOrderLines();
+    }
+
+    public OrderDto() {
+
     }
 
     public String getDescription() {
