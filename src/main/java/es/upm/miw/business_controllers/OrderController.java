@@ -209,4 +209,9 @@ public class OrderController {
     public String validateValue(String value1, String value2){
         return (value1).trim().toLowerCase().toString() + " " + (value2).trim().toLowerCase().toString();
     }
+
+    public OrderDto getOrderById(String id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        return new OrderDto(order);
+    }
 }

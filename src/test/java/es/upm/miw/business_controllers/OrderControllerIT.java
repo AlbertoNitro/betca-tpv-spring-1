@@ -8,6 +8,7 @@ import es.upm.miw.repositories.ArticleRepository;
 import es.upm.miw.repositories.OrderRepository;
 import es.upm.miw.repositories.ProviderRepository;
 import org.assertj.core.util.Arrays;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
+import static junit.framework.TestCase.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestConfig
@@ -95,6 +98,12 @@ public class OrderControllerIT {
         this.providerRepository.save(provider);
         orderDto = this.orderController.create("ORDER-" + String.valueOf((int) (Math.random() * 10000)), provider.getId(), articlesId, requiredAmount);
         assertTrue(orderDto.getOrderLines().length > 0);
+    }
+
+    @Test
+    void testGetOrdereById() {
+        OrderDto orderDto = this.orderController.getOrderById(idOrder);
+        assertEquals(orderDto.getId(), idOrder);
     }
 
     @Test

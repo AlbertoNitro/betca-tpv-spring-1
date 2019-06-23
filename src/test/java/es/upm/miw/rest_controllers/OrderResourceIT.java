@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ApiTestConfig
 public class OrderResourceIT {
@@ -131,4 +132,18 @@ public class OrderResourceIT {
                 .build();
     }
 
+    @Test
+    void testGetOrderById() {
+        OrderDto orderDto = new OrderDto(this.order);
+        OrderDto orderNew = this.restService.loginAdmin().restBuilder(new RestBuilder<OrderDto>())
+                .clazz(OrderDto.class)
+                .path(OrderResource.ORDERS)
+                .path(OrderResource.ORDER)
+                .body(orderDto)
+                .post()
+                .build();
+        System.out.println("New Order");
+        System.out.println(orderNew);
+        assertEquals(this.order.getId(), orderNew.getId());
+    }
 }

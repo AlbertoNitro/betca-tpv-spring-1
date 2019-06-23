@@ -26,6 +26,7 @@ public class OrderResource {
     public static final String ORDERS_art = "/art";
     public static final String ARTICLE = "/article";
     public static final String ORDER_ID = "/{idOrder}";
+    public static final String ORDER = "/order";
 
     @Autowired
     private OrderController orderController;
@@ -85,6 +86,12 @@ public class OrderResource {
     public List<OrderArticleDto> findById(@Valid @RequestBody  OrderDto orderDto) {
         System.out.println("find By id: " + orderDto.getId());
         return this.orderController.findById(orderDto.getId());
+    }
+
+    //Get by Id de una orden de compra
+    @PostMapping(value = ORDER)
+    public OrderDto getOrderById(@Valid @RequestBody  OrderDto orderDto) {
+        return this.orderController.getOrderById(orderDto.getId());
     }
 
     @DeleteMapping(value = ORDER_ID)
